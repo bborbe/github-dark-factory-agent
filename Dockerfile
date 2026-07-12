@@ -25,11 +25,12 @@ ARG BUILD_GIT_COMMIT=none
 ARG BUILD_DATE=unknown
 LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 
-# dark-factory CLI. PIN — and BUMP to the version that ships the in-process
-# `executor: local` mode (the execution backend this agent depends on so it
-# does NOT spawn nested containers) once that feature lands. v0.191.4 predates
-# it; the agent build is gated on that dark-factory feature.
-ARG DARK_FACTORY_VERSION=v0.191.4
+# dark-factory CLI. PIN. v0.192.0 ships the in-process `backend: local` execution
+# mode (spec 104) this agent depends on: it runs claude as a local subprocess in
+# cwd instead of `docker run`, so the agent does NOT spawn nested containers
+# (no DinD) — the Job pod is already a claude-yolo container. Select it at runtime
+# with `dark-factory run --set backend=local`.
+ARG DARK_FACTORY_VERSION=v0.192.0
 USER node
 RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 
