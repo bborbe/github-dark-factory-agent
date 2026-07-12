@@ -1,0 +1,7 @@
+/.update-logs/
+/.claude/
+/CLAUDE.md
+/.mcp-*
+/run-task
+/cmd/run-task/run-task
+/vendor
