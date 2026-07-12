@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package factory wires concrete dependencies for the agent-claude binary.
+// Package factory wires concrete dependencies for the github-dark-factory-agent binary.
 //
 // All factory functions follow the Create* prefix convention and contain
 // zero business logic — they compose constructors with config.
@@ -20,10 +20,10 @@ import (
 	libtime "github.com/bborbe/time"
 	"github.com/bborbe/vault-cli/pkg/domain"
 
-	"github.com/bborbe/agent-claude/pkg/prompts"
+	"github.com/bborbe/github-dark-factory-agent/pkg/prompts"
 )
 
-const serviceName = "agent-claude"
+const serviceName = "github-dark-factory-agent"
 
 // CreateClaudeRunner constructs a ClaudeRunner pre-configured with tools,
 // model, working directory, and CLI environment.
@@ -123,7 +123,7 @@ func CreateAgentFromRunner(
 	)
 }
 
-// CreateAgentProvider wires the per-task-type dispatch table for agent-claude.
+// CreateAgentProvider wires the per-task-type dispatch table for github-dark-factory-agent.
 // Returns lib.AgentProvider — main.go calls Get(ctx, taskType) to select the
 // appropriate *Agent. Pure plumbing; no conditional, no error.
 //

@@ -3,7 +3,7 @@ include Makefile.precommit
 include Makefile.docker
 
 DOCKER_REGISTRY ?= docker.io
-IMAGE ?= bborbe/agent-claude
+IMAGE ?= bborbe/github-dark-factory-agent
 ifeq ($(VERSION),)
 	VERSION := $(shell git describe --tags `git rev-list --tags --max-count=1`)
 endif

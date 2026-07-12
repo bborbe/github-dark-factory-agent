@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.1.1
 
-- refactor: converge build to bborbe/kafka-topic-reader publish-only model — make buca publishes docker.io/bborbe/agent-claude:$(VERSION); deploy machinery removed.
+- refactor: converge build to bborbe/kafka-topic-reader publish-only model — make buca publishes docker.io/bborbe/github-dark-factory-agent:$(VERSION); deploy machinery removed.
 
 ## v0.1.0
 

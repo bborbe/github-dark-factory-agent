@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Command run-task is the local-CLI entry point for agent-claude.
+// Command run-task is the local-CLI entry point for github-dark-factory-agent.
 //
 // Reads a markdown task file from disk, runs the agent against it, and
 // writes the updated content back to the same file. Mirrors the Kafka
@@ -25,7 +25,7 @@ import (
 	"github.com/bborbe/service"
 	"github.com/bborbe/vault-cli/pkg/domain"
 
-	"github.com/bborbe/agent-claude/pkg/factory"
+	"github.com/bborbe/github-dark-factory-agent/pkg/factory"
 )
 
 func main() {

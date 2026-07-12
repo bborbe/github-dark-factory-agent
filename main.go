@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Command agent-claude is the canonical AI-heavy agent: one Claude
+// Command github-dark-factory-agent is the canonical AI-heavy agent: one Claude
 // invocation per phase, all logic in the prompt + allowed tools.
 //
 // This binary is the Kafka entry point — spawned as a K8s Job by
@@ -36,7 +36,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
 
-	"github.com/bborbe/agent-claude/pkg/factory"
+	"github.com/bborbe/github-dark-factory-agent/pkg/factory"
 )
 
 // agentName is the identity string used for Prometheus metric grouping and logging.
@@ -112,7 +112,7 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 	}()
 	start := libtime.NewCurrentDateTime().Now().Time()
 
-	glog.V(2).Infof("agent-claude started phase=%s", a.Phase)
+	glog.V(2).Infof("github-dark-factory-agent started phase=%s", a.Phase)
 
 	deliverer := delivery.NewNoopResultDeliverer()
 	if a.TaskID != "" {

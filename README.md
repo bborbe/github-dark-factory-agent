@@ -8,7 +8,7 @@ New agents are created by swapping instructions (agent `.claude/CLAUDE.md`) and 
 
 ## How It Works
 
-1. Agent pipeline ([[task/controller]] → Kafka → [[task/executor]]) spawns a K8s Job with the `agent-claude` image.
+1. Agent pipeline ([[task/controller]] → Kafka → [[task/executor]]) spawns a K8s Job with the `github-dark-factory-agent` image.
 2. The Job receives `TASK_CONTENT`, `TASK_ID`, `BRANCH`, `ALLOWED_TOOLS`, `MODEL`, etc. via env vars.
 3. `main.go` assembles the prompt via `lib/claude` (embedded `workflow.md` + `output-format.md` + task content).
 4. Runs `claude --print --output-format stream-json` with the allowed tools.
@@ -41,7 +41,7 @@ To add a domain-specific agent that reuses this binary:
 
 ### Config CRD env pattern
 
-The `Config` CRD's `spec.env` map becomes pod env vars, which `main.go` consumes via struct tags. Example from `k8s/agent-claude.yaml`:
+The `Config` CRD's `spec.env` map becomes pod env vars, which `main.go` consumes via struct tags. Example from `k8s/github-dark-factory-agent.yaml`:
 
 ```yaml
 spec:
@@ -81,8 +81,8 @@ Skips K8s, task controller, task executor, git writeback. Useful for iterating o
 ## Links
 
 Admin endpoints:
-- Dev: <https://dev.quant.benjamin-borbe.de/admin/agent-claude/setloglevel/3>
-- Prod: <https://prod.quant.benjamin-borbe.de/admin/agent-claude/setloglevel/3>
+- Dev: <https://dev.quant.benjamin-borbe.de/admin/github-dark-factory-agent/setloglevel/3>
+- Prod: <https://prod.quant.benjamin-borbe.de/admin/github-dark-factory-agent/setloglevel/3>
 
 ## Related
 
