@@ -39,6 +39,11 @@ Three distinct phases (see `docs/design.md`):
 | `CLAUDE_ENV` | no | — | Comma-separated `KEY=VAL` pairs passed to the Claude CLI subprocess |
 | `KAFKA_BROKERS` | no | — | Required when `TASK_ID` is set |
 | `SENTRY_DSN` | no | — | Error reporting |
+| `GH_TOKEN` | no | — | Raw GitHub token; used as the clone/push credential when App creds are unset (local fallback) |
+| `APP_ID` | no | — | GitHub App ID (numeric); enables App auth when set with `INSTALLATION_ID` + a PEM |
+| `INSTALLATION_ID` | no | — | GitHub App Installation ID (numeric) |
+| `PEM_KEY_FILE` | no | — | Path to the GitHub App private key (PEM file mounted from a k8s Secret) |
+| `PEM_KEY` | no | — | GitHub App private key (PEM) as env content; mutually exclusive with `PEM_KEY_FILE` |
 
 ## Creating a New Agent
 
