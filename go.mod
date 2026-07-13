@@ -7,6 +7,7 @@ require (
 	github.com/bborbe/cqrs v0.6.0
 	github.com/bborbe/errors v1.5.13
 	github.com/bborbe/kafka v1.25.1
+	github.com/bborbe/maintainer v0.45.0
 	github.com/bborbe/sentry v1.9.18
 	github.com/bborbe/service v1.10.1
 	github.com/bborbe/time v1.27.1
@@ -33,6 +34,7 @@ require (
 	github.com/bborbe/strimzi v1.8.5 // indirect
 	github.com/bborbe/validation v1.4.14 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bradleyfalzon/ghinstallation/v2 v2.18.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
@@ -55,8 +57,11 @@ require (
 	github.com/go-openapi/swag/typeutils v0.26.0 // indirect
 	github.com/go-openapi/swag/yamlutils v0.26.0 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/google/go-github/v84 v84.0.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/pprof v0.0.0-20260604005048-7023385849c0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect

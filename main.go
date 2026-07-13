@@ -28,6 +28,7 @@ import (
 	"github.com/bborbe/cqrs/base"
 	"github.com/bborbe/errors"
 	libkafka "github.com/bborbe/kafka"
+	githubapp "github.com/bborbe/maintainer/githubapp"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	libtime "github.com/bborbe/time"
@@ -37,6 +38,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/push"
 
 	"github.com/bborbe/github-dark-factory-agent/pkg/factory"
+	"github.com/bborbe/github-dark-factory-agent/pkg/githubauth"
 )
 
 // agentName is the identity string used for Prometheus metric grouping and logging.
@@ -89,7 +91,19 @@ type application struct {
 	Phase domain.TaskPhase `required:"false" arg:"phase" env:"PHASE" usage:"Agent phase: planning | execution | ai_review" default:"execution"`
 
 	// GitHub token for authenticated clones + REST API calls (planning phase).
-	GhToken string `required:"false" arg:"gh-token" env:"GH_TOKEN" usage:"GitHub token for clone + PR inspection" display:"length"`
+	// Used as the raw fallback credential when GitHub App creds are absent
+	// (local cmd/run-task path where the operator exports `gh auth token`).
+	GhToken string `required:"false" arg:"gh-token" env:"GH_TOKEN" usage:"GitHub token for clone + PR inspection (raw fallback when App creds unset)" display:"length"`
+
+	// GitHub App authentication. When APP_ID, INSTALLATION_ID, and a PEM (file
+	// or inline) are all set, the pod mints a short-lived installation access
+	// token at startup and forwards it to every git/gh subprocess as GH_TOKEN.
+	// The cluster pod sets these (GH_TOKEN is empty there); locally they are
+	// absent and the agent falls back to the raw GhToken above.
+	AppID          int64  `required:"false" arg:"app-id"          env:"APP_ID"          usage:"GitHub App ID (numeric); enables App auth when set with INSTALLATION_ID + PEM"`
+	InstallationID int64  `required:"false" arg:"installation-id" env:"INSTALLATION_ID" usage:"GitHub App Installation ID (numeric)"`
+	PEMKeyFile     string `required:"false" arg:"pem-key-file"    env:"PEM_KEY_FILE"    usage:"Path to the GitHub App private key (PEM file mounted from k8s Secret)"`
+	PEMKey         string `required:"false" arg:"pem-key"         env:"PEM_KEY"         usage:"GitHub App private key (PEM) as env var content; mutually exclusive with PEM_KEY_FILE" display:"length"`
 
 	// Workdir paths for bare-clone cache and per-task worktrees.
 	ReposPath string `required:"false" arg:"repos-path" env:"REPOS_PATH" usage:"Root path for bare-clone cache"   default:"/repos"`
@@ -121,6 +135,15 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 
 	glog.V(2).Infof("github-dark-factory-agent started phase=%s", a.Phase)
 
+	// Resolve the GitHub credential (App IAT or raw GH_TOKEN fallback) and make
+	// it usable by every git/gh subprocess. See prepareAuth.
+	resolvedToken, err := a.prepareAuth(ctx)
+	if err != nil {
+		jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+		jobMetrics.RecordDuration(time.Since(start))
+		return err
+	}
+
 	deliverer := delivery.NewNoopResultDeliverer()
 	if a.TaskID != "" {
 		if len(a.KafkaBrokers) == 0 {
@@ -145,16 +168,16 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 		)
 	}
 
-	claudeEnv := a.buildClaudeEnv()
+	claudeEnv := a.buildClaudeEnv(resolvedToken)
 
-	repoManager := factory.CreateRepoManager(a.ReposPath, a.WorkPath, a.GhToken)
-	githubClient := factory.CreateGitHubClient(a.GhToken)
+	repoManager := factory.CreateRepoManager(a.ReposPath, a.WorkPath, resolvedToken)
+	githubClient := factory.CreateGitHubClient(resolvedToken)
 	claudeProber := factory.CreateClaudeProber(a.ClaudeConfigDir)
 	provider := factory.CreateAgentProvider(
 		a.ClaudeConfigDir,
 		a.AgentDir,
 		a.AnthropicModel,
-		a.GhToken,
+		resolvedToken,
 		claudeEnv,
 		repoManager,
 		githubClient,
@@ -179,8 +202,12 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 }
 
 // buildClaudeEnv assembles the Claude CLI subprocess env from the raw env
-// pairs plus the Anthropic provider-routing overrides.
-func (a *application) buildClaudeEnv() map[string]string {
+// pairs plus the Anthropic provider-routing overrides. resolvedToken, when
+// non-empty, is threaded in as GH_TOKEN — the ai_review phase's Claude
+// subprocess shells `gh pr view/diff`, and the runner strips pod env to an
+// allowlist, so the token must be passed explicitly (os.Setenv in prepareAuth
+// covers the dark-factory daemon path, not the Claude runner).
+func (a *application) buildClaudeEnv(resolvedToken string) map[string]string {
 	claudeEnv := envparse.KeyValuePairs(a.ClaudeEnvRaw)
 	if claudeEnv == nil {
 		claudeEnv = map[string]string{}
@@ -194,5 +221,69 @@ func (a *application) buildClaudeEnv() map[string]string {
 	if a.AnthropicModel != "" {
 		claudeEnv["ANTHROPIC_MODEL"] = a.AnthropicModel.String()
 	}
+	if resolvedToken != "" {
+		claudeEnv["GH_TOKEN"] = resolvedToken
+	}
 	return claudeEnv
+}
+
+// prepareAuth resolves the GitHub credential and makes it usable by every
+// git/gh subprocess: it exports GH_TOKEN (covering the dark-factory daemon,
+// which inherits os.Environ() for its `git push`) and installs git's credential
+// helper via `gh auth setup-git`. Returns the resolved token for the
+// RepoManager / GitHub client / gh-token preflight wiring.
+func (a *application) prepareAuth(ctx context.Context) (string, error) {
+	resolvedToken, err := a.resolveAuth(ctx)
+	if err != nil {
+		return "", err
+	}
+	if err := os.Setenv("GH_TOKEN", resolvedToken); err != nil {
+		return "", errors.Wrap(ctx, err, "export GH_TOKEN")
+	}
+	if err := githubauth.NewGhAuthSetupGit(resolvedToken).Setup(ctx); err != nil {
+		return "", errors.Wrap(ctx, err, "gh auth setup-git")
+	}
+	return resolvedToken, nil
+}
+
+// resolveAuth resolves the GitHub credential forwarded to every git/gh
+// subprocess. It prefers GitHub App authentication: when APP_ID,
+// INSTALLATION_ID, and a PEM (file or inline) are all set, it mints a
+// short-lived installation access token via githubapp.MintIAT. Otherwise it
+// falls back to the raw GH_TOKEN input — the local cmd/run-task path where the
+// operator exports `gh auth token`. When neither is configured it returns a
+// clear error, since the agent cannot clone or push without a credential.
+//
+// The token is a runtime value (not a config input), so it is returned to the
+// caller rather than stored on the argument-parsed application struct —
+// argument/v2 panics when reflecting over unexported struct fields at startup.
+func (a *application) resolveAuth(ctx context.Context) (string, error) {
+	hasPEMFile := a.PEMKeyFile != ""
+	hasPEMContent := a.PEMKey != ""
+	useGitHubApp := a.AppID != 0 && a.InstallationID != 0 && (hasPEMFile || hasPEMContent)
+	if useGitHubApp {
+		appCfg := githubapp.Config{AppID: a.AppID, InstallationID: a.InstallationID}
+		if hasPEMFile {
+			appCfg.PEMPath = a.PEMKeyFile
+		} else {
+			appCfg.PEM = []byte(a.PEMKey)
+		}
+		iat, err := githubapp.MintIAT(ctx, appCfg)
+		if err != nil {
+			return "", errors.Wrap(ctx, err, "mint github app iat")
+		}
+		glog.V(2).Infof(
+			"github-dark-factory-agent auth mode=github-app app_id=%d installation_id=%d",
+			a.AppID, a.InstallationID,
+		)
+		return iat, nil
+	}
+	if a.GhToken != "" {
+		glog.V(2).Infof("github-dark-factory-agent auth mode=gh-token (raw GH_TOKEN fallback)")
+		return a.GhToken, nil
+	}
+	return "", errors.Errorf(
+		ctx,
+		"github-dark-factory-agent auth: no credentials configured — set GitHub App creds (APP_ID, INSTALLATION_ID, PEM_KEY_FILE or PEM_KEY) or GH_TOKEN",
+	)
 }
