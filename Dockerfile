@@ -34,6 +34,22 @@ ARG DARK_FACTORY_VERSION=v0.192.0
 USER node
 RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 
+# dark-factory Claude PLUGIN — the /dark-factory:* slash commands
+# (generate-prompts-for-spec, audit-prompt) that the backend:local lifecycle
+# invokes INSIDE claude. The CLI binary above is NOT sufficient on its own:
+# spec generation and prompt audit are run as these slash commands, and an
+# un-provisioned config dir reports "Unknown command:
+# /dark-factory:generate-prompts-for-spec" → zero prompts generated → the spec
+# resets to approved and the lifecycle idles at "nothing to do" (E2E root cause,
+# 2026-07-13). Install into the image's CLAUDE_CONFIG_DIR so the commands
+# resolve at runtime without depending on a mounted PVC. Mirrors
+# github-pr-review-agent's build-time `coding` plugin install. Unpinned
+# (marketplace HEAD tracks the CLI's minor); auth stays runtime (env token).
+RUN set -eux \
+ && timeout 300 claude plugin marketplace add bborbe/dark-factory \
+ && timeout 300 claude plugin install dark-factory@dark-factory \
+ && claude plugin list | grep -q dark-factory
+
 COPY --from=build /main /main
 COPY agent/ /agent/
 ENV BUILD_GIT_VERSION=${BUILD_GIT_VERSION}
