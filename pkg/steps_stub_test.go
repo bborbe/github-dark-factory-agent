@@ -7,7 +7,6 @@ package pkg_test
 import (
 	"context"
 
-	agentlib "github.com/bborbe/agent"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -19,20 +18,16 @@ var _ = Describe("stub steps", func() {
 
 	BeforeEach(func() { ctx = context.Background() })
 
-	It("ai_review step fails with the Increment 3 marker", func() {
-		step := pkg.NewAIReviewStep()
+	It("ai_review ShouldRun returns true (routing must never be skipped)", func() {
+		step := pkg.NewAIReviewStep(nil, nil, nil)
 		shouldRun, err := step.ShouldRun(ctx, nil)
 		Expect(err).To(BeNil())
 		Expect(shouldRun).To(BeTrue())
-		result, err := step.Run(ctx, nil)
-		Expect(err).To(BeNil())
-		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
-		Expect(result.Message).To(ContainSubstring("Increment 3"))
 	})
 
 	It("step names are stable lower-kebab identifiers", func() {
 		Expect(pkg.NewExecutionStep(nil, nil).Name()).To(Equal("df-execution"))
-		Expect(pkg.NewAIReviewStep().Name()).To(Equal("df-ai-review"))
+		Expect(pkg.NewAIReviewStep(nil, nil, nil).Name()).To(Equal("df-ai-review"))
 		Expect(pkg.NewPlanningStep(nil, nil).Name()).To(Equal("df-planning"))
 		Expect(pkg.NewClaudeAuthStep(nil).Name()).To(Equal("verify-claude-auth"))
 		Expect(pkg.NewGHTokenCheckStep("").Name()).To(Equal("verify-gh-token"))
