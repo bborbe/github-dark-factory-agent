@@ -52,8 +52,17 @@ RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 # (which resolves to marketplace HEAD and drifts from the pinned CLI minor). The
 # clone is kept at a stable path — the marketplace source must persist for the
 # installed plugin to keep resolving.
+#
+# Defensive against a pre-provisioned base image: the claude-yolo base may already
+# carry a `dark-factory` marketplace registration (observed in a yolo config
+# snapshot, pointing at a stale container path). Adding a same-named marketplace
+# would then collide, so we rm the clone dir and drop any existing `dark-factory`
+# marketplace before re-adding ours — making this RUN safe to re-run and immune to
+# base-image state.
 RUN set -eux \
+ && rm -rf /home/node/dark-factory-marketplace \
  && git clone --depth 1 --branch "${DARK_FACTORY_VERSION}" https://github.com/bborbe/dark-factory /home/node/dark-factory-marketplace \
+ && (claude plugin marketplace remove dark-factory 2>/dev/null || true) \
  && claude plugin marketplace add /home/node/dark-factory-marketplace \
  && claude plugin install dark-factory@dark-factory \
  && claude plugin list | grep -q dark-factory
