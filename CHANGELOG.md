@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.0
 
 - feat: add GitHub App authentication. When `APP_ID`, `INSTALLATION_ID`, and a PEM (`PEM_KEY_FILE` or `PEM_KEY`) are all set, the agent mints a short-lived installation access token at startup (`githubapp.MintIAT`) and forwards it to every git/gh subprocess — `os.Setenv("GH_TOKEN", …)` covers the dark-factory daemon's `git push` (inherits `os.Environ()`), `gh auth setup-git` installs the git credential helper, and the token is threaded into the RepoManager, GitHub REST client, and gh-token preflight. Falls back to the raw `GH_TOKEN` input when App creds are absent so local `cmd/run-task` (with `GH_TOKEN=$(gh auth token)`) keeps working; errors clearly when neither is configured. Fixes cluster clone/push failures where the pod set no `GH_TOKEN`. Copies `pkg/githubauth` (the `gh auth setup-git` configurator) from github-pr-review-agent.
 
