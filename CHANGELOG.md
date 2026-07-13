@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: hoist `ARG CLAUDE_YOLO_IMAGE` to global scope (before the first `FROM`) in the Dockerfile. It was declared inside the build stage, so the runtime `FROM ${CLAUDE_YOLO_IMAGE}` could not interpolate it and BuildKit aborted with "base name should not be blank" — `make buca` failed before any push. CI runs `make precommit` (go build/test/lint), never `docker build`, so this latent bug surfaced only on the first real image build.
+- fix: build the dark-factory CLI from the pinned clone (`go install .` in the module root) instead of `go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}`. dark-factory's `go.mod` carries `exclude` directives, which `go install pkg@version` refuses; building from the module root honors them (same as upstream `make install`). Reuses the clone the runtime image already makes for the plugin marketplace, so there is now a single pinned clone for both CLI and plugin. Both fixes verified with a local `make build`.
+
 ## v0.3.0
 
 - feat: add GitHub App authentication. When `APP_ID`, `INSTALLATION_ID`, and a PEM (`PEM_KEY_FILE` or `PEM_KEY`) are all set, the agent mints a short-lived installation access token at startup (`githubapp.MintIAT`) and forwards it to every git/gh subprocess — `os.Setenv("GH_TOKEN", …)` covers the dark-factory daemon's `git push` (inherits `os.Environ()`), `gh auth setup-git` installs the git credential helper, and the token is threaded into the RepoManager, GitHub REST client, and gh-token preflight. Falls back to the raw `GH_TOKEN` input when App creds are absent so local `cmd/run-task` (with `GH_TOKEN=$(gh auth token)`) keeps working; errors clearly when neither is configured. Fixes cluster clone/push failures where the pod set no `GH_TOKEN`. Copies `pkg/githubauth` (the `gh auth setup-git` configurator) from github-pr-review-agent.
