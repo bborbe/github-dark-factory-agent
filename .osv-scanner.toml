@@ -1,3 +1,7 @@
 [[IgnoredVulns]]
 id = "GO-2026-5856"
 reason = "stdlib advisory against the pinned Go 1.26.4 toolchain (fixed in 1.26.5). Pre-existing, unrelated to agent code; toolchain bump tracked separately."
+
+[[IgnoredVulns]]
+id = "GO-2026-4970"
+reason = "stdlib advisory against the pinned Go 1.26.4 toolchain (fixed in 1.26.5). Pre-existing, unrelated to agent code; toolchain bump tracked separately."
