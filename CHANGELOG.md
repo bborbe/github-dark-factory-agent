@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.2.1
 
 - fix: add `--set hideGit=true` to the execution step's dark-factory flags — the RepoManager runs the lifecycle in a git worktree (`.git` is a file), which trips dark-factory's spec-084 worktree safety gate; without this the daemon refuses to start. Validated in the local E2E: the daemon now starts and runs inside the worktree.
 - fix: install the dark-factory Claude PLUGIN in the runtime image (Dockerfile), not just the CLI binary. The backend:local lifecycle runs `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude; with only the CLI installed, claude reports `Unknown command` → zero prompts generated → the spec silently resets to `approved` and the daemon idles (the E2E root cause, 2026-07-13). Mirrors github-pr-review-agent's build-time `coding` plugin install. **Pinned** to the same `${DARK_FACTORY_VERSION}` tag as the CLI (clone that tag + add as a local marketplace, not marketplace HEAD) so the plugin minor cannot drift from the CLI minor. Confirmed locally: with the plugin installed, generation produces a valid prompt.
