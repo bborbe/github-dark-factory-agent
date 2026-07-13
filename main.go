@@ -237,8 +237,12 @@ func (a *application) prepareAuth(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if err := os.Setenv("GH_TOKEN", resolvedToken); err != nil {
-		return "", errors.Wrap(ctx, err, "export GH_TOKEN")
+	// resolvedToken is always non-empty here (resolveAuth errors otherwise), but
+	// guard defensively — an empty GH_TOKEN would mislead the daemon subprocess.
+	if resolvedToken != "" {
+		if err := os.Setenv("GH_TOKEN", resolvedToken); err != nil {
+			return "", errors.Wrap(ctx, err, "export GH_TOKEN")
+		}
 	}
 	if err := githubauth.NewGhAuthSetupGit(resolvedToken).Setup(ctx); err != nil {
 		return "", errors.Wrap(ctx, err, "gh auth setup-git")
@@ -268,7 +272,12 @@ func (a *application) resolveAuth(ctx context.Context) (string, error) {
 		} else {
 			appCfg.PEM = []byte(a.PEMKey)
 		}
-		iat, err := githubapp.MintIAT(ctx, appCfg)
+		// Startup auth must not be killed by the task's work deadline: mint on a
+		// fresh bounded context (keeps ctx values, drops the caller's
+		// deadline/cancel) so a near-deadline task can't fail the token mint.
+		mintCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 30*time.Second)
+		defer cancel()
+		iat, err := githubapp.MintIAT(mintCtx, appCfg)
 		if err != nil {
 			return "", errors.Wrap(ctx, err, "mint github app iat")
 		}

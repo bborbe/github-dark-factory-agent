@@ -97,11 +97,17 @@ func defaultExecFunc(
 	// #nosec G204 -- binary is hardcoded "gh" and args are hardcoded ["auth", "setup-git"]; no user input
 	cmd := exec.CommandContext(ctx, name, args...)
 	if ghToken != "" {
-		cmd.Env = []string{
-			"HOME=" + os.Getenv("HOME"),
-			"PATH=" + os.Getenv("PATH"),
-			"GH_TOKEN=" + ghToken,
+		// Minimal allowlisted env for the gh subprocess. Include HOME/PATH only
+		// when set, so an unset var never becomes an explicit empty "HOME="
+		// (which makes gh fail cryptically); an absent var lets gh use its default.
+		env := []string{"GH_TOKEN=" + ghToken}
+		if home := os.Getenv("HOME"); home != "" {
+			env = append(env, "HOME="+home)
 		}
+		if path := os.Getenv("PATH"); path != "" {
+			env = append(env, "PATH="+path)
+		}
+		cmd.Env = env
 	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
