@@ -55,6 +55,10 @@ const resultSectionHeading = "## Result"
 // (--auto-approve-prompt-ids does not exist); the audit gate IS the allowlist.
 var executionFlags = []string{
 	"--set", "backend=local",
+	// hideGit=true is REQUIRED: RepoManager checks out a git WORKTREE (`.git` is a
+	// file pointer), and dark-factory refuses to run from a worktree CWD unless
+	// hideGit=true (spec 084 worktree gate). Verified via local E2E 2026-07-13.
+	"--set", "hideGit=true",
 	"--set", "autoGeneratePrompts=true",
 	"--auto-approve-prompts",
 	"--skip-preflight",

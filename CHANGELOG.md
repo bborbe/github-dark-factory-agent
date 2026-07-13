@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: add `--set hideGit=true` to the execution step's dark-factory flags — the RepoManager runs the lifecycle in a git worktree (`.git` is a file), which trips dark-factory's spec-084 worktree safety gate; without this the daemon refuses to start. Validated in the local E2E: the daemon now starts and runs inside the worktree.
+- fix: install the dark-factory Claude PLUGIN in the runtime image (Dockerfile), not just the CLI binary. The backend:local lifecycle runs `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude; with only the CLI installed, claude reports `Unknown command` → zero prompts generated → the spec silently resets to `approved` and the daemon idles (the E2E root cause, 2026-07-13). Mirrors github-pr-review-agent's build-time `coding` plugin install. **Pinned** to the same `${DARK_FACTORY_VERSION}` tag as the CLI (clone that tag + add as a local marketplace, not marketplace HEAD) so the plugin minor cannot drift from the CLI minor. Confirmed locally: with the plugin installed, generation produces a valid prompt.
+- docs: record two backend:local provisioning requirements in design.md Part 5 — (1) the dark-factory plugin must be installed in the runtime `CLAUDE_CONFIG_DIR`; (2) backend:local ignores dark-factory `config.env`, so the model-router `ANTHROPIC_BASE_URL` + auth token must be pod env vars (a spec-104 follow-up gap).
+
 ## v0.2.0
 
 - feat: implement Increment 1 of the three-phase implementer — wire planning/execution/ai_review as distinct phases (domain.TaskPhase constants), route the `dark-factory-implement` task type; add RepoManager (bare-clone cache + per-task worktree), claude-auth + gh-token preflight steps, and the pure-Go planning step (clone + precondition scan: ref==PR head, PR draft, `.dark-factory.yaml` present, approved-not-completed spec in the PR diff → writes `## Plan`, routes execution; escalates without mutating assignee/status); wire `cmd/run-task` as a local per-phase harness. Execution/ai_review are stubs (Increments 2/3).

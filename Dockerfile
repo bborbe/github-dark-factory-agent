@@ -34,6 +34,39 @@ ARG DARK_FACTORY_VERSION=v0.192.0
 USER node
 RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 
+# dark-factory Claude PLUGIN — the /dark-factory:* slash commands
+# (generate-prompts-for-spec, audit-prompt) that the backend:local lifecycle
+# invokes INSIDE claude. The CLI binary above is NOT sufficient on its own:
+# spec generation and prompt audit are run as these slash commands, and an
+# un-provisioned config dir reports "Unknown command:
+# /dark-factory:generate-prompts-for-spec" → zero prompts generated → the spec
+# resets to approved and the lifecycle idles at "nothing to do" (E2E root cause,
+# 2026-07-13). Install into the image's CLAUDE_CONFIG_DIR so the commands
+# resolve at runtime without depending on a mounted PVC. Mirrors
+# github-pr-review-agent's build-time `coding` plugin install; auth stays
+# runtime (env token).
+#
+# PINNED to the SAME ${DARK_FACTORY_VERSION} tag as the CLI above: the plugin
+# and CLI ship from one repo (bborbe/dark-factory), so we clone that exact tag
+# and add it as a LOCAL marketplace instead of `marketplace add bborbe/dark-factory`
+# (which resolves to marketplace HEAD and drifts from the pinned CLI minor). The
+# clone is kept at a stable path — the marketplace source must persist for the
+# installed plugin to keep resolving.
+#
+# Defensive against a pre-provisioned base image: the claude-yolo base may already
+# carry a `dark-factory` marketplace registration (observed in a yolo config
+# snapshot, pointing at a stale container path). Adding a same-named marketplace
+# would then collide, so we rm the clone dir and drop any existing `dark-factory`
+# marketplace before re-adding ours — making this RUN safe to re-run and immune to
+# base-image state.
+RUN set -eux \
+ && rm -rf /home/node/dark-factory-marketplace \
+ && git clone --depth 1 --branch "${DARK_FACTORY_VERSION}" https://github.com/bborbe/dark-factory /home/node/dark-factory-marketplace \
+ && (claude plugin marketplace remove dark-factory 2>/dev/null || true) \
+ && claude plugin marketplace add /home/node/dark-factory-marketplace \
+ && claude plugin install dark-factory@dark-factory \
+ && claude plugin list | grep -q dark-factory
+
 COPY --from=build /main /main
 COPY agent/ /agent/
 ENV BUILD_GIT_VERSION=${BUILD_GIT_VERSION}
