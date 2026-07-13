@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.1.3
 
 - docs: mark the local-executor dependency RESOLVED in design.md and record the backend:local live-smoke findings — happy path (claude in-process, real commit, zero containers) + the HOME-sensitive claude-auth requirement the Job pod must satisfy
 
