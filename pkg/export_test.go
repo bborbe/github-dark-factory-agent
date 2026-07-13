@@ -5,10 +5,29 @@
 package pkg
 
 import (
+	"context"
 	"time"
 
 	agentlib "github.com/bborbe/agent"
 )
+
+// NewTestExecutionRunner exposes the production runner with an injectable
+// binary + fast poll/timeout so tests can point it at a stub `dark-factory`
+// script and drive the real daemon/spec-complete/push flow without claude.
+func NewTestExecutionRunner(binary string, poll, timeout time.Duration) ExecutionRunner {
+	return &darkFactoryRunner{binary: binary, pollInterval: poll, timeout: timeout}
+}
+
+// ReadSpecStatus exposes the spec-status frontmatter reader for tests.
+func ReadSpecStatus(ctx context.Context, workdir, id string) string {
+	return readSpecStatus(ctx, workdir, id)
+}
+
+// HasInProgressPrompts exposes the queue-empty check for tests.
+func HasInProgressPrompts(workdir string) bool { return hasInProgressPrompts(workdir) }
+
+// CountCompletedPrompts exposes the completed-prompt counter for tests.
+func CountCompletedPrompts(workdir string) int { return countCompletedPrompts(workdir) }
 
 // NewExecClaudeProber exposes the exec-backed prober with an injectable
 // command so tests can drive the success / unauth / error branches without a

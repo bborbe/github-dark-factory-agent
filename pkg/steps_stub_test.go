@@ -19,17 +19,6 @@ var _ = Describe("stub steps", func() {
 
 	BeforeEach(func() { ctx = context.Background() })
 
-	It("execution step fails with the Increment 2 marker", func() {
-		step := pkg.NewExecutionStep()
-		shouldRun, err := step.ShouldRun(ctx, nil)
-		Expect(err).To(BeNil())
-		Expect(shouldRun).To(BeTrue())
-		result, err := step.Run(ctx, nil)
-		Expect(err).To(BeNil())
-		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
-		Expect(result.Message).To(ContainSubstring("Increment 2"))
-	})
-
 	It("ai_review step fails with the Increment 3 marker", func() {
 		step := pkg.NewAIReviewStep()
 		shouldRun, err := step.ShouldRun(ctx, nil)
@@ -42,7 +31,7 @@ var _ = Describe("stub steps", func() {
 	})
 
 	It("step names are stable lower-kebab identifiers", func() {
-		Expect(pkg.NewExecutionStep().Name()).To(Equal("df-execution"))
+		Expect(pkg.NewExecutionStep(nil, nil).Name()).To(Equal("df-execution"))
 		Expect(pkg.NewAIReviewStep().Name()).To(Equal("df-ai-review"))
 		Expect(pkg.NewPlanningStep(nil, nil).Name()).To(Equal("df-planning"))
 		Expect(pkg.NewClaudeAuthStep(nil).Name()).To(Equal("verify-claude-auth"))

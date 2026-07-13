@@ -118,11 +118,10 @@ func CreateFileResultDeliverer(filePath string) agentlib.ResultDeliverer {
 // CreateAgent assembles the three distinct phases:
 //
 //   - planning:  claude-auth + gh-token preflight + pure-Go spec scan → ## Plan
-//   - execution: claude-auth preflight + dark-factory lifecycle (stub in Inc 1)
-//   - ai_review: read-only Claude verifier (stub in Inc 1)
+//   - execution: claude-auth preflight + dark-factory backend:local lifecycle → ## Result
+//   - ai_review: read-only Claude verifier (stub until Increment 3)
 //
-// The planning step is the only implemented domain logic in Increment 1;
-// execution and ai_review are wired stubs.
+// Planning and execution are implemented domain logic; ai_review is a wired stub.
 func CreateAgent(
 	claudeConfigDir claudelib.ClaudeConfigDir,
 	agentDir claudelib.AgentDir,
@@ -142,7 +141,7 @@ func CreateAgent(
 	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
 	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
 	planning := dfpkg.NewPlanningStep(repoManager, githubClient)
-	execution := dfpkg.NewExecutionStep()
+	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner())
 	review := dfpkg.NewAIReviewStep()
 
 	return agentlib.NewAgent(
