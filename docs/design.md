@@ -31,17 +31,22 @@ Design artifact for the Phase-2 gate of [[Lift Dark-Factory Daemon into Agent Fr
 
 **Never runs `gh pr ready`.** The human's flip is the verification sign-off.
 
-## Part 4.2 — ★ Execution engine dependency (blocks the build)
+## Part 4.2 — ✅ Execution engine dependency (RESOLVED — shipped + live-validated)
 
-The Phase-1 E2E proved the pipeline works but surfaced a hard architectural requirement: **dark-factory today spawns nested claude-yolo containers** for the two LLM steps (spec→prompts, prompt→code); git orchestration (branch/merge/commit/push) runs in the Go binary. Since this agent's Job pod is *already* a claude-yolo container, spawning nested containers is DinD — disallowed (goal Non-goal).
+The Phase-1 E2E surfaced a hard requirement: **dark-factory spawned nested claude-yolo containers** for the LLM steps. Since this agent's Job pod is *already* a claude-yolo container, that is DinD — disallowed (goal Non-goal).
 
-**Required dark-factory feature (prerequisite, not yet built):** a **local/in-process Executor** — a second implementation of `dark-factory/pkg/executor.Executor` (today only `dockerExecutor`) that runs `claude` directly in the current process/cwd instead of `docker run`, selected via `--set executor=local` (or config). Git orchestration stays in the binary unchanged. See the "Make Dark-Factory Executor Interface Backend-Neutral" work — the seam exists.
+**Prerequisite SHIPPED (2026-07-13): dark-factory `backend: local`** — a second `pkg/executor.Executor` (`localSubprocessExecutor`) that runs `claude` directly in the current process/cwd instead of `docker run`. Selected via config or `dark-factory run --set backend=local`. Git orchestration stays in the binary unchanged. Landed as spec 104, released **v0.192.0** (docs v0.192.1, scenario 024 v0.192.2). The agent's Dockerfile pins `DARK_FACTORY_VERSION=v0.192.0`.
 
-Until that ships, this agent CANNOT be built cleanly. The Phase-1 E2E ran dark-factory with `--set hideGit=true` and let it spawn containers on the laptop — acceptable for the prototype, not for the cluster Job.
+**Live-validated 2026-07-13** with a real `dark-factory run --set`-style config (`backend: local`, `workflow: direct`, bare-remote sandbox):
+- **Happy path:** a real approved prompt → claude ran **in-process (~11s), zero docker containers** → produced the change → `git commit` → prompt `completed`. This is the exact loop the execution step drives.
+- **Fail path:** claude absent → fails closed (`claude not found on PATH`), no docker (scenario 024, `active`).
+
+So the agent invokes `dark-factory run` (or per-prompt equivalents) with `--set backend=local` and lets dark-factory's Go binary do git; no nested containers, no DinD.
 
 ## Part 5 — Data contract & invariants
 
 - Config via `--set` at runtime, NEVER committed to the PR branch (committed `.dark-factory.yaml` divergence conflicts `workflow:direct`'s `git merge origin/master`). Keep the branch current with `origin/<default>`.
+- **★ claude auth is HOME-sensitive (live-smoke finding 2026-07-13).** `backend: local` runs `claude` as a subprocess inheriting the pod's env. If `claude`'s login credential is not discoverable from the process's `HOME`, every prompt fails fast with `Not logged in · Please run /login` (observed: overriding `HOME` broke auth even with `CLAUDE_CONFIG_DIR` set). **Requirement:** the Job pod MUST provision claude's login where the agent process's `HOME` resolves it — bake/mount the credential into the runtime `HOME` (claude-yolo image convention), do NOT rely on `CLAUDE_CONFIG_DIR` alone. Add a startup precondition check: run a trivial `claude --print` (or reuse dark-factory's claude probe) and fail the task early with a clear escalation if unauthed, rather than failing every prompt.
 - Agent MUST drive `dark-factory spec complete` (else spec stays `verifying` = approved-not-completed → watcher re-emits).
 - Idempotency: `AgentStep.ShouldRun` checks if the phase's `##` section exists; per-prompt commits make execution crash-resumable.
 - Concurrency: per-repo cap 1 (Config CRD) — two PRs on one repo must not race git push.
@@ -61,9 +66,9 @@ Until that ships, this agent CANNOT be built cleanly. The Phase-1 E2E ran dark-f
 
 ## Part 8 — Acceptance (per goal SCs)
 
-Deployed in dev, consumes a real watcher task, walks planning→execution→ai_review in one pod, lands at `human_review` without flipping the PR; output parity with the Phase-1 prototype; idempotent under replay; per-repo concurrency 1. Gated on the local-Executor dark-factory feature.
+Deployed in dev, consumes a real watcher task, walks planning→execution→ai_review in one pod, lands at `human_review` without flipping the PR; output parity with the Phase-1 prototype; idempotent under replay; per-repo concurrency 1. ✅ Prerequisite (dark-factory `backend: local`) shipped v0.192.0 and live-validated — the build is unblocked.
 
 ## Open decisions
 
-1. Execution engine: build the dark-factory **local Executor** feature first (prerequisite) vs. interim wrapper. Recommend: build the feature — it's the clean foundation and the seam exists.
-2. Scenario-required-or-not for verify (Part 7.2).
+1. ~~Execution engine: build the dark-factory local Executor first~~ — **RESOLVED**: built + shipped as `backend: local` (v0.192.0), live-validated happy + fail paths. The agent drives `dark-factory run --set backend=local`.
+2. Scenario-required-or-not for verify (Part 7.2). Leaning: do NOT hard-require a scenario at emit time (spec 104 itself shipped without one, verified by unit tests + the live-smoke); instead the agent runs `spec complete` after prompts pass DoD, and `verify-spec` when a scenario exists. Revisit once the watcher emits real tasks.

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- docs: mark the local-executor dependency RESOLVED in design.md and record the backend:local live-smoke findings — happy path (claude in-process, real commit, zero containers) + the HOME-sensitive claude-auth requirement the Job pod must satisfy
+
 ## v0.1.2
 
 - chore: bump dark-factory CLI to v0.192.0 (ships spec 104 `backend: local` in-process executor) so the agent runs dark-factory without spawning nested containers (no DinD); select at runtime with `--set backend=local`
