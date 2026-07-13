@@ -2,26 +2,20 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package prompts provides embedded prompt fragments for the Claude agent.
+// Package prompts provides embedded prompt fragments for the agent.
+//
+// Increment 1: planning and execution are prompt-free (pure-Go planning; the
+// dark-factory lifecycle drives execution). The only Claude phase is ai_review
+// (Increment 3), whose prompt is added then. BuildInstructions currently
+// returns an empty set so the package compiles and callers stay stable.
 package prompts
 
 import (
-	_ "embed"
-
 	claudelib "github.com/bborbe/agent/claude"
 )
 
-//go:embed workflow.md
-var workflow string
-
-//go:embed output-format.md
-var outputFormat string
-
-// BuildInstructions assembles the full agent prompt from embedded modules.
-// Each section is wrapped in XML tags for clear separation.
+// BuildInstructions returns the agent prompt fragments. Empty until the
+// ai_review prompt lands in Increment 3.
 func BuildInstructions() claudelib.Instructions {
-	return claudelib.Instructions{
-		{Name: "workflow", Content: workflow},
-		{Name: "output-format", Content: outputFormat},
-	}
+	return claudelib.Instructions{}
 }

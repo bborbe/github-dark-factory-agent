@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.1.3
 
 - docs: mark the local-executor dependency RESOLVED in design.md and record the backend:local live-smoke findings — happy path (claude in-process, real commit, zero containers) + the HOME-sensitive claude-auth requirement the Job pod must satisfy
+- feat: implement Increment 1 of the three-phase implementer — wire planning/execution/ai_review as distinct phases (domain.TaskPhase constants), route the `dark-factory-implement` task type; add RepoManager (bare-clone cache + per-task worktree), claude-auth + gh-token preflight steps, and the pure-Go planning step (clone + precondition scan: ref==PR head, PR draft, `.dark-factory.yaml` present, approved-not-completed spec in the PR diff → writes `## Plan`, routes execution; escalates without mutating assignee/status); wire `cmd/run-task` as a local per-phase harness. Execution/ai_review are stubs (Increments 2/3).
 
 ## v0.1.2
 

@@ -1,10 +1,20 @@
-# Agent Claude
+# github-dark-factory-agent
 
-**Reference implementation / copy-paste template** for Claude-based agents. Not a production agent itself — use this as the starting point when building a new domain-specific agent.
+The cluster **dark-factory implementer**. A human drafts + approves a spec on a
+draft-PR branch and walks away; this agent clones the branch and walks the
+dark-factory lifecycle (planning → execution → ai_review), landing the task at
+`phase: human_review` **without flipping the PR**. The human verifies + flips
+draft→ready → the existing `github-pr-review-agent` merges.
 
-Generic, domain-agnostic Claude Code runner. Receives a task from the agent pipeline, spawns `claude --print` with configurable tools and instructions, and returns a structured JSON result.
+Three distinct phases (see `docs/design.md`):
 
-New agents are created by swapping instructions (agent `.claude/CLAUDE.md`) and `ALLOWED_TOOLS` — no Go code changes needed.
+- **planning** — pure-Go: clone the draft-PR branch, validate preconditions
+  (ref == PR head, `.dark-factory.yaml` present, an approved-not-completed spec
+  in the PR diff, PR is a draft), write `## Plan`.
+- **execution** — drive the dark-factory lifecycle with `backend: local`
+  (Increment 2).
+- **ai_review** — read-only Claude verifier → `## Review`, route to
+  `human_review` (Increment 3).
 
 ## How It Works
 

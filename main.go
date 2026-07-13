@@ -40,7 +40,7 @@ import (
 )
 
 // agentName is the identity string used for Prometheus metric grouping and logging.
-const agentName = "claude-agent"
+const agentName = "github-dark-factory-agent"
 
 func main() {
 	app := &application{}
@@ -87,6 +87,13 @@ type application struct {
 
 	// Phase to run (framework requires explicit phase)
 	Phase domain.TaskPhase `required:"false" arg:"phase" env:"PHASE" usage:"Agent phase: planning | execution | ai_review" default:"execution"`
+
+	// GitHub token for authenticated clones + REST API calls (planning phase).
+	GhToken string `required:"false" arg:"gh-token" env:"GH_TOKEN" usage:"GitHub token for clone + PR inspection" display:"length"`
+
+	// Workdir paths for bare-clone cache and per-task worktrees.
+	ReposPath string `required:"false" arg:"repos-path" env:"REPOS_PATH" usage:"Root path for bare-clone cache"   default:"/repos"`
+	WorkPath  string `required:"false" arg:"work-path"  env:"WORK_PATH"  usage:"Root path for per-task worktrees" default:"/work"`
 
 	// Kafka delivery (optional — only active when TASK_ID is set)
 	KafkaBrokers libkafka.Brokers        `required:"false" arg:"kafka-brokers" env:"KAFKA_BROKERS" usage:"Comma separated list of Kafka brokers"`
@@ -138,27 +145,20 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 		)
 	}
 
-	claudeEnv := envparse.KeyValuePairs(a.ClaudeEnvRaw)
-	if claudeEnv == nil {
-		claudeEnv = map[string]string{}
-	}
-	if a.AnthropicBaseURL != "" {
-		claudeEnv["ANTHROPIC_BASE_URL"] = a.AnthropicBaseURL
-	}
-	if a.AnthropicAuthToken != "" {
-		claudeEnv["ANTHROPIC_AUTH_TOKEN"] = a.AnthropicAuthToken
-	}
-	if a.AnthropicModel != "" {
-		claudeEnv["ANTHROPIC_MODEL"] = a.AnthropicModel.String()
-	}
+	claudeEnv := a.buildClaudeEnv()
 
+	repoManager := factory.CreateRepoManager(a.ReposPath, a.WorkPath, a.GhToken)
+	githubClient := factory.CreateGitHubClient(a.GhToken)
+	claudeProber := factory.CreateClaudeProber(a.ClaudeConfigDir)
 	provider := factory.CreateAgentProvider(
 		a.ClaudeConfigDir,
 		a.AgentDir,
-		claudelib.ParseAllowedTools(a.AllowedToolsRaw),
 		a.AnthropicModel,
+		a.GhToken,
 		claudeEnv,
-		envparse.KeyValuePairs(a.EnvContextRaw),
+		repoManager,
+		githubClient,
+		claudeProber,
 	)
 	agent, err := provider.Get(ctx, agentlib.TaskType(a.TaskType))
 	if err != nil {
@@ -176,4 +176,23 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 	jobMetrics.RecordRun(result.Status)
 	jobMetrics.RecordDuration(time.Since(start))
 	return agentlib.PrintResult(ctx, result)
+}
+
+// buildClaudeEnv assembles the Claude CLI subprocess env from the raw env
+// pairs plus the Anthropic provider-routing overrides.
+func (a *application) buildClaudeEnv() map[string]string {
+	claudeEnv := envparse.KeyValuePairs(a.ClaudeEnvRaw)
+	if claudeEnv == nil {
+		claudeEnv = map[string]string{}
+	}
+	if a.AnthropicBaseURL != "" {
+		claudeEnv["ANTHROPIC_BASE_URL"] = a.AnthropicBaseURL
+	}
+	if a.AnthropicAuthToken != "" {
+		claudeEnv["ANTHROPIC_AUTH_TOKEN"] = a.AnthropicAuthToken
+	}
+	if a.AnthropicModel != "" {
+		claudeEnv["ANTHROPIC_MODEL"] = a.AnthropicModel.String()
+	}
+	return claudeEnv
 }

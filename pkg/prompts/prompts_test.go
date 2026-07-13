@@ -12,20 +12,8 @@ import (
 )
 
 var _ = Describe("BuildInstructions", func() {
-	It("returns exactly 2 instructions", func() {
+	It("returns an empty instruction set (prompt-free in Increment 1)", func() {
 		instrs := prompts.BuildInstructions()
-		Expect(instrs).To(HaveLen(2))
-	})
-
-	It("first instruction is workflow", func() {
-		instrs := prompts.BuildInstructions()
-		Expect(instrs[0].Name).To(Equal("workflow"))
-		Expect(instrs[0].Content).NotTo(BeEmpty())
-	})
-
-	It("second instruction is output-format", func() {
-		instrs := prompts.BuildInstructions()
-		Expect(instrs[1].Name).To(Equal("output-format"))
-		Expect(instrs[1].Content).NotTo(BeEmpty())
+		Expect(instrs).To(BeEmpty())
 	})
 })

@@ -1,17 +1,24 @@
 ---
-assignee: claude-agent
-phase: done
-status: completed
-title: Dummy Claude Task
+task_type: dark-factory-implement
+assignee: github-dark-factory-agent
+status: in_progress
+phase: planning
+title: Implement approved spec on draft PR
+repo: bborbe/REPLACE_ME
+clone_url: https://github.com/bborbe/REPLACE_ME.git
+ref: REPLACE_WITH_PR_HEAD_SHA
+branch: REPLACE_WITH_PR_BRANCH
+pr_number: 0
+task_identifier: 00000000-0000-0000-0000-000000000000
 ---
 
-Report which language model is processing this task. Return a JSON object with these exact fields:
+# Dark-Factory Implement
 
-- `model`: the model name as you know yourself (e.g. "claude-sonnet-4-6", "MiniMax-M2.7", etc.)
-- `provider`: the provider/company that built you ("Anthropic", "MiniMax", etc.)
-- `notes`: one sentence explaining how you identified yourself
+Operator-readable header. The clone of the draft PR branch is the data source;
+the planning phase clones it, validates the preconditions (ref == PR head,
+`.dark-factory.yaml` present, an approved-not-completed spec in the PR diff, PR
+is a draft), and writes `## Plan`.
 
-Return ONLY the JSON object, no prose around it.
-## Result
+Replace the frontmatter placeholders with a real draft PR before running:
 
-{"model": "MiniMax-M2.7-highspeed", "provider": "MiniMax", "notes": "Identified via system prompt stating I am powered by MiniMax-M2.7-highspeed model"}
+    TASK_FILE=./dummy-task.md PHASE=planning go run ./cmd/run-task
