@@ -8,6 +8,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"time"
 
 	agentlib "github.com/bborbe/agent"
 	. "github.com/onsi/ginkgo/v2"
@@ -207,7 +208,9 @@ body
 			).To(BeNil())
 			specDir := filepath.Join(dir, "specs", "in-progress")
 			Expect(os.MkdirAll(specDir, 0750)).To(BeNil())
-			spec := "---\napproved: true\ncompleted: 2026-07-13\n---\n\nDone.\n"
+			// Use today's date so the fixture never silently goes stale.
+			completedDate := time.Now().Format("2006-01-02")
+			spec := "---\napproved: true\ncompleted: " + completedDate + "\n---\n\nDone.\n"
 			Expect(os.WriteFile(filepath.Join(specDir, "foo.md"), []byte(spec), 0600)).To(BeNil())
 
 			fakeRepo.EnsureWorktreeReturns(dir, nil)

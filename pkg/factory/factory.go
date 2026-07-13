@@ -33,17 +33,13 @@ const serviceName = "github-dark-factory-agent"
 // the CRD trigger.task_type field must match.
 var taskTypeDarkFactoryImplement = agentlib.TaskType("dark-factory-implement")
 
-// Per-phase Claude allowed-tools sets. Planning and execution are prompt-free
-// in Increment 1 (pure-Go planning; stub execution), so their tool sets are
-// empty. The ai_review scope (Increment 3) is read-only inspection.
-var (
-	planningTools  = claudelib.AllowedTools{}
-	executionTools = claudelib.AllowedTools{}
-	reviewTools    = claudelib.AllowedTools{
-		"Read", "Grep",
-		"Bash(gh pr view:*)", "Bash(gh pr diff:*)",
-	}
-)
+// reviewTools is the ai_review phase's read-only Claude tool scope
+// (diff-vs-spec inspection). Planning and execution are prompt-free (pure-Go
+// planning; dark-factory-driven execution), so they need no Claude tool set.
+var reviewTools = claudelib.AllowedTools{
+	"Read", "Grep",
+	"Bash(gh pr view:*)", "Bash(gh pr diff:*)",
+}
 
 // CreateClaudeRunner constructs a ClaudeRunner pre-configured with tools,
 // model, working directory, and CLI environment.
@@ -132,9 +128,6 @@ func CreateAgent(
 	githubClient dfpkg.GitHubClient,
 	claudeProber dfpkg.ClaudeProber,
 ) *agentlib.Agent {
-	_ = planningTools
-	_ = executionTools
-
 	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
 	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
 	planning := dfpkg.NewPlanningStep(repoManager, githubClient)

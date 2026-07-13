@@ -35,6 +35,24 @@ const resultSectionHeading = "## Result"
 //   - --auto-approve-prompts   audit + approve each generated prompt headlessly
 //   - --skip-preflight         the pod is the sandbox; no baseline gate needed
 //   - --skip-healthcheck       claude auth is verified by the claude-auth preflight step
+//
+// Accepted risk — --auto-approve-prompts blast radius. This flag does NOT
+// blindly approve generated prompts: it triggers dark-factory's spec-078
+// audit-then-approve, so each auto-generated prompt is AUDITED headlessly and
+// only approved if the audit passes (fail-closed — a failing audit stops the
+// spec, and the execution step escalates). This is the intended bookend design:
+// the human pre-approves the SPEC on the draft PR before the agent ever runs, so
+// what gets auto-approved is bounded to prompts derived from a human-approved
+// spec. The blast radius is bounded by four independent gates:
+//
+//	(a) the human pre-approving the SPEC on the draft PR (first bookend);
+//	(b) the spec-078 fail-closed audit gate on every generated prompt;
+//	(c) this agent's ai_review diff-vs-spec sanity check before human_review;
+//	(d) the human's draft→ready flip on the PR (final bookend).
+//
+// The execution pod is single-tenant and ephemeral, so a rogue prompt cannot
+// reach beyond this one PR branch. dark-factory has no per-prompt-id allowlist
+// (--auto-approve-prompt-ids does not exist); the audit gate IS the allowlist.
 var executionFlags = []string{
 	"--set", "backend=local",
 	"--set", "autoGeneratePrompts=true",

@@ -150,6 +150,22 @@ var _ = Describe("AIReviewStep", func() {
 			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
 			Expect(fakeRunner.RunCallCount()).To(Equal(0))
 		})
+
+		It("re-escalates on a recorded non-pass verdict WITHOUT touching assignee/status", func() {
+			// The routeRecorded idempotency path must honour the escalation
+			// doctrine: a recorded outcome != pass re-escalates (failed) and leaves
+			// the controller-owned envelope (assignee + status) untouched.
+			task := reviewTask() +
+				"\n## Review\n\n```json\n{\"repo\":\"bborbe/sandbox\",\"pr_number\":7,\"outcome\":\"concerns\",\"notes\":\"needs eyes\"}\n```\n"
+			result, md := run(task)
+			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Message).To(ContainSubstring("blocking concerns"))
+			assertUntouched(md)
+			// No IO happened on the recorded path.
+			Expect(fakeRunner.RunCallCount()).To(Equal(0))
+			Expect(fakeGH.GetPullRequestCallCount()).To(Equal(0))
+			Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
+		})
 	})
 
 	Describe("escalation paths", func() {
@@ -162,6 +178,21 @@ var _ = Describe("AIReviewStep", func() {
 			_, ok := md.FindSection("## Review")
 			Expect(ok).To(BeFalse())
 			// Never proceeds to the review / worktree once the PR is ready.
+			Expect(fakeRunner.RunCallCount()).To(Equal(0))
+		})
+
+		It("fails (no ## Review) when the pre-verdict PR fetch errors", func() {
+			// Deterministic-gate path: GetPullRequest errors before any verdict is
+			// formed, so the step escalates (failed) WITHOUT writing ## Review (that
+			// section is a verdict, not a pre-check) and without touching assignee.
+			fakeGH.GetPullRequestReturns(nil, testError("github api down"))
+			result, md := run(reviewTask())
+			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Message).To(ContainSubstring("fetch PR"))
+			_, ok := md.FindSection("## Review")
+			Expect(ok).To(BeFalse())
+			assertUntouched(md)
+			// The read-only Claude review never ran (gate failed first).
 			Expect(fakeRunner.RunCallCount()).To(Equal(0))
 		})
 

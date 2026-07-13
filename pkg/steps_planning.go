@@ -174,6 +174,10 @@ func (s *planningStep) validateAndPlan(
 		return failed("planning: scan specs: " + err.Error()), nil
 	}
 	if len(matched) == 0 {
+		// Terminal (failed), not needs_input: retrying the same head SHA cannot
+		// help — the PR diff carries no implementable spec, and no re-trigger of
+		// this SHA will make one appear. A new commit (new SHA) re-emits a fresh
+		// task; that is the only path forward, so escalate rather than retry.
 		return failed(
 			"planning: no approved-not-completed spec under " + specGlobDir + "/ found in PR #" +
 				strconv.Itoa(prNumber) + " diff",

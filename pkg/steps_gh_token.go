@@ -154,7 +154,11 @@ func failed(msg string) *agentlib.Result {
 	}
 }
 
-// truncateMaxLen bounds diagnostic strings surfaced in escalation messages.
+// truncateMaxLen bounds the response-body substring included in escalation /
+// error messages. 200 chars is enough to surface a GitHub error payload's
+// gist (message + docs URL) while capping how much of an untrusted response
+// body leaks into task frontmatter and pod logs — limits both exposure and
+// log noise from a large or hostile body.
 const truncateMaxLen = 200
 
 func truncate(s string) string {
