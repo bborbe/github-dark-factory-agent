@@ -122,6 +122,19 @@ var _ = Describe("ExecutionStep", func() {
 				Expect(os.IsNotExist(statErr)).To(BeTrue())
 			},
 		)
+
+		It(
+			"passes --set hideGit=true so dark-factory runs inside the git worktree (spec-084 gate)",
+			func() {
+				// The RepoManager runs the lifecycle in a worktree whose .git is a
+				// file; dark-factory refuses to start there without hideGit=true.
+				// Guarding the flag here makes its silent removal a test failure.
+				run(execTask())
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
+				_, _, _, flags := fakeRunner.RunLifecycleArgsForCall(0)
+				Expect(flags).To(ContainElement("hideGit=true"))
+			},
+		)
 	})
 
 	Describe("spec auto-completed by workflow:direct", func() {

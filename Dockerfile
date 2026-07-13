@@ -43,11 +43,19 @@ RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 # resets to approved and the lifecycle idles at "nothing to do" (E2E root cause,
 # 2026-07-13). Install into the image's CLAUDE_CONFIG_DIR so the commands
 # resolve at runtime without depending on a mounted PVC. Mirrors
-# github-pr-review-agent's build-time `coding` plugin install. Unpinned
-# (marketplace HEAD tracks the CLI's minor); auth stays runtime (env token).
+# github-pr-review-agent's build-time `coding` plugin install; auth stays
+# runtime (env token).
+#
+# PINNED to the SAME ${DARK_FACTORY_VERSION} tag as the CLI above: the plugin
+# and CLI ship from one repo (bborbe/dark-factory), so we clone that exact tag
+# and add it as a LOCAL marketplace instead of `marketplace add bborbe/dark-factory`
+# (which resolves to marketplace HEAD and drifts from the pinned CLI minor). The
+# clone is kept at a stable path — the marketplace source must persist for the
+# installed plugin to keep resolving.
 RUN set -eux \
- && timeout 300 claude plugin marketplace add bborbe/dark-factory \
- && timeout 300 claude plugin install dark-factory@dark-factory \
+ && git clone --depth 1 --branch "${DARK_FACTORY_VERSION}" https://github.com/bborbe/dark-factory /home/node/dark-factory-marketplace \
+ && claude plugin marketplace add /home/node/dark-factory-marketplace \
+ && claude plugin install dark-factory@dark-factory \
  && claude plugin list | grep -q dark-factory
 
 COPY --from=build /main /main
