@@ -64,6 +64,10 @@ So the agent invokes `dark-factory run` (or per-prompt equivalents) with `--set 
 3. **`workflow:direct` git-merge-origin/master conflict** — mitigated by config-via-`--set` + non-divergent branch + pre-run sync.
 4. Security: GH token + git-push creds via Secret; PR content visible to claude (acceptable, zero-retention).
 
+### Auto-approve blast radius (accepted)
+
+The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+
 ## Part 8 — Acceptance (per goal SCs)
 
 Deployed in dev, consumes a real watcher task, walks planning→execution→ai_review in one pod, lands at `human_review` without flipping the PR; output parity with the Phase-1 prototype; idempotent under replay; per-repo concurrency 1. ✅ Prerequisite (dark-factory `backend: local`) shipped v0.192.0 and live-validated — the build is unblocked.

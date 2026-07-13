@@ -27,10 +27,12 @@ var _ = Describe("CreateAgentProvider", func() {
 		provider = factory.CreateAgentProvider(
 			claudelib.ClaudeConfigDir(""),
 			claudelib.AgentDir("agent"),
-			claudelib.AllowedTools{},
 			claudelib.ClaudeModel("sonnet"),
+			"",
 			map[string]string{},
-			map[string]string{},
+			nil,
+			nil,
+			nil,
 		)
 	})
 
@@ -38,8 +40,8 @@ var _ = Describe("CreateAgentProvider", func() {
 		Expect(provider).NotTo(BeNil())
 	})
 
-	It("Get returns the domain agent for TaskTypeLLM", func() {
-		agent, err := provider.Get(ctx, agentlib.TaskTypeLLM)
+	It("Get returns the domain agent for dark-factory-implement", func() {
+		agent, err := provider.Get(ctx, agentlib.TaskType("dark-factory-implement"))
 		Expect(err).To(BeNil())
 		Expect(agent).NotTo(BeNil())
 	})
@@ -82,7 +84,9 @@ var _ = Describe("CreateAgentProvider", func() {
 		})
 
 		It("error message contains the sorted accepted-types list", func() {
-			Expect(err.Error()).To(ContainSubstring("[healthcheck llm oauth-probe]"))
+			Expect(
+				err.Error(),
+			).To(ContainSubstring("[dark-factory-implement healthcheck oauth-probe]"))
 		})
 	})
 })
@@ -127,8 +131,10 @@ var _ = Describe("CreateAgent", func() {
 		agent := factory.CreateAgent(
 			"",
 			"",
-			nil,
+			claudelib.ClaudeModel("sonnet"),
 			"",
+			nil,
+			nil,
 			nil,
 			nil,
 		)

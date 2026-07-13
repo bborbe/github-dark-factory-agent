@@ -18,12 +18,28 @@ import (
 	"github.com/bborbe/cqrs/base"
 	libkafka "github.com/bborbe/kafka"
 	libtime "github.com/bborbe/time"
-	"github.com/bborbe/vault-cli/pkg/domain"
+	domain "github.com/bborbe/vault-cli/pkg/domain"
 
-	"github.com/bborbe/github-dark-factory-agent/pkg/prompts"
+	dfpkg "github.com/bborbe/github-dark-factory-agent/pkg"
+	"github.com/bborbe/github-dark-factory-agent/pkg/git"
 )
 
 const serviceName = "github-dark-factory-agent"
+
+// taskTypeDarkFactoryImplement is the agent-lib TaskType literal for this
+// agent's domain task. No constant exists in agent-lib for this value, so we
+// cast it locally (mirrors the releaser's taskTypeGitHubRelease). Keep the
+// literal exactly "dark-factory-implement" — the watcher emits it verbatim and
+// the CRD trigger.task_type field must match.
+var taskTypeDarkFactoryImplement = agentlib.TaskType("dark-factory-implement")
+
+// reviewTools is the ai_review phase's read-only Claude tool scope
+// (diff-vs-spec inspection). Planning and execution are prompt-free (pure-Go
+// planning; dark-factory-driven execution), so they need no Claude tool set.
+var reviewTools = claudelib.AllowedTools{
+	"Read", "Grep",
+	"Bash(gh pr view:*)", "Bash(gh pr diff:*)",
+}
 
 // CreateClaudeRunner constructs a ClaudeRunner pre-configured with tools,
 // model, working directory, and CLI environment.
@@ -43,6 +59,22 @@ func CreateClaudeRunner(
 	})
 }
 
+// CreateRepoManager wires the bare-clone / worktree manager with cache paths
+// and the GitHub token used for authenticated HTTPS clones. Pure plumbing.
+func CreateRepoManager(reposPath, workPath, ghToken string) git.RepoManager {
+	return git.NewRepoManager(git.WorkdirConfig{ReposPath: reposPath, WorkPath: workPath}, ghToken)
+}
+
+// CreateGitHubClient wires the GitHub REST client used by the planning phase.
+func CreateGitHubClient(ghToken string) dfpkg.GitHubClient {
+	return dfpkg.NewGitHubClient(ghToken)
+}
+
+// CreateClaudeProber wires the claude-auth preflight prober.
+func CreateClaudeProber(claudeConfigDir claudelib.ClaudeConfigDir) dfpkg.ClaudeProber {
+	return dfpkg.NewClaudeProber(claudeConfigDir)
+}
+
 // CreateSyncProducer creates a Kafka sync producer.
 func CreateSyncProducer(
 	ctx context.Context,
@@ -52,10 +84,7 @@ func CreateSyncProducer(
 }
 
 // CreateKafkaResultDeliverer creates a ResultDeliverer that publishes task
-// updates to Kafka via CQRS commands. Uses the passthrough content generator
-// — the agent framework's StepRunner already produces the full marshaled
-// task in result.Output; the deliverer publishes it as-is and overrides
-// status/phase frontmatter based on the result Status.
+// updates to Kafka via CQRS commands. Uses the passthrough content generator.
 func CreateKafkaResultDeliverer(
 	syncProducer libkafka.SyncProducer,
 	topicPrefix base.TopicPrefix,
@@ -74,8 +103,7 @@ func CreateKafkaResultDeliverer(
 }
 
 // CreateFileResultDeliverer creates a ResultDeliverer that writes the agent's
-// output back to a markdown file (local CLI mode). Uses the passthrough
-// content generator (same rationale as Kafka).
+// output back to a markdown file (local CLI mode).
 func CreateFileResultDeliverer(filePath string) agentlib.ResultDeliverer {
 	return delivery.NewFileResultDeliverer(
 		delivery.NewPassthroughContentGenerator(),
@@ -83,66 +111,72 @@ func CreateFileResultDeliverer(filePath string) agentlib.ResultDeliverer {
 	)
 }
 
-// CreateAgent assembles the full 3-phase claude agent. Single Claude step
-// shared across planning / in_progress / ai_review preserves the existing
-// CRD trigger.phases behavior — every phase runs Claude once and emits
-// done.
+// CreateAgent assembles the three distinct phases:
+//
+//   - planning:  claude-auth + gh-token preflight + pure-Go spec scan → ## Plan
+//   - execution: claude-auth preflight + dark-factory backend:local lifecycle → ## Result
+//   - ai_review: read-only Claude diff-vs-spec verifier → ## Review → human_review
+//
+// All three phases are implemented domain logic.
 func CreateAgent(
 	claudeConfigDir claudelib.ClaudeConfigDir,
 	agentDir claudelib.AgentDir,
-	allowedTools claudelib.AllowedTools,
 	model claudelib.ClaudeModel,
-	claudeEnv map[string]string,
-	envContext map[string]string,
+	ghToken string,
+	env map[string]string,
+	repoManager git.RepoManager,
+	githubClient dfpkg.GitHubClient,
+	claudeProber dfpkg.ClaudeProber,
 ) *agentlib.Agent {
-	return CreateAgentFromRunner(
-		CreateClaudeRunner(claudeConfigDir, agentDir, allowedTools, model, claudeEnv),
-		envContext,
-	)
-}
+	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
+	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
+	planning := dfpkg.NewPlanningStep(repoManager, githubClient)
+	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner())
+	reviewRunner := CreateClaudeRunner(claudeConfigDir, agentDir, reviewTools, model, env)
+	review := dfpkg.NewAIReviewStep(githubClient, repoManager, reviewRunner)
 
-// CreateAgentFromRunner builds the 3-phase claude agent given a pre-constructed
-// ClaudeRunner. Used by CreateAgentProvider to share one runner across the
-// domain agent and the healthcheck-Claude liveness agent.
-func CreateAgentFromRunner(
-	runner claudelib.ClaudeRunner,
-	envContext map[string]string,
-) *agentlib.Agent {
-	step := claudelib.NewAgentStep(claudelib.AgentStepConfig{
-		Name:          "claude-task",
-		Runner:        runner,
-		Instructions:  prompts.BuildInstructions(),
-		EnvContext:    envContext,
-		OutputSection: "## Result",
-		NextPhase:     "done",
-	})
 	return agentlib.NewAgent(
-		agentlib.NewPhase("planning", step),
-		agentlib.NewPhase(domain.TaskPhaseExecution, step),
-		agentlib.NewPhase("ai_review", step),
+		agentlib.NewPhase(domain.TaskPhasePlanning, claudeAuth, ghTokenCheck, planning),
+		agentlib.NewPhase(domain.TaskPhaseExecution, claudeAuth, execution),
+		agentlib.NewPhase(domain.TaskPhaseAIReview, review),
 	)
 }
 
-// CreateAgentProvider wires the per-task-type dispatch table for github-dark-factory-agent.
-// Returns lib.AgentProvider — main.go calls Get(ctx, taskType) to select the
-// appropriate *Agent. Pure plumbing; no conditional, no error.
+// CreateAgentProvider wires the per-task-type dispatch table.
+//   - task_type: dark-factory-implement → the 3-phase domain agent
+//   - task_type: healthcheck / oauth-probe → shared liveness agent
 //
-// TaskTypeLLM routes to the existing 3-phase domain agent. TaskTypeHealthcheck
-// and TaskTypeOAuthProbe (transition alias) both route to the shared
-// healthcheck-Claude liveness agent, reusing the same ClaudeRunner.
+// Pure plumbing; no conditional, no error.
 func CreateAgentProvider(
 	claudeConfigDir claudelib.ClaudeConfigDir,
 	agentDir claudelib.AgentDir,
-	allowedTools claudelib.AllowedTools,
 	model claudelib.ClaudeModel,
-	claudeEnv map[string]string,
-	envContext map[string]string,
+	ghToken string,
+	env map[string]string,
+	repoManager git.RepoManager,
+	githubClient dfpkg.GitHubClient,
+	claudeProber dfpkg.ClaudeProber,
 ) agentlib.AgentProvider {
-	runner := CreateClaudeRunner(claudeConfigDir, agentDir, allowedTools, model, claudeEnv)
-	domainAgent := CreateAgentFromRunner(runner, envContext)
-	livenessAgent := healthcheck.NewAgent(healthcheck.NewClaudeStep(runner))
+	domainAgent := CreateAgent(
+		claudeConfigDir,
+		agentDir,
+		model,
+		ghToken,
+		env,
+		repoManager,
+		githubClient,
+		claudeProber,
+	)
+	healthcheckRunner := CreateClaudeRunner(
+		claudeConfigDir,
+		agentDir,
+		claudelib.AllowedTools{},
+		model,
+		env,
+	)
+	livenessAgent := healthcheck.NewAgent(healthcheck.NewClaudeStep(healthcheckRunner))
 	return agentlib.NewAgentProvider(serviceName, map[agentlib.TaskType]*agentlib.Agent{
-		agentlib.TaskTypeLLM:         domainAgent,
+		taskTypeDarkFactoryImplement: domainAgent,
 		agentlib.TaskTypeHealthcheck: livenessAgent,
 		agentlib.TaskTypeOAuthProbe:  livenessAgent,
 	})
