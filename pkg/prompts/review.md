@@ -9,6 +9,22 @@ Use `gh pr view <pr_number> --repo <repo>` and `gh pr diff <pr_number> --repo
 below (they appear in the diff). Judge whether the code changes implement what
 the spec asked for.
 
+IMPORTANT — the dark-factory lifecycle keeps its own bookkeeping in the repo and
+necessarily commits it on every run. These paths are EXPECTED churn, not part of
+the implementation, and MUST be excluded from your scope judgment (a human
+flipping the PR draft→ready ignores them, so do you):
+
+- `prompts/**` — generated prompt files and their in-progress→completed moves.
+- `specs/**` — the approved spec itself and its in-progress→completed move.
+- `.dark-factory.yaml` — the project's pipeline config (the lifecycle may
+  normalise it).
+
+Never treat additions, deletions, or edits under those paths as "unrelated" or
+"out of scope." Judge ONLY the remaining (non-metadata) files against the spec:
+those are the actual implementation. A spec constraint like "no other file is
+modified" refers to source/implementation files — the bookkeeping above does not
+violate it.
+
 Emit exactly ONE JSON object as your final output, nothing else:
 
 ```json
@@ -22,8 +38,9 @@ Rules:
 
 - `outcome` MUST be one of `"pass"` or `"concerns"`.
 - `"pass"`: the diff implements the spec intent — scope matches, no obviously
-  missing or contradictory changes, nothing alarming (secrets, unrelated mass
-  edits, deletions the spec did not call for).
+  missing or contradictory changes, nothing alarming (secrets, or unrelated mass
+  edits / deletions OUTSIDE the excluded metadata paths above that the spec did
+  not call for).
 - `"concerns"`: the diff does NOT clearly implement the spec, is out of scope,
   is missing required changes, or contains anything that a human MUST review
   before this can proceed. When in doubt, choose `"concerns"`.
