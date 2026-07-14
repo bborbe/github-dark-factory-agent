@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.2
 
 - fix: stream the `dark-factory` daemon's stdout/stderr to the agent's own stdout in `dark_factory_runner.startDaemon` (was `cmd.Stdout/Stderr = nil`, i.e. discarded). The backend:local lifecycle — and the claude subprocesses the daemon spawns — is now visible in `kubectl logs`. Without it a hung daemon (e.g. a claude call blocking on a no-TTY onboarding prompt) was indistinguishable from slow progress until the 30-minute lifecycle deadline. Writes to the process stdout/stderr, not a repo file, so it is not swept into the daemon's commits.
 
