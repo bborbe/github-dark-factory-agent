@@ -1,4 +1,10 @@
 ARG DOCKER_REGISTRY=docker.quant.benjamin-borbe.de:443
+# CLAUDE_YOLO_IMAGE must be declared here, BEFORE the first FROM, to be a global
+# build arg: only global ARGs (pre-first-FROM) are visible to a later `FROM
+# ${...}`. Declaring it just above the second FROM strands it in the build
+# stage's scope, and BuildKit then rejects `FROM ${CLAUDE_YOLO_IMAGE}` with
+# "base name should not be blank" (make buca fails before any push).
+ARG CLAUDE_YOLO_IMAGE=docker.io/bborbe/claude-yolo:v0.13.2
 
 # --- Build the agent binary -------------------------------------------------
 FROM ${DOCKER_REGISTRY}/golang:1.26.4 AS build
@@ -18,21 +24,29 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -mod=vendor -ldflags "-s" -a -in
 #     (so `make precommit` on target Go repos works)
 #   - git, gh, jq, ripgrep, trivy, yq, uv + updater
 # We add only: the dark-factory CLI (the lifecycle driver) + the agent binary.
-ARG CLAUDE_YOLO_IMAGE=docker.io/bborbe/claude-yolo:v0.13.2
+# CLAUDE_YOLO_IMAGE is declared as a global ARG at the top of this file (a later
+# FROM can only interpolate global build args).
 FROM ${CLAUDE_YOLO_IMAGE}
 ARG BUILD_GIT_VERSION=dev
 ARG BUILD_GIT_COMMIT=none
 ARG BUILD_DATE=unknown
 LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 
-# dark-factory CLI. PIN. v0.192.0 ships the in-process `backend: local` execution
-# mode (spec 104) this agent depends on: it runs claude as a local subprocess in
-# cwd instead of `docker run`, so the agent does NOT spawn nested containers
-# (no DinD) — the Job pod is already a claude-yolo container. Select it at runtime
+# dark-factory CLI + PLUGIN both come from ONE pinned clone (the RUN below).
+# PIN v0.192.0: it ships the in-process `backend: local` execution mode (spec
+# 104) this agent depends on — it runs claude as a local subprocess in cwd
+# instead of `docker run`, so the agent does NOT spawn nested containers (no
+# DinD; the Job pod is already a claude-yolo container). Select it at runtime
 # with `dark-factory run --set backend=local`.
+#
+# The CLI is built from the clone (`go install .` in the module root), NOT via
+# `go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}`: that form
+# is rejected because dark-factory's go.mod carries `exclude` directives, which
+# `go install pkg@version` refuses ("must not contain directives that would
+# cause it to be interpreted differently than if it were the main module").
+# Building from the module root honors them, same as upstream `make install`.
 ARG DARK_FACTORY_VERSION=v0.192.0
 USER node
-RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 
 # dark-factory Claude PLUGIN — the /dark-factory:* slash commands
 # (generate-prompts-for-spec, audit-prompt) that the backend:local lifecycle
@@ -62,6 +76,8 @@ RUN go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}
 RUN set -eux \
  && rm -rf /home/node/dark-factory-marketplace \
  && git clone --depth 1 --branch "${DARK_FACTORY_VERSION}" https://github.com/bborbe/dark-factory /home/node/dark-factory-marketplace \
+ && (cd /home/node/dark-factory-marketplace && go install .) \
+ && command -v dark-factory \
  && (claude plugin marketplace remove dark-factory 2>/dev/null || true) \
  && claude plugin marketplace add /home/node/dark-factory-marketplace \
  && claude plugin install dark-factory@dark-factory \
