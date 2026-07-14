@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.4
 
 - fix: populate remote-tracking refs (`refs/remotes/origin/*`) in the RepoManager's bare clone. `git clone --bare` maps remote branches to `refs/heads/*`, so `origin/master` never resolved in a worktree — and dark-factory's per-prompt "sync with default branch" (`git merge origin/<default>`, run by every workflow) failed with `origin/master - not something we can merge`, stalling execution after generation. New `configureRemoteTracking` sets the standard `+refs/heads/*:refs/remotes/origin/*` refspec and fetches, on both the clone and update paths.
 
