@@ -83,6 +83,20 @@ RUN set -eux \
  && claude plugin install dark-factory@dark-factory \
  && claude plugin list | grep -q dark-factory
 
+# dark-factory's generation step (`/dark-factory:generate-prompts-for-spec`)
+# invokes the prompt-creator agent, which relies on the `coding` plugin's Go
+# guides/rules to write well-formed prompt files. Without it, a weaker MiniMax
+# model (e.g. MiniMax-M2.7-highspeed — the fleet model) produces NO prompt file
+# ("generation produced no prompt files") and the spec never leaves `approved`;
+# a strong model masks the gap by improvising. The operator's LOCAL ~/.claude
+# has `coding` installed, which is why local runs generate fine on M2.7 — the
+# cluster image must bake it too. Mirrors github-pr-review-agent's build-time
+# coding install (unpinned marketplace HEAD, same as that image).
+RUN set -eux \
+ && timeout 300 claude plugin marketplace add bborbe/coding \
+ && timeout 300 claude plugin install coding \
+ && claude plugin list | grep -q coding
+
 COPY --from=build /main /main
 COPY agent/ /agent/
 ENV BUILD_GIT_VERSION=${BUILD_GIT_VERSION}
