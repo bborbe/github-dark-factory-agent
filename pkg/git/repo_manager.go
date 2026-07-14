@@ -96,9 +96,10 @@ func (r *repoManager) EnsureBareClone(ctx context.Context, cloneURL string) (str
 		return r.cloneBare(ctx, cloneURL, barePath)
 	}
 
-	// Valid bare repo: fetch updates.
-	if err := r.runGitCmd(ctx, barePath, "fetch", "--prune", "origin"); err != nil {
-		return "", errors.Wrap(ctx, err, "git fetch failed")
+	// Valid bare repo: refresh remote-tracking refs (origin/*) so the daemon's
+	// per-prompt `git merge origin/<default>` resolves.
+	if err := r.configureRemoteTracking(ctx, barePath); err != nil {
+		return "", err
 	}
 
 	return barePath, nil
@@ -118,7 +119,31 @@ func (r *repoManager) cloneBare(ctx context.Context, cloneURL, barePath string) 
 		return "", errors.Errorf(ctx, "git clone --bare: %s", strings.TrimSpace(stderr.String()))
 	}
 
+	if err := r.configureRemoteTracking(ctx, barePath); err != nil {
+		return "", err
+	}
+
 	return barePath, nil
+}
+
+// configureRemoteTracking makes `origin/<branch>` (refs/remotes/origin/*)
+// resolvable in worktrees of this bare repo, then fetches. A `git clone --bare`
+// sets the fetch refspec to +refs/heads/*:refs/heads/* (no remote-tracking
+// refs), but dark-factory's per-prompt "sync with default branch" (run by every
+// workflow) does `git merge origin/<default>` in the worktree; without
+// refs/remotes/origin/* that merge fails with "origin/master - not something we
+// can merge". Setting the standard normal-clone refspec + fetching populates
+// origin/* in the shared object store the worktrees see.
+func (r *repoManager) configureRemoteTracking(ctx context.Context, barePath string) error {
+	if err := r.runGitCmd(
+		ctx, barePath, "config", "remote.origin.fetch", "+refs/heads/*:refs/remotes/origin/*",
+	); err != nil {
+		return errors.Wrap(ctx, err, "configure origin fetch refspec")
+	}
+	if err := r.runGitCmd(ctx, barePath, "fetch", "--prune", "origin"); err != nil {
+		return errors.Wrap(ctx, err, "git fetch remote-tracking refs")
+	}
+	return nil
 }
 
 func (r *repoManager) EnsureWorktree(
