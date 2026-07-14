@@ -85,13 +85,13 @@ RUN set -eux \
 
 # dark-factory's generation step (`/dark-factory:generate-prompts-for-spec`)
 # invokes the prompt-creator agent, which relies on the `coding` plugin's Go
-# guides/rules to write well-formed prompt files. Without it, a weaker MiniMax
-# model (e.g. MiniMax-M2.7-highspeed — the fleet model) produces NO prompt file
-# ("generation produced no prompt files") and the spec never leaves `approved`;
-# a strong model masks the gap by improvising. The operator's LOCAL ~/.claude
-# has `coding` installed, which is why local runs generate fine on M2.7 — the
-# cluster image must bake it too. Mirrors github-pr-review-agent's build-time
-# coding install (unpinned marketplace HEAD, same as that image).
+# guides to write well-formed prompt files. Without it the fleet MiniMax model
+# produces NO prompt file ("generation produced no prompt files") and the spec
+# never leaves `approved`. dark-factory's DOCKER backend gets coding by mounting
+# the operator's ~/.claude-yolo (whose settings enable exactly coding +
+# dark-factory, per docs/yolo-container-setup.md); backend:local has no mount, so
+# this image bakes it. Mirrors github-pr-review-agent's build-time coding install
+# (marketplace HEAD — coding is guides-only, kept at latest fleet-wide).
 RUN set -eux \
  && timeout 300 claude plugin marketplace add bborbe/coding \
  && timeout 300 claude plugin install coding \
