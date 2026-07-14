@@ -100,9 +100,16 @@ func (r *darkFactoryRunner) startDaemon(
 	cmd.Dir = workdir
 	cmd.Env = os.Environ() // HOME for claude auth, PATH, GH_TOKEN — full pod env
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-	// Daemon logs go nowhere on-disk inside the repo (would be swept into commits).
-	cmd.Stdout = nil
-	cmd.Stderr = nil
+	// Stream the daemon's stdout/stderr to our own (the container's) fd 1/2 so the
+	// whole backend:local lifecycle — including the claude subprocesses the daemon
+	// spawns — shows up in `kubectl logs`. RunLifecycle drives off the resulting
+	// on-disk state, not this output, so nothing parses it; it is purely for
+	// observability. Without it a silent daemon is a black box: a claude call
+	// hanging on a no-TTY onboarding prompt looks identical to slow progress until
+	// the lifecycle deadline fires. This writes to the process stdout/stderr, NOT a
+	// file inside the repo, so it is never swept into the daemon's own commits.
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}
