@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: bake the `coding` plugin into the runtime image (Dockerfile), alongside the existing `dark-factory` plugin. dark-factory's generation step invokes the prompt-creator agent, which uses the `coding` plugin's Go guides to write prompt files; without it the fleet's MiniMax model (`MiniMax-M2.7-highspeed`) produced no prompt file ("generation produced no prompt files") and the spec never left `approved`. Local runs generate fine because the operator's `~/.claude` already has `coding`; the cluster image did not. Mirrors github-pr-review-agent's build-time `coding` install.
+
 ## v0.3.2
 
 - fix: stream the `dark-factory` daemon's stdout/stderr to the agent's own stdout in `dark_factory_runner.startDaemon` (was `cmd.Stdout/Stderr = nil`, i.e. discarded). The backend:local lifecycle — and the claude subprocesses the daemon spawns — is now visible in `kubectl logs`. Without it a hung daemon (e.g. a claude call blocking on a no-TTY onboarding prompt) was indistinguishable from slow progress until the 30-minute lifecycle deadline. Writes to the process stdout/stderr, not a repo file, so it is not swept into the daemon's commits.
