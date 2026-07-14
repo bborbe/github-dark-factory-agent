@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.3
 
 - fix: bake the `coding` plugin into the runtime image (Dockerfile), alongside the existing `dark-factory` plugin. dark-factory's generation step invokes the prompt-creator agent, which uses the `coding` plugin's Go guides to write prompt files; without it the fleet's MiniMax model (`MiniMax-M2.7-highspeed`) produced no prompt file ("generation produced no prompt files") and the spec never left `approved`. Local runs generate fine because the operator's `~/.claude` already has `coding`; the cluster image did not. Mirrors github-pr-review-agent's build-time `coding` install.
 
