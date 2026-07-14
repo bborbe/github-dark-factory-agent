@@ -45,7 +45,7 @@ LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 # `go install pkg@version` refuses ("must not contain directives that would
 # cause it to be interpreted differently than if it were the main module").
 # Building from the module root honors them, same as upstream `make install`.
-ARG DARK_FACTORY_VERSION=v0.192.0
+ARG DARK_FACTORY_VERSION=v0.192.4
 USER node
 
 # dark-factory Claude PLUGIN — the /dark-factory:* slash commands
