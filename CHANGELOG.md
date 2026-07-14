@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: ai_review no longer flags dark-factory's own bookkeeping as out-of-scope. The read-only diff-vs-spec reviewer (`pkg/prompts/review.md`) now excludes pipeline-metadata paths — `prompts/**`, `specs/**`, and `.dark-factory.yaml` — from its scope judgment, since the lifecycle necessarily commits them on every run (generated prompts, in-progress→completed moves). Previously a correct implementation escalated to `failed` at ai_review because a spec constraint like "No other file is modified" can never hold for this pipeline (observed in cluster E2E: the marker was created correctly but the reviewer flagged the prompt/spec churn). The reviewer now judges only real implementation files against the spec. Verified via the local `cmd/run-task` loop against a clean draft PR: the same scenario now returns `pass` → `human_review`.
+- chore: `go mod tidy` records `github.com/maxbrunsfeld/counterfeiter/v6` as an indirect dependency.
+
 ## v0.3.5
 
 - chore: bump baked `DARK_FACTORY_VERSION` v0.192.0 → v0.192.4 (CLI + plugin). v0.192.4 fixes the `generate-prompts-for-spec` command's hardcoded `/workspace` paths (docker-mount convention) → cwd-relative, so backend:local generation writes prompts into the worktree the daemon watches instead of an empty `/workspace`. Unblocks the backend:local generation→execution lifecycle.
