@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - fix: ai_review no longer flags dark-factory's own bookkeeping as out-of-scope. The read-only diff-vs-spec reviewer (`pkg/prompts/review.md`) now excludes pipeline-metadata paths — `prompts/**`, `specs/**`, and `.dark-factory.yaml` — from its scope judgment, since the lifecycle necessarily commits them on every run (generated prompts, in-progress→completed moves). Previously a correct implementation escalated to `failed` at ai_review because a spec constraint like "No other file is modified" can never hold for this pipeline (observed in cluster E2E: the marker was created correctly but the reviewer flagged the prompt/spec churn). The reviewer now judges only real implementation files against the spec. Verified via the local `cmd/run-task` loop against a clean draft PR: the same scenario now returns `pass` → `human_review`.
 - chore: `go mod tidy` records `github.com/maxbrunsfeld/counterfeiter/v6` as an indirect dependency.
+- chore: bump `golang.org/x/text` v0.38.0 → v0.39.0 (indirect) — clears CVE-2026-56852 (infinite loop on invalid input) flagged by trivy.
 
 ## v0.3.5
 
