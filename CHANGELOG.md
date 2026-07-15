@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.7
 
 - fix: inject the fleet model into the backend:local daemon. The execution step now forwards the configured model (`claudelib.ClaudeModel`, from the pod's `ANTHROPIC_MODEL`) to `dark-factory daemon` as `--set model=<model>` via `NewExecutionStep`'s new constructor arg — no `os.Getenv` inside the step. The daemon resolves its model from `--set` > `.dark-factory.yaml` `model:` > a built-in Claude default; because it does NOT read `ANTHROPIC_MODEL` for its own selection, a target repo whose `.dark-factory.yaml` omits `model:` silently ran on Sonnet (a ToU violation), which on go-skeleton PR #40 produced a prompt asserting the wrong byte count and never committed the marker. Injecting the model makes the fleet model authoritative regardless of per-repo config. Unit test asserts the flag is forwarded.
 
