@@ -131,7 +131,7 @@ func CreateAgent(
 	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
 	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
 	planning := dfpkg.NewPlanningStep(repoManager, githubClient)
-	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner())
+	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner(), model)
 	reviewRunner := CreateClaudeRunner(claudeConfigDir, agentDir, reviewTools, model, env)
 	review := dfpkg.NewAIReviewStep(githubClient, repoManager, reviewRunner)
 

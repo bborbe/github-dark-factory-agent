@@ -26,7 +26,7 @@ var _ = Describe("stub steps", func() {
 	})
 
 	It("step names are stable lower-kebab identifiers", func() {
-		Expect(pkg.NewExecutionStep(nil, nil).Name()).To(Equal("df-execution"))
+		Expect(pkg.NewExecutionStep(nil, nil, "").Name()).To(Equal("df-execution"))
 		Expect(pkg.NewAIReviewStep(nil, nil, nil).Name()).To(Equal("df-ai-review"))
 		Expect(pkg.NewPlanningStep(nil, nil).Name()).To(Equal("df-planning"))
 		Expect(pkg.NewClaudeAuthStep(nil).Name()).To(Equal("verify-claude-auth"))

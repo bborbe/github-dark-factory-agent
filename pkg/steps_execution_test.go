@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	agentlib "github.com/bborbe/agent"
+	claudelib "github.com/bborbe/agent/claude"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -58,7 +59,11 @@ var _ = Describe("ExecutionStep", func() {
 		fakeRunner = &mocks.ExecutionRunner{}
 		worktree = GinkgoT().TempDir()
 		fakeRepo.EnsureWorktreeReturns(worktree, nil)
-		step = pkg.NewExecutionStep(fakeRepo, fakeRunner)
+		step = pkg.NewExecutionStep(
+			fakeRepo,
+			fakeRunner,
+			claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+		)
 	})
 
 	run := func(taskContent string) (*agentlib.Result, *agentlib.Markdown) {
@@ -91,6 +96,9 @@ var _ = Describe("ExecutionStep", func() {
 				Expect(specIDs).To(ConsistOf("001-hello"))
 				Expect(flags).To(ContainElements("--set", "backend=local"))
 				Expect(flags).To(ContainElement("--auto-approve-prompts"))
+				// the injected fleet model is forwarded to the daemon so
+				// backend:local never falls back to its Claude default.
+				Expect(flags).To(ContainElements("--set", "model=MiniMax-M2.7-highspeed"))
 
 				// verifying spec → agent drives `spec complete`.
 				Expect(fakeRunner.CompleteSpecCallCount()).To(Equal(1))
@@ -137,6 +145,30 @@ var _ = Describe("ExecutionStep", func() {
 				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
 				_, _, _, flags := fakeRunner.RunLifecycleArgsForCall(0)
 				Expect(flags).To(ContainElement("hideGit=true"))
+			},
+		)
+	})
+
+	Describe("model injection", func() {
+		BeforeEach(func() {
+			fakeRunner.RunLifecycleReturns(&pkg.LifecycleResult{
+				PromptsExecuted: 1,
+				SpecStatuses:    map[string]string{"001-hello": "verifying"},
+			}, nil)
+		})
+
+		It(
+			"omits --set model entirely when no fleet model is injected (local/test fallback)",
+			func() {
+				// Empty model → no `--set model=` override, so the daemon keeps its own
+				// default. Guards the fallback branch of daemonFlags against a regression
+				// that would smuggle an empty `model=` (or drop backend=local).
+				step = pkg.NewExecutionStep(fakeRepo, fakeRunner, claudelib.ClaudeModel(""))
+				run(execTask())
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
+				_, _, _, flags := fakeRunner.RunLifecycleArgsForCall(0)
+				Expect(flags).To(ContainElements("--set", "backend=local"))
+				Expect(flags).NotTo(ContainElement(HavePrefix("model=")))
 			},
 		)
 	})
