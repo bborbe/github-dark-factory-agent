@@ -153,11 +153,17 @@ func (r *darkFactoryRunner) waitForDrain(
 	}
 }
 
-// drained reports whether every spec reached a terminal state AND the prompt
-// queue is empty. A spec still in approved/generating/prompted, or a prompt
-// still in prompts/in-progress, means work is ongoing.
+// drained reports whether every spec reached a terminal state AND no prompt is
+// still in flight. "In flight" means either the generation INBOX (prompts/*.md
+// at the repo root, a generated prompt awaiting the daemon's auto-approve audit)
+// or prompts/in-progress (approved, awaiting execution). Checking the inbox is
+// load-bearing: the daemon flips the spec to `verifying` while the auto-approve
+// audit is still running, so without the inbox check drained() returns true
+// mid-audit, stopDaemon SIGKILLs the in-flight audit, the prompt is never
+// approved/executed, and the implementation file (e.g. the marker) is never
+// created. A spec still in approved/generating/prompted also means work ongoing.
 func (r *darkFactoryRunner) drained(ctx context.Context, workdir string, specIDs []string) bool {
-	if hasInProgressPrompts(workdir) {
+	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
 		return false
 	}
 	for _, id := range specIDs {
@@ -216,6 +222,17 @@ func (r *darkFactoryRunner) run(
 			r.binary, strings.Join(args, " "), strings.TrimSpace(stderr.String()))
 	}
 	return nil
+}
+
+// hasInboxPrompts reports whether the generation inbox — prompts/*.md at the
+// repo root — holds any prompt. A newly generated prompt lands here and stays
+// until the daemon's auto-approve audit moves it to prompts/in-progress. The
+// subdirectories (in-progress/completed/log) are not *.md files, so this glob
+// matches only inbox prompts. See drained() for why the inbox is treated as
+// work-in-flight.
+func hasInboxPrompts(workdir string) bool {
+	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "*.md"))
+	return len(matches) > 0
 }
 
 // hasInProgressPrompts reports whether prompts/in-progress holds any *.md file.

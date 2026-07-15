@@ -79,6 +79,20 @@ var _ = Describe("darkFactoryRunner", func() {
 			)).To(BeNil())
 			Expect(pkg.CountCompletedPrompts(work)).To(Equal(1))
 		})
+
+		It("detects inbox prompts (prompts/*.md at root) but not the subdirectories", func() {
+			// A completed prompt in prompts/completed must NOT register as inbox.
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "completed", "done.md"), []byte("x"), 0600,
+			)).To(BeNil())
+			Expect(pkg.HasInboxPrompts(work)).To(BeFalse())
+
+			// A generated prompt awaiting auto-approve lands in the inbox (root).
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "001-inbox.md"), []byte("x"), 0600,
+			)).To(BeNil())
+			Expect(pkg.HasInboxPrompts(work)).To(BeTrue())
+		})
 	})
 
 	Describe("RunLifecycle (stub daemon)", func() {
@@ -107,6 +121,37 @@ esac
 			Expect(res.PromptsExecuted).To(Equal(1))
 			Expect(res.SpecStatuses["001-hello"]).To(Equal("verifying"))
 		})
+
+		It(
+			"does NOT drain while a generated prompt is still in the inbox (auto-approve in flight)",
+			func() {
+				work := GinkgoT().TempDir()
+				// Reproduce the auto-approve window: the daemon has flipped the spec to
+				// `verifying` but the generated prompt is still in the INBOX
+				// (prompts/*.md at root), awaiting the audit that moves it to
+				// prompts/in-progress. drained() must treat the inbox as work-in-flight;
+				// otherwise stopDaemon SIGKILLs the in-flight audit and the marker is
+				// never created. With the fix the lifecycle never drains → deadline error.
+				stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts specs/in-progress
+    printf 'x' > prompts/001-inbox.md
+    printf -- '---\nstatus: verifying\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+				runner := pkg.NewTestExecutionRunner(
+					stub,
+					20*time.Millisecond,
+					250*time.Millisecond,
+				)
+				_, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+				Expect(err).NotTo(BeNil())
+				Expect(err.Error()).To(ContainSubstring("drain"))
+			},
+		)
 
 		It("errors when the lifecycle does not drain before the deadline", func() {
 			work := GinkgoT().TempDir()
