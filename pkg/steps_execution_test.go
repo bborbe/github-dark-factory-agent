@@ -149,6 +149,30 @@ var _ = Describe("ExecutionStep", func() {
 		)
 	})
 
+	Describe("model injection", func() {
+		BeforeEach(func() {
+			fakeRunner.RunLifecycleReturns(&pkg.LifecycleResult{
+				PromptsExecuted: 1,
+				SpecStatuses:    map[string]string{"001-hello": "verifying"},
+			}, nil)
+		})
+
+		It(
+			"omits --set model entirely when no fleet model is injected (local/test fallback)",
+			func() {
+				// Empty model → no `--set model=` override, so the daemon keeps its own
+				// default. Guards the fallback branch of daemonFlags against a regression
+				// that would smuggle an empty `model=` (or drop backend=local).
+				step = pkg.NewExecutionStep(fakeRepo, fakeRunner, claudelib.ClaudeModel(""))
+				run(execTask())
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
+				_, _, _, flags := fakeRunner.RunLifecycleArgsForCall(0)
+				Expect(flags).To(ContainElements("--set", "backend=local"))
+				Expect(flags).NotTo(ContainElement(HavePrefix("model=")))
+			},
+		)
+	})
+
 	Describe("spec auto-completed by workflow:direct", func() {
 		It("skips spec complete but still pushes and writes ## Result", func() {
 			fakeRunner.RunLifecycleReturns(&pkg.LifecycleResult{
