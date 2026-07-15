@@ -185,6 +185,51 @@ esac
 		})
 	})
 
+	Describe("CommitSpecChanges (real git)", func() {
+		var work string
+		BeforeEach(func() {
+			work = GinkgoT().TempDir()
+			gitInit(work, "init", "-q", "-b", "master")
+			gitInit(work, "config", "user.email", "t@t")
+			gitInit(work, "config", "user.name", "t")
+			Expect(os.MkdirAll(filepath.Join(work, "specs", "in-progress"), 0750)).To(BeNil())
+			Expect(os.MkdirAll(filepath.Join(work, "specs", "completed"), 0750)).To(BeNil())
+			Expect(os.WriteFile(
+				filepath.Join(work, "specs", "in-progress", "001-x.md"),
+				[]byte("---\nstatus: verifying\n---\n"), 0600,
+			)).To(BeNil())
+			gitInit(work, "add", "-A")
+			gitInit(work, "commit", "-qm", "init")
+		})
+
+		headCount := func() string {
+			cmd := exec.Command("git", "rev-list", "--count", "HEAD")
+			cmd.Dir = work
+			out, err := cmd.CombinedOutput()
+			Expect(err).To(BeNil(), string(out))
+			return string(out)
+		}
+
+		It("commits the spec-complete move so it can be pushed", func() {
+			before := headCount()
+			// simulate `dark-factory spec complete 001-x`: move in-progress → completed
+			Expect(os.Rename(
+				filepath.Join(work, "specs", "in-progress", "001-x.md"),
+				filepath.Join(work, "specs", "completed", "001-x.md"),
+			)).To(BeNil())
+			runner := pkg.NewTestExecutionRunner("dark-factory", time.Millisecond, time.Second)
+			Expect(runner.CommitSpecChanges(ctx, work)).To(BeNil())
+			Expect(headCount()).NotTo(Equal(before)) // a new commit landed
+		})
+
+		It("is a no-op when there is nothing to commit", func() {
+			before := headCount()
+			runner := pkg.NewTestExecutionRunner("dark-factory", time.Millisecond, time.Second)
+			Expect(runner.CommitSpecChanges(ctx, work)).To(BeNil())
+			Expect(headCount()).To(Equal(before)) // no spurious commit
+		})
+	})
+
 	Describe("PushBranch (real git)", func() {
 		var work string
 		BeforeEach(func() {

@@ -108,6 +108,11 @@ type ExecutionRunner interface {
 	// completed). Required because workflow:direct only auto-marks the spec
 	// `verifying`; without this the watcher re-emits the task forever.
 	CompleteSpec(ctx context.Context, workdir, specID string) error
+	// CommitSpecChanges commits the specs/ working-tree changes that CompleteSpec
+	// leaves uncommitted (`dark-factory spec complete` rewrites the tree but does
+	// not commit — it runs after the daemon stops). Must run before PushBranch, or
+	// the completion is never pushed and the watcher re-emits the task forever.
+	CommitSpecChanges(ctx context.Context, workdir string) error
 	// PushBranch pushes the per-prompt commits on HEAD to origin/<branch>.
 	PushBranch(ctx context.Context, workdir, branch string) error
 }
@@ -256,6 +261,14 @@ func (s *executionStep) runLifecycle(
 	completed, escalation := s.completeSpecs(ctx, worktree, specIDs, result)
 	if escalation != nil {
 		return escalation, nil
+	}
+
+	// Commit the spec-completion moves before pushing: `dark-factory spec complete`
+	// rewrites the tree without committing, so PushBranch (bare `git push HEAD`)
+	// would otherwise leave the PR with approved-not-completed specs and the
+	// watcher would re-emit the task forever.
+	if err := s.runner.CommitSpecChanges(ctx, worktree); err != nil {
+		return failed("execution: commit spec completions: " + err.Error()), nil
 	}
 
 	if err := s.runner.PushBranch(ctx, worktree, p.branch); err != nil {

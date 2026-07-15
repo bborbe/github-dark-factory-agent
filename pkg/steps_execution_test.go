@@ -106,6 +106,10 @@ var _ = Describe("ExecutionStep", func() {
 				Expect(csWD).To(Equal(worktree))
 				Expect(csID).To(Equal("001-hello"))
 
+				// spec-completion moves are committed before the push (else the
+				// PR keeps approved-not-completed specs → watcher re-emits forever).
+				Expect(fakeRunner.CommitSpecChangesCallCount()).To(Equal(1))
+
 				// per-prompt commits pushed to the PR branch.
 				Expect(fakeRunner.PushBranchCallCount()).To(Equal(1))
 				_, pbWD, pbBranch := fakeRunner.PushBranchArgsForCall(0)

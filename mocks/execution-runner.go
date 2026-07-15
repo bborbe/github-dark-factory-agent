@@ -9,6 +9,18 @@ import (
 )
 
 type ExecutionRunner struct {
+	CommitSpecChangesStub        func(context.Context, string) error
+	commitSpecChangesMutex       sync.RWMutex
+	commitSpecChangesArgsForCall []struct {
+		arg1 context.Context
+		arg2 string
+	}
+	commitSpecChangesReturns struct {
+		result1 error
+	}
+	commitSpecChangesReturnsOnCall map[int]struct {
+		result1 error
+	}
 	CompleteSpecStub        func(context.Context, string, string) error
 	completeSpecMutex       sync.RWMutex
 	completeSpecArgsForCall []struct {
@@ -53,6 +65,68 @@ type ExecutionRunner struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *ExecutionRunner) CommitSpecChanges(arg1 context.Context, arg2 string) error {
+	fake.commitSpecChangesMutex.Lock()
+	ret, specificReturn := fake.commitSpecChangesReturnsOnCall[len(fake.commitSpecChangesArgsForCall)]
+	fake.commitSpecChangesArgsForCall = append(fake.commitSpecChangesArgsForCall, struct {
+		arg1 context.Context
+		arg2 string
+	}{arg1, arg2})
+	stub := fake.CommitSpecChangesStub
+	fakeReturns := fake.commitSpecChangesReturns
+	fake.recordInvocation("CommitSpecChanges", []interface{}{arg1, arg2})
+	fake.commitSpecChangesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesCallCount() int {
+	fake.commitSpecChangesMutex.RLock()
+	defer fake.commitSpecChangesMutex.RUnlock()
+	return len(fake.commitSpecChangesArgsForCall)
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesCalls(stub func(context.Context, string) error) {
+	fake.commitSpecChangesMutex.Lock()
+	defer fake.commitSpecChangesMutex.Unlock()
+	fake.CommitSpecChangesStub = stub
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesArgsForCall(i int) (context.Context, string) {
+	fake.commitSpecChangesMutex.RLock()
+	defer fake.commitSpecChangesMutex.RUnlock()
+	argsForCall := fake.commitSpecChangesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesReturns(result1 error) {
+	fake.commitSpecChangesMutex.Lock()
+	defer fake.commitSpecChangesMutex.Unlock()
+	fake.CommitSpecChangesStub = nil
+	fake.commitSpecChangesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesReturnsOnCall(i int, result1 error) {
+	fake.commitSpecChangesMutex.Lock()
+	defer fake.commitSpecChangesMutex.Unlock()
+	fake.CommitSpecChangesStub = nil
+	if fake.commitSpecChangesReturnsOnCall == nil {
+		fake.commitSpecChangesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.commitSpecChangesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *ExecutionRunner) CompleteSpec(arg1 context.Context, arg2 string, arg3 string) error {
