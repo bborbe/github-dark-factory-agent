@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.9
 
 - fix: commit the spec-completion move before pushing, so completed specs actually reach the PR branch. `dark-factory spec complete` (which the execution step drives after the daemon stops) rewrites the working tree — moving the spec `specs/in-progress → specs/completed` — but does NOT git-commit it (nothing commits it once the daemon is gone, unlike the daemon's per-prompt `workflow:direct` commits). `PushBranch` is a bare `git push HEAD`, so the completion was silently dropped: the PR kept an approved-not-completed spec, the watcher re-emitted the task on the agent's own push, and runs overlapped indefinitely (self-trigger loop). New `ExecutionRunner.CommitSpecChanges` stages `specs/` and commits after `completeSpecs` and before `PushBranch` (no-op when nothing is staged). Now the completed spec lands on the branch → the watcher stops re-triggering → clean multi-spec drain to `human_review`. Unit tests cover the commit + the no-op path and assert the execution step calls it before pushing.
 
