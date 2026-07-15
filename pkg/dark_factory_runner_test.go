@@ -93,6 +93,44 @@ var _ = Describe("darkFactoryRunner", func() {
 			)).To(BeNil())
 			Expect(pkg.HasInboxPrompts(work)).To(BeTrue())
 		})
+
+		It("finds a failed prompt but ignores approved/executing/unparseable ones", func() {
+			// approved (retry-eligible, still running) must NOT register as failed.
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "001-approved.md"),
+				[]byte("---\nstatus: approved\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			// An unparseable file must be skipped, not fail the lifecycle.
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "002-garbage.md"),
+				[]byte("not valid frontmatter"), 0600,
+			)).To(BeNil())
+			file, reason := pkg.FindFailedPrompt(ctx, work)
+			Expect(file).To(BeEmpty())
+			Expect(reason).To(BeEmpty())
+
+			// A terminal failed prompt is surfaced with its lastFailReason.
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "003-failed.md"),
+				[]byte(
+					"---\nstatus: failed\nlastFailReason: docker run exit 128\n---\n\nbody\n",
+				),
+				0600,
+			)).To(BeNil())
+			file, reason = pkg.FindFailedPrompt(ctx, work)
+			Expect(file).To(Equal("003-failed.md"))
+			Expect(reason).To(Equal("docker run exit 128"))
+		})
+
+		It("falls back to a placeholder reason when a failed prompt has no lastFailReason", func() {
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "004-failed.md"),
+				[]byte("---\nstatus: failed\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			file, reason := pkg.FindFailedPrompt(ctx, work)
+			Expect(file).To(Equal("004-failed.md"))
+			Expect(reason).To(Equal("no lastFailReason recorded"))
+		})
 	})
 
 	Describe("RunLifecycle (stub daemon)", func() {
@@ -164,6 +202,34 @@ esac
 			_, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
 			Expect(err).NotTo(BeNil())
 			Expect(err.Error()).To(ContainSubstring("drain"))
+		})
+
+		It("fails fast when a prompt is marked failed, without waiting for the deadline", func() {
+			work := GinkgoT().TempDir()
+			// Stub daemon: the prompt exhausted its retries — the failure handler
+			// left it in prompts/in-progress with `status: failed` and the scanner
+			// skips it forever, so the spec can never reach verifying. The runner
+			// must surface that immediately instead of spinning to the deadline
+			// (or, in-cluster, being hard-killed by the overall-run budget before
+			// it can escalate).
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts/in-progress specs/in-progress
+    printf -- '---\nstatus: failed\nlastFailReason: completion report status partial\n---\n\nbody\n' > prompts/in-progress/006-p.md
+    printf -- '---\nstatus: approved\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			// Generous deadline: the fast-path, not the deadline, must end the wait.
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 30*time.Second)
+			start := time.Now()
+			_, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+			Expect(err).NotTo(BeNil())
+			Expect(err.Error()).To(ContainSubstring("006-p.md failed permanently"))
+			Expect(err.Error()).To(ContainSubstring("completion report status partial"))
+			Expect(time.Since(start)).To(BeNumerically("<", 10*time.Second))
 		})
 	})
 

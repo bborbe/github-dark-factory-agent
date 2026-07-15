@@ -133,7 +133,13 @@ func (r *darkFactoryRunner) stopDaemon(ctx context.Context, workdir string, cmd 
 }
 
 // waitForDrain blocks until every requested spec is verifying/completed and no
-// prompts remain in prompts/in-progress, or ctx (timeout) fires.
+// prompts remain in prompts/in-progress, or ctx (timeout) fires. A prompt whose
+// frontmatter reaches `status: failed` fails the wait immediately: the daemon's
+// failure handler marks a prompt failed only once retries are exhausted
+// (re-queues re-mark it `approved`), the scanner then skips it forever ("queue
+// blocked until manual retry"), so its spec can never reach verifying — without
+// this fast-path the loop would spin until the 30-minute lifecycle deadline
+// before escalating the exact same failure.
 func (r *darkFactoryRunner) waitForDrain(
 	ctx context.Context,
 	workdir string,
@@ -142,6 +148,9 @@ func (r *darkFactoryRunner) waitForDrain(
 	ticker := time.NewTicker(r.pollInterval)
 	defer ticker.Stop()
 	for {
+		if file, reason := findFailedPrompt(ctx, workdir); file != "" {
+			return errors.Errorf(ctx, "prompt %s failed permanently: %s", file, reason)
+		}
 		if r.drained(ctx, workdir, specIDs) {
 			return nil
 		}
@@ -289,6 +298,36 @@ func hasInboxPrompts(workdir string) bool {
 func hasInProgressPrompts(workdir string) bool {
 	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "in-progress", "*.md"))
 	return len(matches) > 0
+}
+
+// findFailedPrompt scans prompts/in-progress for a prompt whose frontmatter is
+// `status: failed` — the daemon's terminal failure state (retry-eligible prompts
+// are re-marked `approved`, so `failed` never means "will retry"). Returns the
+// first failed prompt's basename and its lastFailReason ("" when none failed).
+// Unreadable/unparseable files are skipped: transient (mid-write) states must
+// not fail the lifecycle.
+func findFailedPrompt(ctx context.Context, workdir string) (string, string) {
+	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "in-progress", "*.md"))
+	for _, path := range matches {
+		content, err := os.ReadFile(path) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			continue
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			continue
+		}
+		status, _ := parsed.Frontmatter.String("status")
+		if strings.TrimSpace(status) != "failed" {
+			continue
+		}
+		reason, _ := parsed.Frontmatter.String("lastFailReason")
+		if reason = strings.TrimSpace(reason); reason == "" {
+			reason = "no lastFailReason recorded"
+		}
+		return filepath.Base(path), reason
+	}
+	return "", ""
 }
 
 // countCompletedPrompts counts *.md files in prompts/completed.
