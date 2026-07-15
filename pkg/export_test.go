@@ -26,6 +26,9 @@ func ReadSpecStatus(ctx context.Context, workdir, id string) string {
 // HasInProgressPrompts exposes the queue-empty check for tests.
 func HasInProgressPrompts(workdir string) bool { return hasInProgressPrompts(workdir) }
 
+// HasInboxPrompts exposes the generation-inbox check for tests.
+func HasInboxPrompts(workdir string) bool { return hasInboxPrompts(workdir) }
+
 // CountCompletedPrompts exposes the completed-prompt counter for tests.
 func CountCompletedPrompts(workdir string) int { return countCompletedPrompts(workdir) }
 
