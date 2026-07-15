@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.3.8
 
 - fix: `RunLifecycle` no longer stops the dark-factory daemon while a generated prompt is still awaiting auto-approval. The drain check (`drained()`) only looked at `prompts/in-progress`, ignoring the generation **inbox** (`prompts/*.md` at the repo root, where a freshly generated prompt waits for the daemon's auto-approve audit). Because the daemon flips the spec to `verifying` while that audit runs, `drained()` returned true mid-audit, `stopDaemon` SIGKILLed the in-flight audit subprocess (`auto-approve: audit FAILED ... signal: killed`), the prompt was never approved/executed, and the implementation file (e.g. the `HELLO_DARK_FACTORY.md` marker) was never created — ai_review then correctly escalated on the absent file. New `hasInboxPrompts` gates the drain on the inbox too, so the lifecycle waits for the prompt to be approved → executed → completed. Surfaced on go-skeleton PR #40 (master `.dark-factory.yaml` sets `validationPrompt: docs/dod.md`, making the audit slow enough to lose the race). Unit test drives a stub daemon that leaves a prompt in the inbox and asserts the lifecycle does not drain.
 
