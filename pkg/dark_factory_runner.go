@@ -185,6 +185,56 @@ func (r *darkFactoryRunner) CompleteSpec(ctx context.Context, workdir, specID st
 	return nil
 }
 
+// CommitSpecChanges stages and commits the working-tree changes under specs/ that
+// `dark-factory spec complete` leaves behind. That CLI rewrites the tree
+// (in-progress → completed) but does NOT git-commit — it runs after the daemon is
+// stopped, so nothing commits it (unlike the daemon's per-prompt workflow:direct
+// commits). PushBranch is a bare `git push HEAD`, so without this the spec
+// completion is never pushed: the PR keeps an approved-not-completed spec and the
+// watcher re-emits the task forever (self-trigger loop). A no-op when nothing is
+// staged (e.g. dark-factory already committed the move, or no spec completed).
+func (r *darkFactoryRunner) CommitSpecChanges(ctx context.Context, workdir string) error {
+	if err := r.runGit(ctx, workdir, "add", "-A", "specs"); err != nil {
+		return errors.Wrap(ctx, err, "git add specs")
+	}
+	if !r.hasStagedChanges(ctx, workdir) {
+		return nil
+	}
+	if err := r.runGit(ctx, workdir, "commit", "-m", "dark-factory: complete spec(s)"); err != nil {
+		return errors.Wrap(ctx, err, "git commit spec completions")
+	}
+	return nil
+}
+
+// runGit executes `git <args...>` in workdir, surfacing stderr on failure.
+func (r *darkFactoryRunner) runGit(ctx context.Context, workdir string, args ...string) error {
+	// #nosec G204 -- git is fixed; args are internal literals + validated spec ids
+	cmd := exec.CommandContext(ctx, "git", args...)
+	cmd.Dir = workdir
+	cmd.Env = os.Environ()
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		return errors.Errorf(
+			ctx,
+			"git %s: %s",
+			strings.Join(args, " "),
+			strings.TrimSpace(stderr.String()),
+		)
+	}
+	return nil
+}
+
+// hasStagedChanges reports whether the index holds staged changes
+// (`git diff --cached --quiet` exits non-zero when it does).
+func (r *darkFactoryRunner) hasStagedChanges(ctx context.Context, workdir string) bool {
+	// #nosec G204 -- fixed git command, no user input
+	cmd := exec.CommandContext(ctx, "git", "diff", "--cached", "--quiet")
+	cmd.Dir = workdir
+	cmd.Env = os.Environ()
+	return cmd.Run() != nil
+}
+
 // PushBranch pushes the per-prompt commits on HEAD to origin/<branch>.
 func (r *darkFactoryRunner) PushBranch(ctx context.Context, workdir, branch string) error {
 	// #nosec G204 -- git is fixed; branch is validated frontmatter (branch-name shaped)
