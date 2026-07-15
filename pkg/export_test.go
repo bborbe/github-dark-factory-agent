@@ -32,6 +32,11 @@ func HasInboxPrompts(workdir string) bool { return hasInboxPrompts(workdir) }
 // CountCompletedPrompts exposes the completed-prompt counter for tests.
 func CountCompletedPrompts(workdir string) int { return countCompletedPrompts(workdir) }
 
+// FindFailedPrompt exposes the terminal-failure detector for tests.
+func FindFailedPrompt(ctx context.Context, workdir string) (string, string) {
+	return findFailedPrompt(ctx, workdir)
+}
+
 // NewExecClaudeProber exposes the exec-backed prober with an injectable
 // command so tests can drive the success / unauth / error branches without a
 // real claude binary.
