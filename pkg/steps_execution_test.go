@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	agentlib "github.com/bborbe/agent"
+	claudelib "github.com/bborbe/agent/claude"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -58,7 +59,11 @@ var _ = Describe("ExecutionStep", func() {
 		fakeRunner = &mocks.ExecutionRunner{}
 		worktree = GinkgoT().TempDir()
 		fakeRepo.EnsureWorktreeReturns(worktree, nil)
-		step = pkg.NewExecutionStep(fakeRepo, fakeRunner)
+		step = pkg.NewExecutionStep(
+			fakeRepo,
+			fakeRunner,
+			claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+		)
 	})
 
 	run := func(taskContent string) (*agentlib.Result, *agentlib.Markdown) {
@@ -91,6 +96,9 @@ var _ = Describe("ExecutionStep", func() {
 				Expect(specIDs).To(ConsistOf("001-hello"))
 				Expect(flags).To(ContainElements("--set", "backend=local"))
 				Expect(flags).To(ContainElement("--auto-approve-prompts"))
+				// the injected fleet model is forwarded to the daemon so
+				// backend:local never falls back to its Claude default.
+				Expect(flags).To(ContainElements("--set", "model=MiniMax-M2.7-highspeed"))
 
 				// verifying spec → agent drives `spec complete`.
 				Expect(fakeRunner.CompleteSpecCallCount()).To(Equal(1))

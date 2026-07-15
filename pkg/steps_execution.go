@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	agentlib "github.com/bborbe/agent"
+	claudelib "github.com/bborbe/agent/claude"
 	"github.com/bborbe/errors"
 	domain "github.com/bborbe/vault-cli/pkg/domain"
 	"github.com/golang/glog"
@@ -128,12 +129,38 @@ type ExecutionOutput struct {
 type executionStep struct {
 	repoManager git.RepoManager
 	runner      ExecutionRunner
+	// model is the fleet model injected at construction (from the pod's
+	// ANTHROPIC_MODEL). It is forwarded to the daemon as `--set model=<model>`
+	// so backend:local never falls back to its built-in Claude default when a
+	// repo's .dark-factory.yaml omits `model:` (empty = no override).
+	model claudelib.ClaudeModel
 }
 
-// NewExecutionStep wires the execution step with its two IO seams: the repo
-// manager (worktree) and the dark-factory/git lifecycle runner.
-func NewExecutionStep(repoManager git.RepoManager, runner ExecutionRunner) agentlib.Step {
-	return &executionStep{repoManager: repoManager, runner: runner}
+// NewExecutionStep wires the execution step with its IO seams — the repo manager
+// (worktree) and the dark-factory/git lifecycle runner — plus the fleet model
+// forwarded to the daemon so backend:local uses it instead of its Claude default.
+func NewExecutionStep(
+	repoManager git.RepoManager,
+	runner ExecutionRunner,
+	model claudelib.ClaudeModel,
+) agentlib.Step {
+	return &executionStep{repoManager: repoManager, runner: runner, model: model}
+}
+
+// daemonFlags returns the static executionFlags plus a `--set model=<model>`
+// override derived from the injected fleet model. The daemon resolves its model
+// from --set > .dark-factory.yaml `model:` > a built-in Claude default; the fleet
+// routes agents to a specific provider model (e.g. MiniMax) but the daemon does
+// NOT read ANTHROPIC_MODEL for its own selection, so a repo config that omits
+// `model:` silently falls back to Claude (a ToU violation, and the source of the
+// wrong-byte-count prompt that failed the PR #40 marker run). An empty model
+// leaves the flag off, preserving prior behavior for tests and local runs.
+func (s *executionStep) daemonFlags() []string {
+	flags := append([]string{}, executionFlags...)
+	if m := strings.TrimSpace(s.model.String()); m != "" {
+		flags = append(flags, "--set", "model="+m)
+	}
+	return flags
 }
 
 // Name implements agentlib.Step.
@@ -219,7 +246,7 @@ func (s *executionStep) runLifecycle(
 	}
 
 	specIDs := specIDsFromPaths(plan.MatchedSpecs)
-	result, err := s.runner.RunLifecycle(ctx, worktree, specIDs, executionFlags)
+	result, err := s.runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())
 	if err != nil {
 		// A dark-factory / DoD / audit failure (spec-078 fail-closed). Escalate;
 		// NO auto-fix loop, NO assignee mutation.
