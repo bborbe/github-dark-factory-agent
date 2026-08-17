@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- chore: update Go to 1.26.6 and dependencies; fix GO-2026-5841 (klauspost/compress), GO-2026-6179 (golang.org/x/mod), GO-2026-6180 (golang.org/x/mod), GO-2026-5026 (stdlib), GO-2026-5972 (stdlib), GO-2026-6090 (stdlib), GO-2026-6218 (stdlib)
+
 ## v0.3.10
 
 - fix: fail-fast on a permanently-failed prompt instead of hanging to the lifecycle deadline. When a dark-factory prompt exhausts its retries the failure handler leaves it in `prompts/in-progress` with `status: failed` and the scanner skips it forever ("queue blocked until manual retry"), so its spec can never reach `verifying`. `drained()` could not distinguish that dead prompt from a slow one, so `waitForDrain` spun until the 30-minute `lifecycleTimeout` — and in-cluster the overall-run budget hard-killed the Job with `context canceled` at ~30 min BEFORE the step could escalate, so no `## Failure` was ever written and the task was not cleanly parked. `waitForDrain` now scans `prompts/in-progress` each tick via new `findFailedPrompt` and returns a lifecycle error the moment a prompt reaches terminal `status: failed`, surfacing its `lastFailReason`. The execution step then escalates cleanly (`Status: failed`) within seconds while the context is still alive — PR stays draft, spec stays incomplete, task parks. Approved/executing/unparseable prompts are ignored (only terminal `failed` counts). Unit tests cover the detector's discrimination + the RunLifecycle fast-path timing.
