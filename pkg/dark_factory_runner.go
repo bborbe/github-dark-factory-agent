@@ -31,7 +31,13 @@ const lifecyclePollInterval = 3 * time.Second
 // calls; a trivial spec finishes in <2min, a large one can take many minutes.
 // On timeout the daemon is stopped and RunLifecycle returns an error so the
 // step escalates rather than hanging the Job.
-const lifecycleTimeout = 30 * time.Minute
+//
+// Default is 90m (raised from 30m 2026-08-21 after real 2-prompt feature runs
+// hit the deadline mid-execution: generation ~7m + per-prompt execute 10-15m
+// + fix loops exceeds 30m). Overridable per deployment via LIFECYCLE_TIMEOUT
+// (duration, e.g. "90m") and per task via `lifecycle_timeout_minutes:` in the
+// task frontmatter (the execution step resolves it and passes it down).
+const lifecycleTimeout = 90 * time.Minute
 
 // darkFactoryRunner is the production ExecutionRunner: it shells `dark-factory`
 // and `git` with the worktree as cwd, inheriting the pod env (HOME for claude
@@ -43,12 +49,41 @@ type darkFactoryRunner struct {
 	timeout      time.Duration
 }
 
-// NewExecutionRunner constructs the production dark-factory/git lifecycle runner.
+// NewExecutionRunner constructs the production dark-factory/git lifecycle runner
+// with the package-default lifecycleTimeout (90m), honoring a LIFECYCLE_TIMEOUT
+// env override (Go duration, e.g. "90m", "2h") when set.
 func NewExecutionRunner() ExecutionRunner {
+	return NewExecutionRunnerWithTimeout(ResolveLifecycleTimeoutFromEnv(lifecycleTimeout))
+}
+
+// resolveLifecycleTimeoutFromEnv returns the LIFECYCLE_TIMEOUT env value parsed
+// as a Go duration, or fallback when unset/unparsable. Invalid values log a
+// warning and fall back (a misconfigured timeout must not silently become zero).
+func ResolveLifecycleTimeoutFromEnv(fallback time.Duration) time.Duration {
+	raw := os.Getenv("LIFECYCLE_TIMEOUT")
+	if raw == "" {
+		return fallback
+	}
+	d, err := time.ParseDuration(raw)
+	if err != nil {
+		glog.Warningf("LIFECYCLE_TIMEOUT=%q: %v — using default %s", raw, err, fallback)
+		return fallback
+	}
+	if d <= 0 {
+		glog.Warningf("LIFECYCLE_TIMEOUT=%q: must be positive — using default %s", raw, fallback)
+		return fallback
+	}
+	return d
+}
+
+// NewExecutionRunnerWithTimeout constructs the lifecycle runner with an explicit
+// timeout. Used when the caller resolves a per-task `lifecycle_timeout_minutes:`
+// frontmatter override (execution step) or a LIFECYCLE_TIMEOUT env override.
+func NewExecutionRunnerWithTimeout(timeout time.Duration) ExecutionRunner {
 	return &darkFactoryRunner{
 		binary:       darkFactoryBinary,
 		pollInterval: lifecyclePollInterval,
-		timeout:      lifecycleTimeout,
+		timeout:      timeout,
 	}
 }
 

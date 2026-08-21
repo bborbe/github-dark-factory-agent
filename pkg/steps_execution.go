@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"time"
 
 	agentlib "github.com/bborbe/agent"
 	claudelib "github.com/bborbe/agent/claude"
@@ -232,6 +233,18 @@ type lifecycleParams struct {
 	taskID   string
 }
 
+// resolveLifecycleTimeout reads the task frontmatter `lifecycle_timeout_minutes`
+// (an integer number of minutes) and returns the corresponding duration, or zero
+// if absent/invalid (caller keeps its default runner). Per-task override wins
+// over the env/built-in default that the step's default runner already carries.
+func ResolveLifecycleTimeout(md *agentlib.Markdown) time.Duration {
+	mins, ok := md.Frontmatter.Int("lifecycle_timeout_minutes")
+	if !ok || mins <= 0 {
+		return 0
+	}
+	return time.Duration(mins) * time.Minute
+}
+
 // runLifecycle ensures the worktree, drives dark-factory, completes the spec,
 // pushes, writes ## Result, and routes.
 func (s *executionStep) runLifecycle(
@@ -251,7 +264,14 @@ func (s *executionStep) runLifecycle(
 	}
 
 	specIDs := specIDsFromPaths(plan.MatchedSpecs)
-	result, err := s.runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())
+	runner := s.runner
+	// Per-task `lifecycle_timeout_minutes:` frontmatter override: build a
+	// runner with that timeout for THIS run only (default/env runner untouched).
+	if t := ResolveLifecycleTimeout(md); t > 0 {
+		runner = NewExecutionRunnerWithTimeout(t)
+		glog.V(2).Infof("execution: lifecycle timeout overridden by task frontmatter: %s", t)
+	}
+	result, err := runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())
 	if err != nil {
 		// A dark-factory / DoD / audit failure (spec-078 fail-closed). Escalate;
 		// NO auto-fix loop, NO assignee mutation.
