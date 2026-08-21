@@ -55,3 +55,15 @@ func NewGHTokenCheckStepWithURL(token, httpURL string) agentlib.Step {
 func NewGitHubClientWithBaseURL(token, baseURL string) GitHubClient {
 	return newGitHubClient(token, baseURL)
 }
+
+// ResolveLifecycleTimeoutFromEnv exposes the LIFECYCLE_TIMEOUT env parser for
+// tests.
+func ResolveLifecycleTimeoutFromEnv(fallback time.Duration) time.Duration {
+	return resolveLifecycleTimeoutFromEnv(fallback)
+}
+
+// ResolveLifecycleTimeout exposes the task-frontmatter override parser for
+// tests.
+func ResolveLifecycleTimeout(md *agentlib.Markdown) time.Duration {
+	return resolveLifecycleTimeout(md)
+}
