@@ -53,24 +53,24 @@ type darkFactoryRunner struct {
 // with the package-default lifecycleTimeout (90m), honoring a LIFECYCLE_TIMEOUT
 // env override (Go duration, e.g. "90m", "2h") when set.
 func NewExecutionRunner() ExecutionRunner {
-	return NewExecutionRunnerWithTimeout(ResolveLifecycleTimeoutFromEnv(lifecycleTimeout))
+	return NewExecutionRunnerWithTimeout(resolveLifecycleTimeoutFromEnv(lifecycleTimeout))
 }
 
 // resolveLifecycleTimeoutFromEnv returns the LIFECYCLE_TIMEOUT env value parsed
 // as a Go duration, or fallback when unset/unparsable. Invalid values log a
 // warning and fall back (a misconfigured timeout must not silently become zero).
-func ResolveLifecycleTimeoutFromEnv(fallback time.Duration) time.Duration {
+func resolveLifecycleTimeoutFromEnv(fallback time.Duration) time.Duration {
 	raw := os.Getenv("LIFECYCLE_TIMEOUT")
 	if raw == "" {
 		return fallback
 	}
 	d, err := time.ParseDuration(raw)
 	if err != nil {
-		glog.Warningf("LIFECYCLE_TIMEOUT=%q: %v — using default %s", raw, err, fallback)
+		glog.Warningf("parsing LIFECYCLE_TIMEOUT=%q: %v — using default %s", raw, err, fallback)
 		return fallback
 	}
 	if d <= 0 {
-		glog.Warningf("LIFECYCLE_TIMEOUT=%q: must be positive — using default %s", raw, fallback)
+		glog.Warningf("non-positive LIFECYCLE_TIMEOUT=%q — using default %s", raw, fallback)
 		return fallback
 	}
 	return d

@@ -237,7 +237,7 @@ type lifecycleParams struct {
 // (an integer number of minutes) and returns the corresponding duration, or zero
 // if absent/invalid (caller keeps its default runner). Per-task override wins
 // over the env/built-in default that the step's default runner already carries.
-func ResolveLifecycleTimeout(md *agentlib.Markdown) time.Duration {
+func resolveLifecycleTimeout(md *agentlib.Markdown) time.Duration {
 	mins, ok := md.Frontmatter.Int("lifecycle_timeout_minutes")
 	if !ok || mins <= 0 {
 		return 0
@@ -267,7 +267,7 @@ func (s *executionStep) runLifecycle(
 	runner := s.runner
 	// Per-task `lifecycle_timeout_minutes:` frontmatter override: build a
 	// runner with that timeout for THIS run only (default/env runner untouched).
-	if t := ResolveLifecycleTimeout(md); t > 0 {
+	if t := resolveLifecycleTimeout(md); t > 0 {
 		runner = NewExecutionRunnerWithTimeout(t)
 		glog.V(2).Infof("execution: lifecycle timeout overridden by task frontmatter: %s", t)
 	}
