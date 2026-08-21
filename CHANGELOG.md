@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.4.0
 
 - fix: raise the lifecycle timeout default 30m→90m and make it configurable, so real multi-prompt feature runs (generation ~7m + per-prompt execute 10-15m + fix loops) no longer hit the deadline mid-execution. New `LIFECYCLE_TIMEOUT` env override (Go duration) sets the deployment default; a per-task `lifecycle_timeout_minutes:` frontmatter field overrides for that task only. Both are resolved via `ResolveLifecycleTimeoutFromEnv` / `ResolveLifecycleTimeout` and threaded through `NewExecutionRunnerWithTimeout`. Invalid/absent values fall back safely (never zero).
 - fix: handle ignored `os.Setenv`/`os.Unsetenv` error returns in the lifecycle-timeout tests so the standalone errcheck target passes.
