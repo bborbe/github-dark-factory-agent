@@ -19,24 +19,24 @@ import (
 var _ = Describe("lifecycle timeout resolution", func() {
 	Describe("resolveLifecycleTimeoutFromEnv", func() {
 		It("falls back to the default when LIFECYCLE_TIMEOUT is unset", func() {
-			os.Unsetenv("LIFECYCLE_TIMEOUT")
+			Expect(os.Unsetenv("LIFECYCLE_TIMEOUT")).To(Succeed())
 			Expect(pkg.ResolveLifecycleTimeoutFromEnv(90 * time.Minute)).To(Equal(90 * time.Minute))
 		})
 
 		It("parses a valid LIFECYCLE_TIMEOUT", func() {
-			os.Setenv("LIFECYCLE_TIMEOUT", "2h")
+			Expect(os.Setenv("LIFECYCLE_TIMEOUT", "2h")).To(Succeed())
 			DeferCleanup(os.Unsetenv, "LIFECYCLE_TIMEOUT")
 			Expect(pkg.ResolveLifecycleTimeoutFromEnv(90 * time.Minute)).To(Equal(2 * time.Hour))
 		})
 
 		It("falls back on an unparsable LIFECYCLE_TIMEOUT", func() {
-			os.Setenv("LIFECYCLE_TIMEOUT", "not-a-duration")
+			Expect(os.Setenv("LIFECYCLE_TIMEOUT", "not-a-duration")).To(Succeed())
 			DeferCleanup(os.Unsetenv, "LIFECYCLE_TIMEOUT")
 			Expect(pkg.ResolveLifecycleTimeoutFromEnv(90 * time.Minute)).To(Equal(90 * time.Minute))
 		})
 
 		It("falls back on a non-positive LIFECYCLE_TIMEOUT", func() {
-			os.Setenv("LIFECYCLE_TIMEOUT", "0s")
+			Expect(os.Setenv("LIFECYCLE_TIMEOUT", "0s")).To(Succeed())
 			DeferCleanup(os.Unsetenv, "LIFECYCLE_TIMEOUT")
 			Expect(pkg.ResolveLifecycleTimeoutFromEnv(90 * time.Minute)).To(Equal(90 * time.Minute))
 		})
