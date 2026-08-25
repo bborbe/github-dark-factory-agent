@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- chore: update Go to 1.27.0 and github.com/bborbe/agent to v0.83.0, github.com/bborbe/cqrs to v0.6.8, github.com/bborbe/errors to v1.5.21, github.com/bborbe/kafka to v1.25.9, github.com/bborbe/maintainer to v0.50.2, github.com/bborbe/sentry to v1.9.27, github.com/bborbe/service to v1.10.9, github.com/bborbe/time to v1.27.10, github.com/bborbe/vault-cli to v0.116.2
+
 ## v0.4.0
 
 - fix: raise the lifecycle timeout default 30m→90m and make it configurable, so real multi-prompt feature runs (generation ~7m + per-prompt execute 10-15m + fix loops) no longer hit the deadline mid-execution. New `LIFECYCLE_TIMEOUT` env override (Go duration) sets the deployment default; a per-task `lifecycle_timeout_minutes:` frontmatter field overrides for that task only. Both are resolved via `ResolveLifecycleTimeoutFromEnv` / `ResolveLifecycleTimeout` and threaded through `NewExecutionRunnerWithTimeout`. Invalid/absent values fall back safely (never zero).

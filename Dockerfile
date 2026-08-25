@@ -7,7 +7,7 @@ ARG DOCKER_REGISTRY=docker.quant.benjamin-borbe.de:443
 ARG CLAUDE_YOLO_IMAGE=docker.io/bborbe/claude-yolo:v0.13.2
 
 # --- Build the agent binary -------------------------------------------------
-FROM ${DOCKER_REGISTRY}/golang:1.26.6 AS build
+FROM ${DOCKER_REGISTRY}/golang:1.27.0 AS build
 ARG BUILD_GIT_VERSION=dev
 ARG BUILD_GIT_COMMIT=none
 ARG BUILD_DATE=unknown
