@@ -1,4 +1,4 @@
-ARG DOCKER_REGISTRY=docker.quant.benjamin-borbe.de:443
+ARG DOCKER_REGISTRY=docker.prod.nuke.benjamin-borbe.de:443
 # CLAUDE_YOLO_IMAGE must be declared here, BEFORE the first FROM, to be a global
 # build arg: only global ARGs (pre-first-FROM) are visible to a later `FROM
 # ${...}`. Declaring it just above the second FROM strands it in the build
