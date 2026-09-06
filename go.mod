@@ -9,9 +9,9 @@ require (
 	github.com/bborbe/kafka v1.25.13
 	github.com/bborbe/maintainer v0.50.6
 	github.com/bborbe/sentry v1.10.1
-	github.com/bborbe/service v1.10.12
+	github.com/bborbe/service v1.10.13
 	github.com/bborbe/time v1.27.13
-	github.com/bborbe/vault-cli v0.122.2
+	github.com/bborbe/vault-cli v0.122.3
 	github.com/golang/glog v1.2.5
 	github.com/onsi/ginkgo/v2 v2.32.1
 	github.com/onsi/gomega v1.43.0
@@ -23,8 +23,8 @@ require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/bborbe/argument/v2 v2.13.2 // indirect
 	github.com/bborbe/collection v1.20.26 // indirect
-	github.com/bborbe/http v1.26.25 // indirect
-	github.com/bborbe/k8s v1.14.18 // indirect
+	github.com/bborbe/http v1.26.26 // indirect
+	github.com/bborbe/k8s v1.14.19 // indirect
 	github.com/bborbe/kv v1.21.13 // indirect
 	github.com/bborbe/log v1.6.25 // indirect
 	github.com/bborbe/math v1.4.8 // indirect
