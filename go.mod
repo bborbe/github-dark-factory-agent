@@ -2,16 +2,18 @@ module github.com/bborbe/github-dark-factory-agent
 
 go 1.27.1
 
+replace k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20260821135717-be32def86098
+
 require (
-	github.com/bborbe/agent v0.87.1
+	github.com/bborbe/agent v0.87.4
 	github.com/bborbe/cqrs v0.6.10
-	github.com/bborbe/errors v1.6.0
-	github.com/bborbe/kafka v1.25.13
-	github.com/bborbe/maintainer v0.50.6
+	github.com/bborbe/errors v1.6.1
+	github.com/bborbe/kafka v1.25.16
+	github.com/bborbe/maintainer v0.50.7
 	github.com/bborbe/sentry v1.10.1
 	github.com/bborbe/service v1.10.13
-	github.com/bborbe/time v1.27.13
-	github.com/bborbe/vault-cli v0.122.3
+	github.com/bborbe/time v1.27.14
+	github.com/bborbe/vault-cli v0.126.3
 	github.com/golang/glog v1.2.5
 	github.com/onsi/ginkgo/v2 v2.32.1
 	github.com/onsi/gomega v1.43.0
@@ -29,7 +31,7 @@ require (
 	github.com/bborbe/log v1.6.25 // indirect
 	github.com/bborbe/math v1.4.8 // indirect
 	github.com/bborbe/metrics v0.6.2 // indirect
-	github.com/bborbe/parse v1.11.2 // indirect
+	github.com/bborbe/parse v1.11.3 // indirect
 	github.com/bborbe/run v1.10.2 // indirect
 	github.com/bborbe/strimzi v1.8.17 // indirect
 	github.com/bborbe/validation v1.5.0 // indirect
@@ -62,7 +64,7 @@ require (
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-github/v88 v88.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
-	github.com/google/pprof v0.0.0-20260903180319-d6c3cb2f37ec // indirect
+	github.com/google/pprof v0.0.0-20260906184651-6331bc6350fe // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
@@ -108,7 +110,7 @@ require (
 	k8s.io/apimachinery v0.37.0 // indirect
 	k8s.io/client-go v0.37.0 // indirect
 	k8s.io/klog/v2 v2.140.0 // indirect
-	k8s.io/kube-openapi v0.0.0-20260821135717-be32def86098 // indirect
+	k8s.io/kube-openapi v0.0.0-20260904170622-9ab3195f2a72 // indirect
 	k8s.io/utils v0.0.0-20260707023825-cf1189d6abe3 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
