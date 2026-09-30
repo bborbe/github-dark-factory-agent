@@ -11,25 +11,27 @@ import (
 type ClaudeProber struct {
 	ProbeStub        func(context.Context) error
 	probeMutex       sync.RWMutex
-	probeArgsForCall []struct {
-		arg1 context.Context
-	}
-	probeReturns struct {
+	probeArgsForCall []ClaudeProberProbeArgs
+	probeReturns     struct {
 		result1 error
 	}
 	probeReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// ClaudeProberProbeArgs holds the arguments of one call to Probe.
+type ClaudeProberProbeArgs struct {
+	Arg1 context.Context
 }
 
 func (fake *ClaudeProber) Probe(arg1 context.Context) error {
 	fake.probeMutex.Lock()
 	ret, specificReturn := fake.probeReturnsOnCall[len(fake.probeArgsForCall)]
-	fake.probeArgsForCall = append(fake.probeArgsForCall, struct {
-		arg1 context.Context
-	}{arg1})
+	fake.probeArgsForCall = append(fake.probeArgsForCall, ClaudeProberProbeArgs{arg1})
 	stub := fake.ProbeStub
 	fakeReturns := fake.probeReturns
 	fake.recordInvocation("Probe", []interface{}{arg1})
@@ -59,7 +61,15 @@ func (fake *ClaudeProber) ProbeArgsForCall(i int) context.Context {
 	fake.probeMutex.RLock()
 	defer fake.probeMutex.RUnlock()
 	argsForCall := fake.probeArgsForCall[i]
-	return argsForCall.arg1
+	return argsForCall.Arg1
+}
+
+func (fake *ClaudeProber) ProbeArgs() []ClaudeProberProbeArgs {
+	fake.probeMutex.RLock()
+	defer fake.probeMutex.RUnlock()
+	args := make([]ClaudeProberProbeArgs, len(fake.probeArgsForCall))
+	copy(args, fake.probeArgsForCall)
+	return args
 }
 
 func (fake *ClaudeProber) ProbeReturns(result1 error) {
@@ -95,9 +105,18 @@ func (fake *ClaudeProber) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *ClaudeProber) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *ClaudeProber) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}

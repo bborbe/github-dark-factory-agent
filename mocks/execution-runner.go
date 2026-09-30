@@ -11,11 +11,8 @@ import (
 type ExecutionRunner struct {
 	CommitSpecChangesStub        func(context.Context, string) error
 	commitSpecChangesMutex       sync.RWMutex
-	commitSpecChangesArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-	}
-	commitSpecChangesReturns struct {
+	commitSpecChangesArgsForCall []ExecutionRunnerCommitSpecChangesArgs
+	commitSpecChangesReturns     struct {
 		result1 error
 	}
 	commitSpecChangesReturnsOnCall map[int]struct {
@@ -23,12 +20,8 @@ type ExecutionRunner struct {
 	}
 	CompleteSpecStub        func(context.Context, string, string) error
 	completeSpecMutex       sync.RWMutex
-	completeSpecArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-	}
-	completeSpecReturns struct {
+	completeSpecArgsForCall []ExecutionRunnerCompleteSpecArgs
+	completeSpecReturns     struct {
 		result1 error
 	}
 	completeSpecReturnsOnCall map[int]struct {
@@ -36,12 +29,8 @@ type ExecutionRunner struct {
 	}
 	PushBranchStub        func(context.Context, string, string) error
 	pushBranchMutex       sync.RWMutex
-	pushBranchArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-	}
-	pushBranchReturns struct {
+	pushBranchArgsForCall []ExecutionRunnerPushBranchArgs
+	pushBranchReturns     struct {
 		result1 error
 	}
 	pushBranchReturnsOnCall map[int]struct {
@@ -49,13 +38,8 @@ type ExecutionRunner struct {
 	}
 	RunLifecycleStub        func(context.Context, string, []string, []string) (*pkg.LifecycleResult, error)
 	runLifecycleMutex       sync.RWMutex
-	runLifecycleArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 []string
-		arg4 []string
-	}
-	runLifecycleReturns struct {
+	runLifecycleArgsForCall []ExecutionRunnerRunLifecycleArgs
+	runLifecycleReturns     struct {
 		result1 *pkg.LifecycleResult
 		result2 error
 	}
@@ -64,16 +48,42 @@ type ExecutionRunner struct {
 		result2 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// ExecutionRunnerCommitSpecChangesArgs holds the arguments of one call to CommitSpecChanges.
+type ExecutionRunnerCommitSpecChangesArgs struct {
+	Arg1 context.Context
+	Arg2 string
+}
+
+// ExecutionRunnerCompleteSpecArgs holds the arguments of one call to CompleteSpec.
+type ExecutionRunnerCompleteSpecArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+}
+
+// ExecutionRunnerPushBranchArgs holds the arguments of one call to PushBranch.
+type ExecutionRunnerPushBranchArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+}
+
+// ExecutionRunnerRunLifecycleArgs holds the arguments of one call to RunLifecycle.
+type ExecutionRunnerRunLifecycleArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 []string
+	Arg4 []string
 }
 
 func (fake *ExecutionRunner) CommitSpecChanges(arg1 context.Context, arg2 string) error {
 	fake.commitSpecChangesMutex.Lock()
 	ret, specificReturn := fake.commitSpecChangesReturnsOnCall[len(fake.commitSpecChangesArgsForCall)]
-	fake.commitSpecChangesArgsForCall = append(fake.commitSpecChangesArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-	}{arg1, arg2})
+	fake.commitSpecChangesArgsForCall = append(fake.commitSpecChangesArgsForCall, ExecutionRunnerCommitSpecChangesArgs{arg1, arg2})
 	stub := fake.CommitSpecChangesStub
 	fakeReturns := fake.commitSpecChangesReturns
 	fake.recordInvocation("CommitSpecChanges", []interface{}{arg1, arg2})
@@ -103,7 +113,15 @@ func (fake *ExecutionRunner) CommitSpecChangesArgsForCall(i int) (context.Contex
 	fake.commitSpecChangesMutex.RLock()
 	defer fake.commitSpecChangesMutex.RUnlock()
 	argsForCall := fake.commitSpecChangesArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return argsForCall.Arg1, argsForCall.Arg2
+}
+
+func (fake *ExecutionRunner) CommitSpecChangesArgs() []ExecutionRunnerCommitSpecChangesArgs {
+	fake.commitSpecChangesMutex.RLock()
+	defer fake.commitSpecChangesMutex.RUnlock()
+	args := make([]ExecutionRunnerCommitSpecChangesArgs, len(fake.commitSpecChangesArgsForCall))
+	copy(args, fake.commitSpecChangesArgsForCall)
+	return args
 }
 
 func (fake *ExecutionRunner) CommitSpecChangesReturns(result1 error) {
@@ -132,11 +150,7 @@ func (fake *ExecutionRunner) CommitSpecChangesReturnsOnCall(i int, result1 error
 func (fake *ExecutionRunner) CompleteSpec(arg1 context.Context, arg2 string, arg3 string) error {
 	fake.completeSpecMutex.Lock()
 	ret, specificReturn := fake.completeSpecReturnsOnCall[len(fake.completeSpecArgsForCall)]
-	fake.completeSpecArgsForCall = append(fake.completeSpecArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
+	fake.completeSpecArgsForCall = append(fake.completeSpecArgsForCall, ExecutionRunnerCompleteSpecArgs{arg1, arg2, arg3})
 	stub := fake.CompleteSpecStub
 	fakeReturns := fake.completeSpecReturns
 	fake.recordInvocation("CompleteSpec", []interface{}{arg1, arg2, arg3})
@@ -166,7 +180,15 @@ func (fake *ExecutionRunner) CompleteSpecArgsForCall(i int) (context.Context, st
 	fake.completeSpecMutex.RLock()
 	defer fake.completeSpecMutex.RUnlock()
 	argsForCall := fake.completeSpecArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3
+}
+
+func (fake *ExecutionRunner) CompleteSpecArgs() []ExecutionRunnerCompleteSpecArgs {
+	fake.completeSpecMutex.RLock()
+	defer fake.completeSpecMutex.RUnlock()
+	args := make([]ExecutionRunnerCompleteSpecArgs, len(fake.completeSpecArgsForCall))
+	copy(args, fake.completeSpecArgsForCall)
+	return args
 }
 
 func (fake *ExecutionRunner) CompleteSpecReturns(result1 error) {
@@ -195,11 +217,7 @@ func (fake *ExecutionRunner) CompleteSpecReturnsOnCall(i int, result1 error) {
 func (fake *ExecutionRunner) PushBranch(arg1 context.Context, arg2 string, arg3 string) error {
 	fake.pushBranchMutex.Lock()
 	ret, specificReturn := fake.pushBranchReturnsOnCall[len(fake.pushBranchArgsForCall)]
-	fake.pushBranchArgsForCall = append(fake.pushBranchArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
+	fake.pushBranchArgsForCall = append(fake.pushBranchArgsForCall, ExecutionRunnerPushBranchArgs{arg1, arg2, arg3})
 	stub := fake.PushBranchStub
 	fakeReturns := fake.pushBranchReturns
 	fake.recordInvocation("PushBranch", []interface{}{arg1, arg2, arg3})
@@ -229,7 +247,15 @@ func (fake *ExecutionRunner) PushBranchArgsForCall(i int) (context.Context, stri
 	fake.pushBranchMutex.RLock()
 	defer fake.pushBranchMutex.RUnlock()
 	argsForCall := fake.pushBranchArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3
+}
+
+func (fake *ExecutionRunner) PushBranchArgs() []ExecutionRunnerPushBranchArgs {
+	fake.pushBranchMutex.RLock()
+	defer fake.pushBranchMutex.RUnlock()
+	args := make([]ExecutionRunnerPushBranchArgs, len(fake.pushBranchArgsForCall))
+	copy(args, fake.pushBranchArgsForCall)
+	return args
 }
 
 func (fake *ExecutionRunner) PushBranchReturns(result1 error) {
@@ -268,12 +294,7 @@ func (fake *ExecutionRunner) RunLifecycle(arg1 context.Context, arg2 string, arg
 	}
 	fake.runLifecycleMutex.Lock()
 	ret, specificReturn := fake.runLifecycleReturnsOnCall[len(fake.runLifecycleArgsForCall)]
-	fake.runLifecycleArgsForCall = append(fake.runLifecycleArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 []string
-		arg4 []string
-	}{arg1, arg2, arg3Copy, arg4Copy})
+	fake.runLifecycleArgsForCall = append(fake.runLifecycleArgsForCall, ExecutionRunnerRunLifecycleArgs{arg1, arg2, arg3Copy, arg4Copy})
 	stub := fake.RunLifecycleStub
 	fakeReturns := fake.runLifecycleReturns
 	fake.recordInvocation("RunLifecycle", []interface{}{arg1, arg2, arg3Copy, arg4Copy})
@@ -303,7 +324,15 @@ func (fake *ExecutionRunner) RunLifecycleArgsForCall(i int) (context.Context, st
 	fake.runLifecycleMutex.RLock()
 	defer fake.runLifecycleMutex.RUnlock()
 	argsForCall := fake.runLifecycleArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3, argsForCall.Arg4
+}
+
+func (fake *ExecutionRunner) RunLifecycleArgs() []ExecutionRunnerRunLifecycleArgs {
+	fake.runLifecycleMutex.RLock()
+	defer fake.runLifecycleMutex.RUnlock()
+	args := make([]ExecutionRunnerRunLifecycleArgs, len(fake.runLifecycleArgsForCall))
+	copy(args, fake.runLifecycleArgsForCall)
+	return args
 }
 
 func (fake *ExecutionRunner) RunLifecycleReturns(result1 *pkg.LifecycleResult, result2 error) {
@@ -342,9 +371,18 @@ func (fake *ExecutionRunner) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *ExecutionRunner) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *ExecutionRunner) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}
