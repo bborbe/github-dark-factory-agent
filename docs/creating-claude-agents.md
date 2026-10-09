@@ -146,7 +146,7 @@ metadata:
   namespace: '{{ "NAMESPACE" | env }}'
 spec:
   assignee: <domain>-agent           # matches task assignee
-  image: docker.quant.benjamin-borbe.de:443/agent-<domain>
+  image: docker.prod.nuke.benjamin-borbe.de:443/agent-<domain>
   heartbeat: 5m
   secretName: agent-<domain>
   volumeClaim: agent-<domain>         # PVC with Claude Code OAuth config
