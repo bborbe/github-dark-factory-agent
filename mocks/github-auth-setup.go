@@ -11,25 +11,27 @@ import (
 type GitHubAuthSetup struct {
 	SetupStub        func(context.Context) error
 	setupMutex       sync.RWMutex
-	setupArgsForCall []struct {
-		arg1 context.Context
-	}
-	setupReturns struct {
+	setupArgsForCall []GitHubAuthSetupSetupArgs
+	setupReturns     struct {
 		result1 error
 	}
 	setupReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// GitHubAuthSetupSetupArgs holds the arguments of one call to Setup.
+type GitHubAuthSetupSetupArgs struct {
+	Arg1 context.Context
 }
 
 func (fake *GitHubAuthSetup) Setup(arg1 context.Context) error {
 	fake.setupMutex.Lock()
 	ret, specificReturn := fake.setupReturnsOnCall[len(fake.setupArgsForCall)]
-	fake.setupArgsForCall = append(fake.setupArgsForCall, struct {
-		arg1 context.Context
-	}{arg1})
+	fake.setupArgsForCall = append(fake.setupArgsForCall, GitHubAuthSetupSetupArgs{arg1})
 	stub := fake.SetupStub
 	fakeReturns := fake.setupReturns
 	fake.recordInvocation("Setup", []interface{}{arg1})
@@ -59,7 +61,15 @@ func (fake *GitHubAuthSetup) SetupArgsForCall(i int) context.Context {
 	fake.setupMutex.RLock()
 	defer fake.setupMutex.RUnlock()
 	argsForCall := fake.setupArgsForCall[i]
-	return argsForCall.arg1
+	return argsForCall.Arg1
+}
+
+func (fake *GitHubAuthSetup) SetupArgs() []GitHubAuthSetupSetupArgs {
+	fake.setupMutex.RLock()
+	defer fake.setupMutex.RUnlock()
+	args := make([]GitHubAuthSetupSetupArgs, len(fake.setupArgsForCall))
+	copy(args, fake.setupArgsForCall)
+	return args
 }
 
 func (fake *GitHubAuthSetup) SetupReturns(result1 error) {
@@ -95,9 +105,18 @@ func (fake *GitHubAuthSetup) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *GitHubAuthSetup) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *GitHubAuthSetup) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}

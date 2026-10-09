@@ -11,11 +11,8 @@ import (
 type ClaudeRunner struct {
 	RunStub        func(context.Context, string) (*claude.ClaudeResult, error)
 	runMutex       sync.RWMutex
-	runArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-	}
-	runReturns struct {
+	runArgsForCall []ClaudeRunnerRunArgs
+	runReturns     struct {
 		result1 *claude.ClaudeResult
 		result2 error
 	}
@@ -24,16 +21,20 @@ type ClaudeRunner struct {
 		result2 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// ClaudeRunnerRunArgs holds the arguments of one call to Run.
+type ClaudeRunnerRunArgs struct {
+	Arg1 context.Context
+	Arg2 string
 }
 
 func (fake *ClaudeRunner) Run(arg1 context.Context, arg2 string) (*claude.ClaudeResult, error) {
 	fake.runMutex.Lock()
 	ret, specificReturn := fake.runReturnsOnCall[len(fake.runArgsForCall)]
-	fake.runArgsForCall = append(fake.runArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-	}{arg1, arg2})
+	fake.runArgsForCall = append(fake.runArgsForCall, ClaudeRunnerRunArgs{arg1, arg2})
 	stub := fake.RunStub
 	fakeReturns := fake.runReturns
 	fake.recordInvocation("Run", []interface{}{arg1, arg2})
@@ -63,7 +64,15 @@ func (fake *ClaudeRunner) RunArgsForCall(i int) (context.Context, string) {
 	fake.runMutex.RLock()
 	defer fake.runMutex.RUnlock()
 	argsForCall := fake.runArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return argsForCall.Arg1, argsForCall.Arg2
+}
+
+func (fake *ClaudeRunner) RunArgs() []ClaudeRunnerRunArgs {
+	fake.runMutex.RLock()
+	defer fake.runMutex.RUnlock()
+	args := make([]ClaudeRunnerRunArgs, len(fake.runArgsForCall))
+	copy(args, fake.runArgsForCall)
+	return args
 }
 
 func (fake *ClaudeRunner) RunReturns(result1 *claude.ClaudeResult, result2 error) {
@@ -102,9 +111,18 @@ func (fake *ClaudeRunner) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *ClaudeRunner) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *ClaudeRunner) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}

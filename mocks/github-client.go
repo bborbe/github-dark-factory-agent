@@ -11,13 +11,8 @@ import (
 type GitHubClient struct {
 	GetPullRequestStub        func(context.Context, string, string, int) (*pkg.PullRequestInfo, error)
 	getPullRequestMutex       sync.RWMutex
-	getPullRequestArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 int
-	}
-	getPullRequestReturns struct {
+	getPullRequestArgsForCall []GitHubClientGetPullRequestArgs
+	getPullRequestReturns     struct {
 		result1 *pkg.PullRequestInfo
 		result2 error
 	}
@@ -27,13 +22,8 @@ type GitHubClient struct {
 	}
 	ListPullRequestFilesStub        func(context.Context, string, string, int) ([]string, error)
 	listPullRequestFilesMutex       sync.RWMutex
-	listPullRequestFilesArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 int
-	}
-	listPullRequestFilesReturns struct {
+	listPullRequestFilesArgsForCall []GitHubClientListPullRequestFilesArgs
+	listPullRequestFilesReturns     struct {
 		result1 []string
 		result2 error
 	}
@@ -42,18 +32,30 @@ type GitHubClient struct {
 		result2 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// GitHubClientGetPullRequestArgs holds the arguments of one call to GetPullRequest.
+type GitHubClientGetPullRequestArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+	Arg4 int
+}
+
+// GitHubClientListPullRequestFilesArgs holds the arguments of one call to ListPullRequestFiles.
+type GitHubClientListPullRequestFilesArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+	Arg4 int
 }
 
 func (fake *GitHubClient) GetPullRequest(arg1 context.Context, arg2 string, arg3 string, arg4 int) (*pkg.PullRequestInfo, error) {
 	fake.getPullRequestMutex.Lock()
 	ret, specificReturn := fake.getPullRequestReturnsOnCall[len(fake.getPullRequestArgsForCall)]
-	fake.getPullRequestArgsForCall = append(fake.getPullRequestArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 int
-	}{arg1, arg2, arg3, arg4})
+	fake.getPullRequestArgsForCall = append(fake.getPullRequestArgsForCall, GitHubClientGetPullRequestArgs{arg1, arg2, arg3, arg4})
 	stub := fake.GetPullRequestStub
 	fakeReturns := fake.getPullRequestReturns
 	fake.recordInvocation("GetPullRequest", []interface{}{arg1, arg2, arg3, arg4})
@@ -83,7 +85,15 @@ func (fake *GitHubClient) GetPullRequestArgsForCall(i int) (context.Context, str
 	fake.getPullRequestMutex.RLock()
 	defer fake.getPullRequestMutex.RUnlock()
 	argsForCall := fake.getPullRequestArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3, argsForCall.Arg4
+}
+
+func (fake *GitHubClient) GetPullRequestArgs() []GitHubClientGetPullRequestArgs {
+	fake.getPullRequestMutex.RLock()
+	defer fake.getPullRequestMutex.RUnlock()
+	args := make([]GitHubClientGetPullRequestArgs, len(fake.getPullRequestArgsForCall))
+	copy(args, fake.getPullRequestArgsForCall)
+	return args
 }
 
 func (fake *GitHubClient) GetPullRequestReturns(result1 *pkg.PullRequestInfo, result2 error) {
@@ -115,12 +125,7 @@ func (fake *GitHubClient) GetPullRequestReturnsOnCall(i int, result1 *pkg.PullRe
 func (fake *GitHubClient) ListPullRequestFiles(arg1 context.Context, arg2 string, arg3 string, arg4 int) ([]string, error) {
 	fake.listPullRequestFilesMutex.Lock()
 	ret, specificReturn := fake.listPullRequestFilesReturnsOnCall[len(fake.listPullRequestFilesArgsForCall)]
-	fake.listPullRequestFilesArgsForCall = append(fake.listPullRequestFilesArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 int
-	}{arg1, arg2, arg3, arg4})
+	fake.listPullRequestFilesArgsForCall = append(fake.listPullRequestFilesArgsForCall, GitHubClientListPullRequestFilesArgs{arg1, arg2, arg3, arg4})
 	stub := fake.ListPullRequestFilesStub
 	fakeReturns := fake.listPullRequestFilesReturns
 	fake.recordInvocation("ListPullRequestFiles", []interface{}{arg1, arg2, arg3, arg4})
@@ -150,7 +155,15 @@ func (fake *GitHubClient) ListPullRequestFilesArgsForCall(i int) (context.Contex
 	fake.listPullRequestFilesMutex.RLock()
 	defer fake.listPullRequestFilesMutex.RUnlock()
 	argsForCall := fake.listPullRequestFilesArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3, argsForCall.Arg4
+}
+
+func (fake *GitHubClient) ListPullRequestFilesArgs() []GitHubClientListPullRequestFilesArgs {
+	fake.listPullRequestFilesMutex.RLock()
+	defer fake.listPullRequestFilesMutex.RUnlock()
+	args := make([]GitHubClientListPullRequestFilesArgs, len(fake.listPullRequestFilesArgsForCall))
+	copy(args, fake.listPullRequestFilesArgsForCall)
+	return args
 }
 
 func (fake *GitHubClient) ListPullRequestFilesReturns(result1 []string, result2 error) {
@@ -189,9 +202,18 @@ func (fake *GitHubClient) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *GitHubClient) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *GitHubClient) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}
