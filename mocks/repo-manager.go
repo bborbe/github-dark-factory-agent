@@ -11,11 +11,8 @@ import (
 type RepoManager struct {
 	EnsureBareCloneStub        func(context.Context, string) (string, error)
 	ensureBareCloneMutex       sync.RWMutex
-	ensureBareCloneArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-	}
-	ensureBareCloneReturns struct {
+	ensureBareCloneArgsForCall []RepoManagerEnsureBareCloneArgs
+	ensureBareCloneReturns     struct {
 		result1 string
 		result2 error
 	}
@@ -25,13 +22,8 @@ type RepoManager struct {
 	}
 	EnsureWorktreeStub        func(context.Context, string, string, string) (string, error)
 	ensureWorktreeMutex       sync.RWMutex
-	ensureWorktreeArgsForCall []struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 string
-	}
-	ensureWorktreeReturns struct {
+	ensureWorktreeArgsForCall []RepoManagerEnsureWorktreeArgs
+	ensureWorktreeReturns     struct {
 		result1 string
 		result2 error
 	}
@@ -41,26 +33,41 @@ type RepoManager struct {
 	}
 	PruneAllWorktreesStub        func(context.Context) error
 	pruneAllWorktreesMutex       sync.RWMutex
-	pruneAllWorktreesArgsForCall []struct {
-		arg1 context.Context
-	}
-	pruneAllWorktreesReturns struct {
+	pruneAllWorktreesArgsForCall []RepoManagerPruneAllWorktreesArgs
+	pruneAllWorktreesReturns     struct {
 		result1 error
 	}
 	pruneAllWorktreesReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
+	callOrder        []string
 	invocationsMutex sync.RWMutex
+}
+
+// RepoManagerEnsureBareCloneArgs holds the arguments of one call to EnsureBareClone.
+type RepoManagerEnsureBareCloneArgs struct {
+	Arg1 context.Context
+	Arg2 string
+}
+
+// RepoManagerEnsureWorktreeArgs holds the arguments of one call to EnsureWorktree.
+type RepoManagerEnsureWorktreeArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+	Arg4 string
+}
+
+// RepoManagerPruneAllWorktreesArgs holds the arguments of one call to PruneAllWorktrees.
+type RepoManagerPruneAllWorktreesArgs struct {
+	Arg1 context.Context
 }
 
 func (fake *RepoManager) EnsureBareClone(arg1 context.Context, arg2 string) (string, error) {
 	fake.ensureBareCloneMutex.Lock()
 	ret, specificReturn := fake.ensureBareCloneReturnsOnCall[len(fake.ensureBareCloneArgsForCall)]
-	fake.ensureBareCloneArgsForCall = append(fake.ensureBareCloneArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-	}{arg1, arg2})
+	fake.ensureBareCloneArgsForCall = append(fake.ensureBareCloneArgsForCall, RepoManagerEnsureBareCloneArgs{arg1, arg2})
 	stub := fake.EnsureBareCloneStub
 	fakeReturns := fake.ensureBareCloneReturns
 	fake.recordInvocation("EnsureBareClone", []interface{}{arg1, arg2})
@@ -90,7 +97,15 @@ func (fake *RepoManager) EnsureBareCloneArgsForCall(i int) (context.Context, str
 	fake.ensureBareCloneMutex.RLock()
 	defer fake.ensureBareCloneMutex.RUnlock()
 	argsForCall := fake.ensureBareCloneArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return argsForCall.Arg1, argsForCall.Arg2
+}
+
+func (fake *RepoManager) EnsureBareCloneArgs() []RepoManagerEnsureBareCloneArgs {
+	fake.ensureBareCloneMutex.RLock()
+	defer fake.ensureBareCloneMutex.RUnlock()
+	args := make([]RepoManagerEnsureBareCloneArgs, len(fake.ensureBareCloneArgsForCall))
+	copy(args, fake.ensureBareCloneArgsForCall)
+	return args
 }
 
 func (fake *RepoManager) EnsureBareCloneReturns(result1 string, result2 error) {
@@ -122,12 +137,7 @@ func (fake *RepoManager) EnsureBareCloneReturnsOnCall(i int, result1 string, res
 func (fake *RepoManager) EnsureWorktree(arg1 context.Context, arg2 string, arg3 string, arg4 string) (string, error) {
 	fake.ensureWorktreeMutex.Lock()
 	ret, specificReturn := fake.ensureWorktreeReturnsOnCall[len(fake.ensureWorktreeArgsForCall)]
-	fake.ensureWorktreeArgsForCall = append(fake.ensureWorktreeArgsForCall, struct {
-		arg1 context.Context
-		arg2 string
-		arg3 string
-		arg4 string
-	}{arg1, arg2, arg3, arg4})
+	fake.ensureWorktreeArgsForCall = append(fake.ensureWorktreeArgsForCall, RepoManagerEnsureWorktreeArgs{arg1, arg2, arg3, arg4})
 	stub := fake.EnsureWorktreeStub
 	fakeReturns := fake.ensureWorktreeReturns
 	fake.recordInvocation("EnsureWorktree", []interface{}{arg1, arg2, arg3, arg4})
@@ -157,7 +167,15 @@ func (fake *RepoManager) EnsureWorktreeArgsForCall(i int) (context.Context, stri
 	fake.ensureWorktreeMutex.RLock()
 	defer fake.ensureWorktreeMutex.RUnlock()
 	argsForCall := fake.ensureWorktreeArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3, argsForCall.Arg4
+}
+
+func (fake *RepoManager) EnsureWorktreeArgs() []RepoManagerEnsureWorktreeArgs {
+	fake.ensureWorktreeMutex.RLock()
+	defer fake.ensureWorktreeMutex.RUnlock()
+	args := make([]RepoManagerEnsureWorktreeArgs, len(fake.ensureWorktreeArgsForCall))
+	copy(args, fake.ensureWorktreeArgsForCall)
+	return args
 }
 
 func (fake *RepoManager) EnsureWorktreeReturns(result1 string, result2 error) {
@@ -189,9 +207,7 @@ func (fake *RepoManager) EnsureWorktreeReturnsOnCall(i int, result1 string, resu
 func (fake *RepoManager) PruneAllWorktrees(arg1 context.Context) error {
 	fake.pruneAllWorktreesMutex.Lock()
 	ret, specificReturn := fake.pruneAllWorktreesReturnsOnCall[len(fake.pruneAllWorktreesArgsForCall)]
-	fake.pruneAllWorktreesArgsForCall = append(fake.pruneAllWorktreesArgsForCall, struct {
-		arg1 context.Context
-	}{arg1})
+	fake.pruneAllWorktreesArgsForCall = append(fake.pruneAllWorktreesArgsForCall, RepoManagerPruneAllWorktreesArgs{arg1})
 	stub := fake.PruneAllWorktreesStub
 	fakeReturns := fake.pruneAllWorktreesReturns
 	fake.recordInvocation("PruneAllWorktrees", []interface{}{arg1})
@@ -221,7 +237,15 @@ func (fake *RepoManager) PruneAllWorktreesArgsForCall(i int) context.Context {
 	fake.pruneAllWorktreesMutex.RLock()
 	defer fake.pruneAllWorktreesMutex.RUnlock()
 	argsForCall := fake.pruneAllWorktreesArgsForCall[i]
-	return argsForCall.arg1
+	return argsForCall.Arg1
+}
+
+func (fake *RepoManager) PruneAllWorktreesArgs() []RepoManagerPruneAllWorktreesArgs {
+	fake.pruneAllWorktreesMutex.RLock()
+	defer fake.pruneAllWorktreesMutex.RUnlock()
+	args := make([]RepoManagerPruneAllWorktreesArgs, len(fake.pruneAllWorktreesArgsForCall))
+	copy(args, fake.pruneAllWorktreesArgsForCall)
+	return args
 }
 
 func (fake *RepoManager) PruneAllWorktreesReturns(result1 error) {
@@ -257,9 +281,18 @@ func (fake *RepoManager) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
+func (fake *RepoManager) CallOrder() []string {
+	fake.invocationsMutex.RLock()
+	defer fake.invocationsMutex.RUnlock()
+	order := make([]string, len(fake.callOrder))
+	copy(order, fake.callOrder)
+	return order
+}
+
 func (fake *RepoManager) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
+	fake.callOrder = append(fake.callOrder, key)
 	if fake.invocations == nil {
 		fake.invocations = map[string][][]interface{}{}
 	}
