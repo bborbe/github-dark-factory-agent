@@ -265,22 +265,45 @@ func findStalledSpec(ctx context.Context, workdir string, specIDs []string) stri
 func anyPromptReferencesSpec(ctx context.Context, workdir, specID string) bool {
 	want := specNumPrefix(specID)
 	for _, dir := range []string{"", "in-progress", "completed"} {
+		// A cancelled scan reports the spec as linked, never as stalled: the
+		// caller is already unwinding on ctx.Done(), and an aborted read must
+		// not be read as evidence that no prompt references the spec.
+		if ctx.Err() != nil {
+			return true
+		}
 		matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", dir, "*.md"))
-		for _, path := range matches {
-			content, err := os.ReadFile(
-				path,
-			) // #nosec G304 -- path from Glob over the managed worktree
-			if err != nil {
-				continue
-			}
-			parsed, err := agentlib.ParseMarkdown(ctx, string(content))
-			if err != nil {
-				continue
-			}
-			for _, spec := range promptSpecValues(parsed.Frontmatter["spec"]) {
-				if specNumPrefix(spec) == want || spec == specID {
-					return true
-				}
+		if anyPromptInFilesReferencesSpec(ctx, matches, want, specID) {
+			return true
+		}
+	}
+	return false
+}
+
+// anyPromptInFilesReferencesSpec reports whether any of paths carries the spec
+// link. Split from anyPromptReferencesSpec so each loop stays under the
+// cognitive-complexity ceiling.
+func anyPromptInFilesReferencesSpec(
+	ctx context.Context,
+	paths []string,
+	want, specID string,
+) bool {
+	for _, path := range paths {
+		if ctx.Err() != nil {
+			return true
+		}
+		content, err := os.ReadFile(
+			path,
+		) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			continue
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			continue
+		}
+		for _, spec := range promptSpecValues(parsed.Frontmatter["spec"]) {
+			if specNumPrefix(spec) == want || spec == specID {
+				return true
 			}
 		}
 	}
