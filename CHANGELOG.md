@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.0
 
 - chore: bump the baked `DARK_FACTORY_VERSION` v0.192.4 → v0.198.9 (CLI + plugin, one pinned clone). v0.198.9 makes the `spec:` link mandatory for spec-derived prompts and enforces it in the generator's `finalizePrompted`: an empty link is backfilled with an ERROR naming the file, and a batch in which no prompt links the spec now fails so the spec resets to `approved` instead of being marked `prompted`. Without it the cluster route stalls silently — the generated prompt carried no link, `CheckAndComplete` found none and no-oped, the spec sat at `prompted` forever, and the lifecycle drain burned to its deadline (nuke-dev, `bborbe/go-skeleton` PR #128, 2026-10-20). ⚠️ The jump spans six minor versions, so the CLI surface this agent drives was re-checked at the new tag: `daemon` with `--set backend=local`, `--set hideGit=true`, `--set autoGeneratePrompts=true`, `--auto-approve-prompts`, `--skip-preflight`, `--skip-healthcheck`, `--set model=…`, plus `spec complete <id>` — all present.
 
