@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: **`waitForDrain` fails fast when a requested spec is stranded at `prompted` with no prompt referencing it**, instead of holding the Job's only agent slot until the lifecycle deadline. ⚠️ dark-factory advances a spec out of `prompted` only through its spec-link scan (`CheckAndComplete`), which no-ops when no prompt carries `spec:` — so a prompt authored without the link leaves the spec unreachable and every later daemon tick a no-op. `drained()` cannot see this: it counts in-flight prompts, and a stranded run has none. Observed 2026-10-20 on nuke dev: a fallback hand-authored prompt with `spec: ""` executed to `exit_code=0`, the spec stayed `prompted`, and the run burned the whole deadline before reporting `lifecycle did not drain before deadline` over work that had actually succeeded. The new `findStalledSpec` requires three consecutive polls (9s at the 3s interval) so a healthy run — whose spec is momentarily `prompted` while its prompt is auto-approved — is never mistaken for a stalled one.
+
 ## v0.4.8
 
 - chore: update github.com/bborbe/agent to v0.103.1, github.com/bborbe/cqrs to v0.6.12, github.com/bborbe/errors to v1.6.3, github.com/bborbe/kafka to v1.28.3, github.com/bborbe/maintainer to v0.50.12, github.com/bborbe/sentry to v1.10.4, github.com/bborbe/service to v1.11.0, github.com/bborbe/time to v1.27.17, github.com/bborbe/vault-cli to v0.174.0, github.com/onsi/ginkgo/v2 to v2.33.1, github.com/onsi/gomega to v1.44.0, github.com/prometheus/client_golang to v1.25.0
