@@ -39,6 +39,20 @@ const lifecyclePollInterval = 3 * time.Second
 // task frontmatter (the execution step resolves it and passes it down).
 const lifecycleTimeout = 90 * time.Minute
 
+// specStatusPrompted is the spec state that can strand a run. dark-factory moves
+// a spec to `verifying` only when every prompt carrying its `spec:` link has
+// completed; a spec at `prompted` with no such prompt is unreachable by any
+// daemon tick, so `drained()` waits for a transition that cannot happen.
+const specStatusPrompted = "prompted"
+
+// stallGracePolls is how many consecutive polls the stalled-spec condition must
+// hold before waitForDrain aborts. Grace is required because a healthy run is
+// momentarily in this state: the spec flips to `prompted` while its prompt sits
+// in the inbox, and the sweeper promotes it to `verifying` only on a later tick.
+// Three polls (9s at the default interval) outlasts that window without letting
+// a genuinely stranded run sit for the whole lifecycle deadline.
+const stallGracePolls = 3
+
 // darkFactoryRunner is the production ExecutionRunner: it shells `dark-factory`
 // and `git` with the worktree as cwd, inheriting the pod env (HOME for claude
 // auth, GH_TOKEN for push). It is exercised by the live smoke, not unit tests
@@ -182,6 +196,7 @@ func (r *darkFactoryRunner) waitForDrain(
 ) error {
 	ticker := time.NewTicker(r.pollInterval)
 	defer ticker.Stop()
+	stalledPolls := 0
 	for {
 		if file, reason := findFailedPrompt(ctx, workdir); file != "" {
 			return errors.Errorf(ctx, "prompt %s failed permanently: %s", file, reason)
@@ -189,12 +204,150 @@ func (r *darkFactoryRunner) waitForDrain(
 		if r.drained(ctx, workdir, specIDs) {
 			return nil
 		}
+		// A spec at `prompted` that no prompt references can never advance, so
+		// waiting for it only holds the Job's slot until the deadline. Fail on
+		// the first such spec after the grace window instead.
+		if id := findStalledSpec(ctx, workdir, specIDs); id != "" {
+			if stalledPolls++; stalledPolls >= stallGracePolls {
+				return errors.Errorf(
+					ctx,
+					"lifecycle stalled: spec %s is %q but no prompt references it, so "+
+						"dark-factory can never advance it (its spec-link scan no-ops "+
+						"when no prompt carries `spec:`) — holding the slot longer "+
+						"cannot change the outcome",
+					id, specStatusPrompted,
+				)
+			}
+		} else {
+			stalledPolls = 0
+		}
 		select {
 		case <-ctx.Done():
 			return errors.Wrap(ctx, ctx.Err(), "lifecycle did not drain before deadline")
 		case <-ticker.C:
 		}
 	}
+}
+
+// findStalledSpec returns the id of a requested spec that is stranded at
+// `prompted` with no prompt anywhere referencing it, or "" when no spec is.
+//
+// This is the deadlock that cost a full lifecycle deadline on 2026-10-20: a
+// fallback path hand-authored a prompt with an empty `spec:` field, the
+// implementation executed and committed, and the spec then sat at `prompted`
+// forever because dark-factory's CheckAndComplete no-ops when no prompt carries
+// the link (`found == false`). Nothing in the worktree changes again, so the
+// run holds its only agent slot until the deadline and reports failure over work
+// that actually succeeded.
+//
+// Returns "" while work is in flight — a prompt that has just landed in the
+// inbox is precisely the one about to be approved and executed.
+func findStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
+	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
+		return ""
+	}
+	for _, id := range specIDs {
+		if readSpecStatus(ctx, workdir, id) != specStatusPrompted {
+			continue
+		}
+		if !anyPromptReferencesSpec(ctx, workdir, id) {
+			return id
+		}
+	}
+	return ""
+}
+
+// anyPromptReferencesSpec reports whether any prompt in the inbox, the queue or
+// the completed dir carries specID in its `spec` frontmatter. Mirrors
+// dark-factory's own matching: the field is normally a YAML list
+// (`spec: ["003-foo"]`) but may be a bare scalar, and comparison is by numeric
+// prefix so `003-json-readiness-endpoint`, `003` and `3` all match.
+func anyPromptReferencesSpec(ctx context.Context, workdir, specID string) bool {
+	want := specNumPrefix(specID)
+	for _, dir := range []string{"", "in-progress", "completed"} {
+		// A cancelled scan reports the spec as linked, never as stalled: the
+		// caller is already unwinding on ctx.Done(), and an aborted read must
+		// not be read as evidence that no prompt references the spec.
+		if ctx.Err() != nil {
+			return true
+		}
+		matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", dir, "*.md"))
+		if anyPromptInFilesReferencesSpec(ctx, matches, want, specID) {
+			return true
+		}
+	}
+	return false
+}
+
+// anyPromptInFilesReferencesSpec reports whether any of paths carries the spec
+// link. Split from anyPromptReferencesSpec so each loop stays under the
+// cognitive-complexity ceiling.
+func anyPromptInFilesReferencesSpec(
+	ctx context.Context,
+	paths []string,
+	want, specID string,
+) bool {
+	for _, path := range paths {
+		if ctx.Err() != nil {
+			return true
+		}
+		content, err := os.ReadFile(
+			path,
+		) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			continue
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			continue
+		}
+		for _, spec := range promptSpecValues(parsed.Frontmatter["spec"]) {
+			if specNumPrefix(spec) == want || spec == specID {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// promptSpecValues normalizes a prompt's `spec` frontmatter to a slice of
+// strings, accepting both the list form dark-factory writes and a bare scalar.
+func promptSpecValues(raw any) []string {
+	switch v := raw.(type) {
+	case string:
+		return []string{v}
+	case []any:
+		out := make([]string, 0, len(v))
+		for _, item := range v {
+			if s, ok := item.(string); ok {
+				out = append(out, s)
+			}
+		}
+		return out
+	case []string:
+		return v
+	default:
+		return nil
+	}
+}
+
+// specNumPrefix returns the numeric prefix of a spec id ("003-foo" -> "3"),
+// or the whole value when it has none. Comparison is numeric so `003`, `3` and
+// `003-json-readiness-endpoint` all identify the same spec.
+func specNumPrefix(id string) string {
+	id = strings.TrimSpace(id)
+	end := 0
+	for end < len(id) && id[end] >= '0' && id[end] <= '9' {
+		end++
+	}
+	if end == 0 {
+		return id
+	}
+	trimmed := strings.TrimLeft(id[:end], "0")
+	if trimmed == "" {
+		return "0"
+	}
+	return trimmed
 }
 
 // drained reports whether every spec reached a terminal state AND no prompt is

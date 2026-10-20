@@ -37,6 +37,16 @@ func FindFailedPrompt(ctx context.Context, workdir string) (string, string) {
 	return findFailedPrompt(ctx, workdir)
 }
 
+// FindStalledSpec exposes the stranded-spec detector for tests.
+func FindStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
+	return findStalledSpec(ctx, workdir, specIDs)
+}
+
+// AnyPromptReferencesSpec exposes the prompt-to-spec link scan for tests.
+func AnyPromptReferencesSpec(ctx context.Context, workdir, specID string) bool {
+	return anyPromptReferencesSpec(ctx, workdir, specID)
+}
+
 // NewExecClaudeProber exposes the exec-backed prober with an injectable
 // command so tests can drive the success / unauth / error branches without a
 // real claude binary.

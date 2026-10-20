@@ -133,6 +133,94 @@ var _ = Describe("darkFactoryRunner", func() {
 		})
 	})
 
+	Describe("stalled spec detection", func() {
+		var work string
+		BeforeEach(func() {
+			work = GinkgoT().TempDir()
+			Expect(os.MkdirAll(filepath.Join(work, "specs", "in-progress"), 0750)).To(BeNil())
+			Expect(os.MkdirAll(filepath.Join(work, "prompts", "in-progress"), 0750)).To(BeNil())
+			Expect(os.MkdirAll(filepath.Join(work, "prompts", "completed"), 0750)).To(BeNil())
+		})
+
+		writeSpec := func(status string) {
+			Expect(os.WriteFile(
+				filepath.Join(work, "specs", "in-progress", "003-json-readiness.md"),
+				[]byte("---\nstatus: "+status+"\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+		}
+
+		It("reports a spec stranded at prompted when no prompt links it", func() {
+			// The 2026-10-20 shape: the implementation ran and completed, but the
+			// hand-authored prompt carried an empty `spec:` field, so dark-factory's
+			// spec-link scan never finds it and the spec can never advance.
+			writeSpec("prompted")
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "completed", "009-readiness.md"),
+				[]byte("---\nspec: \"\"\nstatus: completed\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+
+			Expect(
+				pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"}),
+			).To(Equal("003-json-readiness"))
+		})
+
+		It("does not report a spec whose completed prompt carries the link", func() {
+			writeSpec("prompted")
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "completed", "009-readiness.md"),
+				[]byte("---\nspec: [\"003-json-readiness\"]\nstatus: completed\n---\n\nbody\n"),
+				0600,
+			)).To(BeNil())
+
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("matches the link by numeric prefix, like dark-factory does", func() {
+			writeSpec("prompted")
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "completed", "009-readiness.md"),
+				[]byte("---\nspec: [\"3\"]\nstatus: completed\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("stays quiet while a prompt is still in flight", func() {
+			writeSpec("prompted")
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "009-readiness.md"),
+				[]byte("---\nstatus: approved\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("ignores a spec that is not at prompted", func() {
+			writeSpec("generating")
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("detects the link in the inbox and in the queue too", func() {
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "in-progress", "009-readiness.md"),
+				[]byte("---\nspec: [\"003-json-readiness\"]\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			Expect(
+				pkg.AnyPromptReferencesSpec(ctx, work, "003-json-readiness"),
+			).To(BeTrue())
+
+			Expect(os.Remove(filepath.Join(work, "prompts", "in-progress", "009-readiness.md"))).
+				To(BeNil())
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "010-inbox.md"),
+				[]byte("---\nspec: [\"003-json-readiness\"]\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			Expect(
+				pkg.AnyPromptReferencesSpec(ctx, work, "003-json-readiness"),
+			).To(BeTrue())
+		})
+	})
+
 	Describe("RunLifecycle (stub daemon)", func() {
 		It("starts the daemon, waits for drain, and reports spec status + prompt count", func() {
 			work := GinkgoT().TempDir()
