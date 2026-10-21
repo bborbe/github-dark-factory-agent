@@ -374,9 +374,11 @@ func (s *executionStep) adoptPushedHead(
 		)
 	}
 
-	// glog.Info (level 0), not V(2): this line is the replay's evidence that no
-	// LLM call happened, so it must survive the default log verbosity.
-	glog.Infof(
+	// V(1): the adopt event is an operator-relevant skip, but this repo keeps
+	// every log line V-gated (go-glog convention). The replay runs at -v=2, so
+	// V(1) stays visible there; ## Result (adopted/prompts_executed=0) is the
+	// durable evidence and does not depend on verbosity at all.
+	glog.V(1).Infof(
 		"execution: adopting already-pushed branch head %s for %s (ref %s) — skipping lifecycle",
 		remoteHead,
 		p.branch,
