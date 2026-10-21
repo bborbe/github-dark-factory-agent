@@ -8,6 +8,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"strings"
 
 	agentlib "github.com/bborbe/agent"
 	claudelib "github.com/bborbe/agent/claude"
@@ -128,6 +129,43 @@ var _ = Describe("AIReviewStep", func() {
 		It("does NOT clear the assignee (controller does when phase==human_review)", func() {
 			_, md := run(reviewTask())
 			assertUntouched(md)
+		})
+	})
+
+	Describe("adopted result", func() {
+		// The worktree at the task's stale ref carries no completed spec: an
+		// adopted run pushed its completions to the remote branch instead.
+		BeforeEach(func() {
+			fakeRepo.EnsureWorktreeReturns(GinkgoT().TempDir(), nil)
+			fakeRunner.RunReturns(&claudelib.ClaudeResult{
+				Result: `{"outcome":"pass","notes":"pushed head implements the spec"}`,
+			}, nil)
+		})
+
+		adoptedTask := func() string {
+			return strings.Replace(
+				reviewTask(),
+				`"prompts_executed":1,"commits_pushed":true`,
+				`"prompts_executed":0,"commits_pushed":true,"branch_head":"def456","adopted":true`,
+				1,
+			)
+		}
+
+		It("skips the worktree post-conditions and routes to human_review", func() {
+			result, md := run(adoptedTask())
+
+			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+			Expect(result.NextPhase).To(Equal("human_review"))
+
+			// The stale-ref worktree is never touched, but the verdict still runs
+			// against the PR (which carries the adopted head).
+			Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
+			Expect(fakeRunner.RunCallCount()).To(Equal(1))
+			Expect(fakeGH.GetPullRequestCallCount()).To(Equal(1))
+
+			out, err := agentlib.ExtractSection[pkg.ReviewOutput](ctx, md, "## Review")
+			Expect(err).To(BeNil())
+			Expect(out.Outcome).To(Equal("pass"))
 		})
 	})
 

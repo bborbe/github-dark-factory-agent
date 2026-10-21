@@ -141,6 +141,24 @@ func (s *aiReviewStep) review(
 		)), nil
 	}
 
+	// An adopted result (execution found the branch already pushed and skipped
+	// the lifecycle) carries its spec completions on the REMOTE branch, not at
+	// the task's stale `ref`. Re-asserting (b) and (c) against a worktree at
+	// `ref` would therefore always fail — the original run pushed the completed
+	// specs, so the ref simply never contains them. The verdict below still
+	// runs: it reviews the PR diff, which is the adopted head.
+	if execOut, err := agentlib.ExtractSection[ExecutionOutput](
+		ctx, md, resultSectionHeading,
+	); err == nil && execOut.Adopted {
+		glog.V(1).Infof(
+			"ai_review: %s was adopted from pushed head %s — skipping worktree post-conditions",
+			resultSectionHeading,
+			execOut.BranchHead,
+		)
+		verdict := s.claudeVerdict(ctx, fields["repo"], prNumber, plan.MatchedSpecs)
+		return s.writeAndRoute(ctx, md, plan.Repo, prNumber, verdict)
+	}
+
 	worktree, err := s.repoManager.EnsureWorktree(
 		ctx, fields["clone_url"], fields["ref"], fields["task_identifier"],
 	)
