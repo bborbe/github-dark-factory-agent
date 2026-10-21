@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.4
 
 - fix: adopt an already-pushed branch head instead of re-running the whole lifecycle. A crash after `PushBranch` but before `## Result` is delivered left the remote branch ahead of the task's `ref`; the re-run repeated the full LLM job (~30 min of prompts, reproduced on nuke dev 2026-10-21) and then failed non-fast-forward with `! [rejected] HEAD -> <branch> (non-fast-forward)`, leaving a spurious failed task. The execution step now compares the remote branch head with `ref` before `EnsureWorktree`: a head that moved **and** descends from `ref` is adopted (no lifecycle, `## Result` written citing the head with `adopted: true` and `prompts_executed: 0`); a head that moved but does not descend from `ref` returns needs-input naming both shas rather than claiming another push's work.
 
