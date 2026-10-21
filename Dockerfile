@@ -33,11 +33,12 @@ ARG BUILD_DATE=unknown
 LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 
 # dark-factory CLI + PLUGIN both come from ONE pinned clone (the RUN below).
-# PIN v0.192.0: it ships the in-process `backend: local` execution mode (spec
-# 104) this agent depends on — it runs claude as a local subprocess in cwd
-# instead of `docker run`, so the agent does NOT spawn nested containers (no
-# DinD; the Job pod is already a claude-yolo container). Select it at runtime
-# with `dark-factory run --set backend=local`.
+# PINNED (see the ARG below for the version): it ships the in-process
+# `backend: local` execution mode (spec 104) this agent depends on — it runs
+# claude as a local subprocess in cwd instead of `docker run`, so the agent
+# does NOT spawn nested containers (no DinD; the Job pod is already a
+# claude-yolo container). Select it at runtime with
+# `dark-factory run --set backend=local`.
 #
 # The CLI is built from the clone (`go install .` in the module root), NOT via
 # `go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}`: that form
