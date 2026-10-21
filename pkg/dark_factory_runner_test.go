@@ -292,6 +292,34 @@ esac
 			Expect(err.Error()).To(ContainSubstring("drain"))
 		})
 
+		It("aborts the drain when a spec is stranded at prompted and no prompt links it", func() {
+			work := GinkgoT().TempDir()
+			// Stub daemon: the spec is left at `prompted` while the only prompt is
+			// COMPLETED and carries no `spec:` link. dark-factory advances a spec
+			// out of `prompted` only through its spec-link scan (CheckAndComplete),
+			// which no-ops when no prompt references it — so the spec can never
+			// reach verifying, drained() never returns true, and without the stall
+			// check this burns the whole deadline (the 2026-10-20 nuke-dev hang).
+			// Three polls at 20ms must abort well inside the 10s deadline.
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts/completed specs/in-progress
+    printf 'x' > prompts/completed/001-unlinked.md
+    printf -- '---\nstatus: prompted\n---\n\nbody\n' > specs/in-progress/003-json-readiness.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 10*time.Second)
+			start := time.Now()
+			_, err := runner.RunLifecycle(ctx, work, []string{"003-json-readiness"}, nil)
+			Expect(err).NotTo(BeNil())
+			Expect(err.Error()).To(ContainSubstring("lifecycle stalled"))
+			Expect(err.Error()).To(ContainSubstring("003-json-readiness"))
+			Expect(time.Since(start)).To(BeNumerically("<", 5*time.Second))
+		})
+
 		It("fails fast when a prompt is marked failed, without waiting for the deadline", func() {
 			work := GinkgoT().TempDir()
 			// Stub daemon: the prompt exhausted its retries — the failure handler

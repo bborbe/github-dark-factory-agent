@@ -33,11 +33,12 @@ ARG BUILD_DATE=unknown
 LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 
 # dark-factory CLI + PLUGIN both come from ONE pinned clone (the RUN below).
-# PIN v0.192.0: it ships the in-process `backend: local` execution mode (spec
-# 104) this agent depends on — it runs claude as a local subprocess in cwd
-# instead of `docker run`, so the agent does NOT spawn nested containers (no
-# DinD; the Job pod is already a claude-yolo container). Select it at runtime
-# with `dark-factory run --set backend=local`.
+# PINNED (see the ARG below for the version): it ships the in-process
+# `backend: local` execution mode (spec 104) this agent depends on — it runs
+# claude as a local subprocess in cwd instead of `docker run`, so the agent
+# does NOT spawn nested containers (no DinD; the Job pod is already a
+# claude-yolo container). Select it at runtime with
+# `dark-factory run --set backend=local`.
 #
 # The CLI is built from the clone (`go install .` in the module root), NOT via
 # `go install github.com/bborbe/dark-factory@${DARK_FACTORY_VERSION}`: that form
@@ -45,7 +46,7 @@ LABEL org.opencontainers.image.version="${BUILD_GIT_VERSION}"
 # `go install pkg@version` refuses ("must not contain directives that would
 # cause it to be interpreted differently than if it were the main module").
 # Building from the module root honors them, same as upstream `make install`.
-ARG DARK_FACTORY_VERSION=v0.198.9
+ARG DARK_FACTORY_VERSION=v0.198.11
 USER node
 
 # dark-factory Claude PLUGIN — the /dark-factory:* slash commands
