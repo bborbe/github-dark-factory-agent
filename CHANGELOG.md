@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- chore: bump the baked `DARK_FACTORY_VERSION` v0.198.9 → v0.198.11 (CLI + plugin, one pinned clone). v0.198.10 drops `model: opus` from the six `agents/*.md`, so a subagent inherits the session model instead of resolving to an Anthropic name the router maps to an adaptive-thinking-only backend, which answered every dispatch with `API Error: 400`. v0.198.11 adds `Task` to `allowed-tools` in `commands/create-prompt.md` and `commands/create-spec.md`, so the prompt-creator / spec-creator **agents** can be invoked through the Task tool; without it the command fell back to a Skill-tool call and failed with `Unknown skill: dark-factory:prompt-creator`. Both fixes reach this image through the plugin clone, which is pinned to the same tag.
+
 ## v0.5.1
 
 - fix: **`waitForDrain` fails fast when a requested spec is stranded at `prompted` with no prompt referencing it**, instead of holding the Job's only agent slot until the lifecycle deadline. ⚠️ dark-factory advances a spec out of `prompted` only through its spec-link scan (`CheckAndComplete`), which no-ops when no prompt carries `spec:` — so a prompt authored without the link leaves the spec unreachable and every later daemon tick a no-op. `drained()` cannot see this: it counts in-flight prompts, and a stranded run has none. Observed 2026-10-20 on nuke dev: a fallback hand-authored prompt with `spec: ""` executed to `exit_code=0`, the spec stayed `prompted`, and the run burned the whole deadline before reporting `lifecycle did not drain before deadline` over work that had actually succeeded. The new `findStalledSpec` requires three consecutive polls (9s at the 3s interval) so a healthy run — whose spec is momentarily `prompted` while its prompt is auto-approved — is never mistaken for a stalled one.
