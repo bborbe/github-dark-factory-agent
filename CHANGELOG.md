@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - chore: bump the baked `DARK_FACTORY_VERSION` v0.198.9 → v0.198.11 (CLI + plugin, one pinned clone). v0.198.10 drops `model: opus` from the six `agents/*.md`, so a subagent inherits the session model instead of resolving to an Anthropic name the router maps to an adaptive-thinking-only backend, which answered every dispatch with `API Error: 400`. v0.198.11 adds `Task` to `allowed-tools` in `commands/create-prompt.md` and `commands/create-spec.md`, so the prompt-creator / spec-creator **agents** can be invoked through the Task tool; without it the command fell back to a Skill-tool call and failed with `Unknown skill: dark-factory:prompt-creator`. Both fixes reach this image through the plugin clone, which is pinned to the same tag.
+- chore: update Go to 1.27.3 and github.com/bborbe/agent to v0.112.0, github.com/bborbe/kafka to v1.28.4, github.com/bborbe/sentry to v1.10.5, github.com/bborbe/vault-cli to v0.177.0
 
 ## v0.5.1
 
