@@ -317,5 +317,71 @@ task_identifier: ` + validTaskID + `
 			Expect(assignee).To(Equal("github-dark-factory-agent"))
 			Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
 		})
+
+		Describe("adopting an already-pushed branch head", func() {
+			It("adopts the moved head without running the lifecycle", func() {
+				fakeRepo.RemoteBranchHeadReturns("def456", nil)
+				fakeRepo.IsAncestorReturns(true, nil)
+
+				result, md := run(execTask())
+
+				Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+				Expect(result.NextPhase).To(Equal("ai_review"))
+
+				// The whole point: no worktree checkout, no LLM lifecycle, no push.
+				Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(0))
+				Expect(fakeRunner.PushBranchCallCount()).To(Equal(0))
+
+				// ## Result cites the adopted head and reports zero prompts.
+				section, ok := md.FindSection("## Result")
+				Expect(ok).To(BeTrue())
+				Expect(section.Body).To(ContainSubstring(`"branch_head": "def456"`))
+				Expect(section.Body).To(ContainSubstring(`"adopted": true`))
+				Expect(section.Body).To(ContainSubstring(`"prompts_executed": 0`))
+			})
+
+			It("refuses to adopt a branch that moved but does not descend from ref", func() {
+				fakeRepo.RemoteBranchHeadReturns("def456", nil)
+				fakeRepo.IsAncestorReturns(false, nil)
+
+				result, _ := run(execTask())
+
+				Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
+				Expect(result.Message).To(ContainSubstring("def456"))
+				Expect(result.Message).To(ContainSubstring("abc123"))
+				Expect(result.Message).To(ContainSubstring("does not descend"))
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(0))
+				Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
+			})
+
+			It("runs normally when the branch still sits at ref", func() {
+				fakeRepo.RemoteBranchHeadReturns("abc123", nil)
+				fakeRunner.RunLifecycleReturns(&pkg.LifecycleResult{
+					PromptsExecuted: 1,
+					SpecStatuses:    map[string]string{"001-hello": "verifying"},
+				}, nil)
+
+				result, _ := run(execTask())
+
+				Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+				Expect(fakeRepo.IsAncestorCallCount()).To(Equal(0))
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
+			})
+
+			It("runs normally when the branch was never pushed", func() {
+				fakeRepo.RemoteBranchHeadReturns("", nil)
+				fakeRunner.RunLifecycleReturns(&pkg.LifecycleResult{
+					PromptsExecuted: 1,
+					SpecStatuses:    map[string]string{"001-hello": "verifying"},
+				}, nil)
+
+				result, _ := run(execTask())
+
+				Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
+			})
+		})
+
 	})
 })

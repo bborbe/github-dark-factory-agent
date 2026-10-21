@@ -126,6 +126,12 @@ type ExecutionOutput struct {
 	SpecsCompleted  []string `json:"specs_completed"`
 	PromptsExecuted int      `json:"prompts_executed"`
 	CommitsPushed   bool     `json:"commits_pushed"`
+	// BranchHead is the remote commit this result refers to — the adopted head
+	// on a re-run, or the pushed head on a normal run.
+	BranchHead string `json:"branch_head,omitempty"`
+	// Adopted is true when the result was adopted from an already-pushed branch
+	// instead of produced by a lifecycle run (PromptsExecuted is 0 then).
+	Adopted bool `json:"adopted,omitempty"`
 }
 
 // executionStep implements agentlib.Step. It clones the draft-PR branch's
@@ -253,6 +259,20 @@ func (s *executionStep) runLifecycle(
 	plan *PlanOutput,
 	p lifecycleParams,
 ) (*agentlib.Result, error) {
+	// Adopt an already-pushed branch head. A crash after PushBranch but before
+	// ## Result is delivered leaves the remote branch ahead of the task's ref;
+	// re-running would repeat the whole (expensive, side-effecting) LLM job and
+	// then fail non-fast-forward. When the branch moved AND the moved head still
+	// descends from ref, the work is already pushed — write ## Result citing the
+	// remote head and route on without running the lifecycle.
+	adopted, adoptResult := s.adoptPushedHead(ctx, md, plan, p)
+	if adoptResult != nil {
+		return adoptResult, nil
+	}
+	if adopted {
+		return advanceToAIReview(), nil
+	}
+
 	worktree, err := s.repoManager.EnsureWorktree(ctx, p.cloneURL, p.ref, p.taskID)
 	if err != nil {
 		if git.IsGitAuthFailure(err) {
@@ -302,6 +322,8 @@ func (s *executionStep) runLifecycle(
 		SpecsCompleted:  completed,
 		PromptsExecuted: result.PromptsExecuted,
 		CommitsPushed:   true,
+		BranchHead:      s.headAfterPush(ctx, p),
+		Adopted:         false,
 	}
 	section, err := agentlib.MarshalSectionTyped(ctx, resultSectionHeading, output)
 	if err != nil {
@@ -314,6 +336,83 @@ func (s *executionStep) runLifecycle(
 		resultSectionHeading, plan.Repo, completed, result.PromptsExecuted,
 	)
 	return advanceToAIReview(), nil
+}
+
+// adoptPushedHead reports whether the remote branch has moved past the task's
+// ref, and writes ## Result for that head when the move is safe to adopt.
+//
+// Adoption is deliberately narrow: the moved head must descend from ref, so a
+// branch someone else force-pushed (or a different task's work) is never
+// claimed as this task's result. That case returns needs-input naming both
+// shas instead.
+func (s *executionStep) adoptPushedHead(
+	ctx context.Context,
+	md *agentlib.Markdown,
+	plan *PlanOutput,
+	p lifecycleParams,
+) (bool, *agentlib.Result) {
+	remoteHead, err := s.repoManager.RemoteBranchHead(ctx, p.cloneURL, p.branch)
+	if err != nil {
+		return false, failed("execution: read remote branch head " + p.branch + ": " + err.Error())
+	}
+	// Nothing pushed yet, or the branch still sits exactly at ref: a normal run.
+	if remoteHead == "" || remoteHead == p.ref {
+		return false, nil
+	}
+
+	descends, err := s.repoManager.IsAncestor(ctx, p.cloneURL, p.ref, remoteHead)
+	if err != nil {
+		return false, failed(
+			"execution: check ancestry " + p.ref + " -> " + remoteHead + ": " + err.Error(),
+		)
+	}
+	if !descends {
+		return false, needsInput(
+			"execution: branch " + p.branch + " moved to " + remoteHead +
+				", which does not descend from ref " + p.ref +
+				" — refusing to adopt work this task did not push",
+		)
+	}
+
+	// glog.Info (level 0), not V(2): this line is the replay's evidence that no
+	// LLM call happened, so it must survive the default log verbosity.
+	glog.Infof(
+		"execution: adopting already-pushed branch head %s for %s (ref %s) — skipping lifecycle",
+		remoteHead,
+		p.branch,
+		p.ref,
+	)
+
+	output := ExecutionOutput{
+		Repo:            plan.Repo,
+		Branch:          p.branch,
+		SpecsCompleted:  specIDsFromPaths(plan.MatchedSpecs),
+		PromptsExecuted: 0,
+		CommitsPushed:   true,
+		BranchHead:      remoteHead,
+		Adopted:         true,
+	}
+	section, err := agentlib.MarshalSectionTyped(ctx, resultSectionHeading, output)
+	if err != nil {
+		return false, failed(
+			"execution: marshal adopted " + resultSectionHeading + ": " + err.Error(),
+		)
+	}
+	md.ReplaceSection(section)
+	return true, nil
+}
+
+// headAfterPush reports the remote head after a successful push, so ## Result
+// cites the commit it actually produced. A read failure is not fatal here — the
+// push already succeeded, and an empty field is a missing citation, not a
+// failed run.
+func (s *executionStep) headAfterPush(ctx context.Context, p lifecycleParams) string {
+	head, err := s.repoManager.RemoteBranchHead(ctx, p.cloneURL, p.branch)
+	if err != nil {
+		glog.Warningf("execution: read remote head after push: %v", err)
+		return ""
+	}
+	return head
 }
 
 // completeSpecs drives `dark-factory spec complete` for every matched spec left

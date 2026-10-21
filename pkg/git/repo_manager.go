@@ -7,6 +7,7 @@ package git
 import (
 	"bytes"
 	"context"
+	stderrors "errors"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -28,6 +29,13 @@ type RepoManager interface {
 	// EnsureWorktree ensures a worktree for the given ref and taskID exists.
 	// Returns the absolute path to the worktree.
 	EnsureWorktree(ctx context.Context, cloneURL, ref, taskID string) (string, error)
+	// RemoteBranchHead returns the commit the remote branch currently points at,
+	// read from the shared bare clone (EnsureBareClone refreshes origin/*). An
+	// empty string means the branch does not exist remotely yet.
+	RemoteBranchHead(ctx context.Context, cloneURL, branch string) (string, error)
+	// IsAncestor reports whether ancestor is reachable from descendant. Both
+	// must already exist in the shared bare clone.
+	IsAncestor(ctx context.Context, cloneURL, ancestor, descendant string) (bool, error)
 	// PruneAllWorktrees runs `git worktree prune` on every bare repo under reposPath.
 	PruneAllWorktrees(ctx context.Context) error
 }
@@ -70,6 +78,11 @@ func (r *repoManager) cmdEnv() []string {
 		"GH_TOKEN=" + r.ghToken,
 	}
 }
+
+// shaRegexp matches a full 40-character commit SHA. Both operands of
+// `git merge-base --is-ancestor` are validated against it so the shas can be
+// passed to the subprocess without shell-quoting concerns.
+var shaRegexp = regexp.MustCompile(`^[0-9a-f]{40}$`)
 
 var taskIDRegexp = regexp.MustCompile(
 	`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`,
@@ -179,6 +192,86 @@ func (r *repoManager) EnsureWorktree(
 	}
 
 	return worktreePath, nil
+}
+
+// RemoteBranchHead returns the commit the remote branch points at. The shared
+// bare clone's origin/* refs are refreshed by EnsureBareClone, so no separate
+// fetch is needed. A missing branch yields ("", nil) — a branch that has never
+// been pushed is a normal state for a first run, not an error.
+func (r *repoManager) RemoteBranchHead(
+	ctx context.Context,
+	cloneURL, branch string,
+) (string, error) {
+	if !isValidBranchName(branch) {
+		return "", errors.Errorf(ctx, "invalid branch: %s", branch)
+	}
+
+	barePath, err := r.EnsureBareClone(ctx, cloneURL)
+	if err != nil {
+		return "", errors.Wrap(ctx, err, "ensure bare clone failed")
+	}
+
+	// #nosec G204 -- barePath is a validated bare clone; branch is branch-name shaped
+	cmd := exec.CommandContext(
+		ctx, "git", "-C", barePath, "rev-parse", "--verify", "refs/remotes/origin/"+branch,
+	)
+	cmd.Env = r.cmdEnv()
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		// rev-parse exits non-zero when the ref is absent; that is "never pushed",
+		// not a failure to read. Anything else is a real error.
+		var exitErr *exec.ExitError
+		if stderrors.As(err, &exitErr) {
+			return "", nil
+		}
+		return "", errors.Errorf(
+			ctx, "git rev-parse origin/%s: %s", branch, strings.TrimSpace(stderr.String()),
+		)
+	}
+	return strings.TrimSpace(stdout.String()), nil
+}
+
+// IsAncestor reports whether ancestor is reachable from descendant. A git exit
+// code of 1 is the documented "not an ancestor" answer; any other non-zero exit
+// is a real error (unknown commit, corrupt repo).
+func (r *repoManager) IsAncestor(
+	ctx context.Context,
+	cloneURL, ancestor, descendant string,
+) (bool, error) {
+	barePath, err := r.EnsureBareClone(ctx, cloneURL)
+	if err != nil {
+		return false, errors.Wrap(ctx, err, "ensure bare clone failed")
+	}
+
+	// #nosec G204 -- barePath is a validated bare clone; shas are validated below
+	for _, sha := range []string{ancestor, descendant} {
+		if !shaRegexp.MatchString(sha) {
+			return false, errors.Errorf(ctx, "invalid commit sha: %s", sha)
+		}
+	}
+
+	cmd := exec.CommandContext(
+		ctx, "git", "-C", barePath, "merge-base", "--is-ancestor", ancestor, descendant,
+	)
+	cmd.Env = r.cmdEnv()
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		var exitErr *exec.ExitError
+		if stderrors.As(err, &exitErr) && exitErr.ExitCode() == 1 {
+			return false, nil
+		}
+		return false, errors.Errorf(
+			ctx,
+			"git merge-base --is-ancestor %s %s: %s",
+			ancestor,
+			descendant,
+			strings.TrimSpace(stderr.String()),
+		)
+	}
+	return true, nil
 }
 
 func (r *repoManager) PruneAllWorktrees(ctx context.Context) error {
