@@ -31,6 +31,17 @@ type RepoManager struct {
 		result1 string
 		result2 error
 	}
+	IsAncestorStub        func(context.Context, string, string, string) (bool, error)
+	isAncestorMutex       sync.RWMutex
+	isAncestorArgsForCall []RepoManagerIsAncestorArgs
+	isAncestorReturns     struct {
+		result1 bool
+		result2 error
+	}
+	isAncestorReturnsOnCall map[int]struct {
+		result1 bool
+		result2 error
+	}
 	PruneAllWorktreesStub        func(context.Context) error
 	pruneAllWorktreesMutex       sync.RWMutex
 	pruneAllWorktreesArgsForCall []RepoManagerPruneAllWorktreesArgs
@@ -39,6 +50,17 @@ type RepoManager struct {
 	}
 	pruneAllWorktreesReturnsOnCall map[int]struct {
 		result1 error
+	}
+	RemoteBranchHeadStub        func(context.Context, string, string) (string, error)
+	remoteBranchHeadMutex       sync.RWMutex
+	remoteBranchHeadArgsForCall []RepoManagerRemoteBranchHeadArgs
+	remoteBranchHeadReturns     struct {
+		result1 string
+		result2 error
+	}
+	remoteBranchHeadReturnsOnCall map[int]struct {
+		result1 string
+		result2 error
 	}
 	invocations      map[string][][]interface{}
 	callOrder        []string
@@ -59,9 +81,24 @@ type RepoManagerEnsureWorktreeArgs struct {
 	Arg4 string
 }
 
+// RepoManagerIsAncestorArgs holds the arguments of one call to IsAncestor.
+type RepoManagerIsAncestorArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
+	Arg4 string
+}
+
 // RepoManagerPruneAllWorktreesArgs holds the arguments of one call to PruneAllWorktrees.
 type RepoManagerPruneAllWorktreesArgs struct {
 	Arg1 context.Context
+}
+
+// RepoManagerRemoteBranchHeadArgs holds the arguments of one call to RemoteBranchHead.
+type RepoManagerRemoteBranchHeadArgs struct {
+	Arg1 context.Context
+	Arg2 string
+	Arg3 string
 }
 
 func (fake *RepoManager) EnsureBareClone(arg1 context.Context, arg2 string) (string, error) {
@@ -204,6 +241,76 @@ func (fake *RepoManager) EnsureWorktreeReturnsOnCall(i int, result1 string, resu
 	}{result1, result2}
 }
 
+func (fake *RepoManager) IsAncestor(arg1 context.Context, arg2 string, arg3 string, arg4 string) (bool, error) {
+	fake.isAncestorMutex.Lock()
+	ret, specificReturn := fake.isAncestorReturnsOnCall[len(fake.isAncestorArgsForCall)]
+	fake.isAncestorArgsForCall = append(fake.isAncestorArgsForCall, RepoManagerIsAncestorArgs{arg1, arg2, arg3, arg4})
+	stub := fake.IsAncestorStub
+	fakeReturns := fake.isAncestorReturns
+	fake.recordInvocation("IsAncestor", []interface{}{arg1, arg2, arg3, arg4})
+	fake.isAncestorMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *RepoManager) IsAncestorCallCount() int {
+	fake.isAncestorMutex.RLock()
+	defer fake.isAncestorMutex.RUnlock()
+	return len(fake.isAncestorArgsForCall)
+}
+
+func (fake *RepoManager) IsAncestorCalls(stub func(context.Context, string, string, string) (bool, error)) {
+	fake.isAncestorMutex.Lock()
+	defer fake.isAncestorMutex.Unlock()
+	fake.IsAncestorStub = stub
+}
+
+func (fake *RepoManager) IsAncestorArgsForCall(i int) (context.Context, string, string, string) {
+	fake.isAncestorMutex.RLock()
+	defer fake.isAncestorMutex.RUnlock()
+	argsForCall := fake.isAncestorArgsForCall[i]
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3, argsForCall.Arg4
+}
+
+func (fake *RepoManager) IsAncestorArgs() []RepoManagerIsAncestorArgs {
+	fake.isAncestorMutex.RLock()
+	defer fake.isAncestorMutex.RUnlock()
+	args := make([]RepoManagerIsAncestorArgs, len(fake.isAncestorArgsForCall))
+	copy(args, fake.isAncestorArgsForCall)
+	return args
+}
+
+func (fake *RepoManager) IsAncestorReturns(result1 bool, result2 error) {
+	fake.isAncestorMutex.Lock()
+	defer fake.isAncestorMutex.Unlock()
+	fake.IsAncestorStub = nil
+	fake.isAncestorReturns = struct {
+		result1 bool
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *RepoManager) IsAncestorReturnsOnCall(i int, result1 bool, result2 error) {
+	fake.isAncestorMutex.Lock()
+	defer fake.isAncestorMutex.Unlock()
+	fake.IsAncestorStub = nil
+	if fake.isAncestorReturnsOnCall == nil {
+		fake.isAncestorReturnsOnCall = make(map[int]struct {
+			result1 bool
+			result2 error
+		})
+	}
+	fake.isAncestorReturnsOnCall[i] = struct {
+		result1 bool
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *RepoManager) PruneAllWorktrees(arg1 context.Context) error {
 	fake.pruneAllWorktreesMutex.Lock()
 	ret, specificReturn := fake.pruneAllWorktreesReturnsOnCall[len(fake.pruneAllWorktreesArgsForCall)]
@@ -269,6 +376,76 @@ func (fake *RepoManager) PruneAllWorktreesReturnsOnCall(i int, result1 error) {
 	fake.pruneAllWorktreesReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *RepoManager) RemoteBranchHead(arg1 context.Context, arg2 string, arg3 string) (string, error) {
+	fake.remoteBranchHeadMutex.Lock()
+	ret, specificReturn := fake.remoteBranchHeadReturnsOnCall[len(fake.remoteBranchHeadArgsForCall)]
+	fake.remoteBranchHeadArgsForCall = append(fake.remoteBranchHeadArgsForCall, RepoManagerRemoteBranchHeadArgs{arg1, arg2, arg3})
+	stub := fake.RemoteBranchHeadStub
+	fakeReturns := fake.remoteBranchHeadReturns
+	fake.recordInvocation("RemoteBranchHead", []interface{}{arg1, arg2, arg3})
+	fake.remoteBranchHeadMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *RepoManager) RemoteBranchHeadCallCount() int {
+	fake.remoteBranchHeadMutex.RLock()
+	defer fake.remoteBranchHeadMutex.RUnlock()
+	return len(fake.remoteBranchHeadArgsForCall)
+}
+
+func (fake *RepoManager) RemoteBranchHeadCalls(stub func(context.Context, string, string) (string, error)) {
+	fake.remoteBranchHeadMutex.Lock()
+	defer fake.remoteBranchHeadMutex.Unlock()
+	fake.RemoteBranchHeadStub = stub
+}
+
+func (fake *RepoManager) RemoteBranchHeadArgsForCall(i int) (context.Context, string, string) {
+	fake.remoteBranchHeadMutex.RLock()
+	defer fake.remoteBranchHeadMutex.RUnlock()
+	argsForCall := fake.remoteBranchHeadArgsForCall[i]
+	return argsForCall.Arg1, argsForCall.Arg2, argsForCall.Arg3
+}
+
+func (fake *RepoManager) RemoteBranchHeadArgs() []RepoManagerRemoteBranchHeadArgs {
+	fake.remoteBranchHeadMutex.RLock()
+	defer fake.remoteBranchHeadMutex.RUnlock()
+	args := make([]RepoManagerRemoteBranchHeadArgs, len(fake.remoteBranchHeadArgsForCall))
+	copy(args, fake.remoteBranchHeadArgsForCall)
+	return args
+}
+
+func (fake *RepoManager) RemoteBranchHeadReturns(result1 string, result2 error) {
+	fake.remoteBranchHeadMutex.Lock()
+	defer fake.remoteBranchHeadMutex.Unlock()
+	fake.RemoteBranchHeadStub = nil
+	fake.remoteBranchHeadReturns = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *RepoManager) RemoteBranchHeadReturnsOnCall(i int, result1 string, result2 error) {
+	fake.remoteBranchHeadMutex.Lock()
+	defer fake.remoteBranchHeadMutex.Unlock()
+	fake.RemoteBranchHeadStub = nil
+	if fake.remoteBranchHeadReturnsOnCall == nil {
+		fake.remoteBranchHeadReturnsOnCall = make(map[int]struct {
+			result1 string
+			result2 error
+		})
+	}
+	fake.remoteBranchHeadReturnsOnCall[i] = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *RepoManager) Invocations() map[string][][]interface{} {
