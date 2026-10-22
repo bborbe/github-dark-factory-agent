@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.5.4
+## Unreleased
 
 - fix: skip the ai_review worktree post-conditions when execution adopted an already-pushed branch. The adopt path routes to ai_review without creating a worktree, but ai_review checked out the task's stale `ref` and demanded every matched spec be completed there — completions the original run had already pushed to the branch, so the check could never pass and every adoption ended in `spec … is not completed (execution did not finish)`. Found on the nuke-dev replay: the run logged `"adopted": true` and then failed one step later. An adopted result now goes straight to the read-only PR verdict; the draft-PR and diff-vs-spec checks still run. Its `## Review` records only those two in `checks_passed` (with `adopted: true`) — not the `specs_completed` / `no_prompts_in_flight` gates the adopted path never evaluates, since that artifact is the human's draft→ready sign-off and must not attest to checks that did not run.
+
+## v0.5.4
 
 - fix: adopt an already-pushed branch head instead of re-running the whole lifecycle. A crash after `PushBranch` but before `## Result` is delivered left the remote branch ahead of the task's `ref`; the re-run repeated the full LLM job (~30 min of prompts, reproduced on nuke dev 2026-10-21) and then failed non-fast-forward with `! [rejected] HEAD -> <branch> (non-fast-forward)`, leaving a spurious failed task. The execution step now compares the remote branch head with `ref` before `EnsureWorktree`: a head that moved **and** descends from `ref` is adopted (no lifecycle, `## Result` written citing the head with `adopted: true` and `prompts_executed: 0`); a head that moved but does not descend from `ref` returns needs-input naming both shas rather than claiming another push's work.
 
