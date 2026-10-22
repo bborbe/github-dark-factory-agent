@@ -33,12 +33,38 @@ const reviewSectionHeading = "## Review"
 // Outcome records the verdict (prompts.ReviewOutcomePass /
 // prompts.ReviewOutcomeConcerns) so a replay re-routes without re-reviewing.
 type ReviewOutput struct {
-	Repo         string   `json:"repo"`
-	PRNumber     int      `json:"pr_number"`
-	Outcome      string   `json:"outcome"`
+	Repo     string `json:"repo"`
+	PRNumber int    `json:"pr_number"`
+	Outcome  string `json:"outcome"`
+	// ChecksPassed lists only the gates this run actually evaluated. An adopted
+	// result skips the worktree gates, so recording them would make the durable
+	// artifact — the human's draft→ready sign-off — attest to checks that never ran.
 	ChecksPassed []string `json:"checks_passed"`
-	Notes        string   `json:"notes"`
+	// Adopted is true when the result came from an already-pushed branch head.
+	// It marks specs_completed as UNVERIFIED rather than passed: the completions
+	// live on the pushed branch, which this step deliberately does not inspect.
+	Adopted bool   `json:"adopted,omitempty"`
+	Notes   string `json:"notes"`
 }
+
+// The two check sets. Keeping them named makes the skip explicit at the call
+// site instead of hiding it in a conditional inside writeAndRoute.
+var (
+	// checksFull are the gates a normal (lifecycle-run) result passes.
+	checksFull = []string{
+		"pr_still_draft",
+		"specs_completed",
+		"no_prompts_in_flight",
+		"diff_matches_spec_intent",
+	}
+	// checksAdopted are the gates an adopted result passes. specs_completed and
+	// no_prompts_in_flight are absent because the worktree at the task's stale
+	// `ref` cannot answer them — not because they were evaluated and passed.
+	checksAdopted = []string{
+		"pr_still_draft",
+		"diff_matches_spec_intent",
+	}
+)
 
 // aiReviewStep implements agentlib.Step. It is the read-only verifier at the end
 // of the lifecycle: it re-asserts the post-conditions deterministically (PR
@@ -93,7 +119,12 @@ func (s *aiReviewStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentli
 	if err != nil {
 		return failed("ai_review: read " + planSectionHeading + ": " + err.Error()), nil
 	}
-	if _, err := agentlib.ExtractSection[ExecutionOutput](ctx, md, resultSectionHeading); err != nil {
+	// Thread the parsed result through rather than re-parsing it in review: a
+	// second extraction would have to swallow its error, and an adopted result
+	// that silently fell through to the worktree path would reproduce the very
+	// `spec … is not completed` failure the adopt path exists to avoid.
+	execOut, err := agentlib.ExtractSection[ExecutionOutput](ctx, md, resultSectionHeading)
+	if err != nil {
 		return failed("ai_review: read " + resultSectionHeading + ": " + err.Error()), nil
 	}
 
@@ -114,7 +145,7 @@ func (s *aiReviewStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentli
 		), nil
 	}
 
-	return s.review(ctx, md, plan, fields, prNumber, owner, name)
+	return s.review(ctx, md, plan, execOut, fields, prNumber, owner, name)
 }
 
 // review runs the deterministic post-condition gate, the Claude verdict, and
@@ -123,6 +154,7 @@ func (s *aiReviewStep) review(
 	ctx context.Context,
 	md *agentlib.Markdown,
 	plan *PlanOutput,
+	execOut *ExecutionOutput,
 	fields map[string]string,
 	prNumber int,
 	owner, name string,
@@ -147,16 +179,14 @@ func (s *aiReviewStep) review(
 	// `ref` would therefore always fail — the original run pushed the completed
 	// specs, so the ref simply never contains them. The verdict below still
 	// runs: it reviews the PR diff, which is the adopted head.
-	if execOut, err := agentlib.ExtractSection[ExecutionOutput](
-		ctx, md, resultSectionHeading,
-	); err == nil && execOut.Adopted {
+	if execOut.Adopted {
 		glog.V(1).Infof(
 			"ai_review: %s was adopted from pushed head %s — skipping worktree post-conditions",
 			resultSectionHeading,
 			execOut.BranchHead,
 		)
 		verdict := s.claudeVerdict(ctx, fields["repo"], prNumber, plan.MatchedSpecs)
-		return s.writeAndRoute(ctx, md, plan.Repo, prNumber, verdict)
+		return s.writeAndRoute(ctx, md, plan.Repo, prNumber, verdict, checksAdopted, true)
 	}
 
 	worktree, err := s.repoManager.EnsureWorktree(
@@ -188,7 +218,7 @@ func (s *aiReviewStep) review(
 
 	// (d) read-only Claude diff-vs-spec sanity → verdict.
 	verdict := s.claudeVerdict(ctx, fields["repo"], prNumber, plan.MatchedSpecs)
-	return s.writeAndRoute(ctx, md, plan.Repo, prNumber, verdict)
+	return s.writeAndRoute(ctx, md, plan.Repo, prNumber, verdict, checksFull, false)
 }
 
 // claudeVerdict runs the read-only review prompt and parses the structured
@@ -234,20 +264,18 @@ func (s *aiReviewStep) writeAndRoute(
 	repo string,
 	prNumber int,
 	verdict prompts.ReviewVerdict,
+	checks []string,
+	adopted bool,
 ) (*agentlib.Result, error) {
 	output := ReviewOutput{
 		Repo:     repo,
 		PRNumber: prNumber,
 		Outcome:  verdict.Outcome,
+		Adopted:  adopted,
 		Notes:    verdict.Notes,
 	}
 	if verdict.Outcome == prompts.ReviewOutcomePass {
-		output.ChecksPassed = []string{
-			"pr_still_draft",
-			"specs_completed",
-			"no_prompts_in_flight",
-			"diff_matches_spec_intent",
-		}
+		output.ChecksPassed = checks
 	}
 	section, err := agentlib.MarshalSectionTyped(ctx, reviewSectionHeading, output)
 	if err != nil {

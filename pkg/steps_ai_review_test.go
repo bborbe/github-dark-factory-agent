@@ -120,6 +120,14 @@ var _ = Describe("AIReviewStep", func() {
 			Expect(out.Repo).To(Equal("bborbe/sandbox"))
 			Expect(out.PRNumber).To(Equal(7))
 			Expect(out.ChecksPassed).To(ContainElement("diff_matches_spec_intent"))
+			// The normal path evaluates every gate, so it records every gate.
+			Expect(out.ChecksPassed).To(ConsistOf(
+				"pr_still_draft",
+				"specs_completed",
+				"no_prompts_in_flight",
+				"diff_matches_spec_intent",
+			))
+			Expect(out.Adopted).To(BeFalse())
 
 			// Read-only review actually ran; PR draft flag was checked.
 			Expect(fakeRunner.RunCallCount()).To(Equal(1))
@@ -133,10 +141,11 @@ var _ = Describe("AIReviewStep", func() {
 	})
 
 	Describe("adopted result", func() {
-		// The worktree at the task's stale ref carries no completed spec: an
-		// adopted run pushed its completions to the remote branch instead.
+		// The outer BeforeEach worktree deliberately does NOT matter here: an
+		// adopted run never touches it. The specs it completed live on the pushed
+		// branch, so the worktree at the task's stale `ref` has no completed spec
+		// and asserting (b)/(c) there would always fail.
 		BeforeEach(func() {
-			fakeRepo.EnsureWorktreeReturns(GinkgoT().TempDir(), nil)
 			fakeRunner.RunReturns(&claudelib.ClaudeResult{
 				Result: `{"outcome":"pass","notes":"pushed head implements the spec"}`,
 			}, nil)
@@ -166,6 +175,37 @@ var _ = Describe("AIReviewStep", func() {
 			out, err := agentlib.ExtractSection[pkg.ReviewOutput](ctx, md, "## Review")
 			Expect(err).To(BeNil())
 			Expect(out.Outcome).To(Equal("pass"))
+			Expect(out.Adopted).To(BeTrue())
+		})
+
+		It("records only the checks it actually ran — never the skipped worktree gates", func() {
+			// The durable ## Review is the human's draft→ready sign-off. Claiming
+			// specs_completed or no_prompts_in_flight here would attest to gates
+			// this path bypasses, so their absence is the assertion that matters.
+			_, md := run(adoptedTask())
+
+			out, err := agentlib.ExtractSection[pkg.ReviewOutput](ctx, md, "## Review")
+			Expect(err).To(BeNil())
+			Expect(out.ChecksPassed).To(ConsistOf("pr_still_draft", "diff_matches_spec_intent"))
+			Expect(out.ChecksPassed).NotTo(ContainElement("specs_completed"))
+			Expect(out.ChecksPassed).NotTo(ContainElement("no_prompts_in_flight"))
+		})
+
+		It("still escalates on a concerns verdict", func() {
+			fakeRunner.RunReturns(&claudelib.ClaudeResult{
+				Result: `{"outcome":"concerns","notes":"pushed head diverges from the spec"}`,
+			}, nil)
+			result, md := run(adoptedTask())
+
+			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Message).To(ContainSubstring("blocking concerns"))
+			Expect(fakeRepo.EnsureWorktreeCallCount()).To(Equal(0))
+
+			out, err := agentlib.ExtractSection[pkg.ReviewOutput](ctx, md, "## Review")
+			Expect(err).To(BeNil())
+			Expect(out.Outcome).To(Equal("concerns"))
+			Expect(out.Adopted).To(BeTrue())
+			assertUntouched(md)
 		})
 	})
 
