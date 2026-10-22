@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.4
 
 - fix: skip the ai_review worktree post-conditions when execution adopted an already-pushed branch. The adopt path routes to ai_review without creating a worktree, but ai_review checked out the task's stale `ref` and demanded every matched spec be completed there — completions the original run had already pushed to the branch, so the check could never pass and every adoption ended in `spec … is not completed (execution did not finish)`. Found on the nuke-dev replay: the run logged `"adopted": true` and then failed one step later. An adopted result now goes straight to the read-only PR verdict; the draft-PR and diff-vs-spec checks still run. Its `## Review` records only those two in `checks_passed` (with `adopted: true`) — not the `specs_completed` / `no_prompts_in_flight` gates the adopted path never evaluates, since that artifact is the human's draft→ready sign-off and must not attest to checks that did not run.
 
