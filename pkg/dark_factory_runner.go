@@ -45,9 +45,10 @@ const lifecycleTimeout = 90 * time.Minute
 // expressed as "anything not drained", because an unreadable or not-yet-written
 // spec file reads as the empty status and must never be mistaken for a stall.
 const (
-	specStatusDraft    = "draft"
-	specStatusApproved = "approved"
-	specStatusPrompted = "prompted"
+	specStatusDraft      = "draft"
+	specStatusApproved   = "approved"
+	specStatusPrompted   = "prompted"
+	specStatusGenerating = "generating"
 )
 
 // isStallableSpecStatus reports whether status is one that can strand a run.
@@ -274,7 +275,8 @@ func (r *darkFactoryRunner) waitForDrain(
 // Returns "" while work is in flight — a prompt that has just landed in the
 // inbox is precisely the one about to be approved and executed.
 func findStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
+	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) ||
+		anySpecGenerating(ctx, workdir) {
 		return ""
 	}
 	for _, id := range specIDs {
@@ -286,6 +288,42 @@ func findStalledSpec(ctx context.Context, workdir string, specIDs []string) stri
 		}
 	}
 	return ""
+}
+
+// anySpecGenerating reports whether any spec under specs/in-progress is mid
+// generation.
+//
+// This is the guard that keeps the widened stall detector safe. dark-factory
+// generates prompts one spec at a time — specWatcher holds a mutex around
+// generator.Generate and the startup scan is sequential — so while one spec
+// generates, every other requested spec legitimately waits at `approved` for the
+// whole generation (~7m, see the lifecycleTimeout comment). Without this check a
+// healthy multi-spec run aborts ~30s in on a sibling that was merely queued
+// behind the generating one.
+func anySpecGenerating(ctx context.Context, workdir string) bool {
+	matches, _ := filepath.Glob(filepath.Join(workdir, "specs", "in-progress", "*.md"))
+	for _, path := range matches {
+		// A cancelled scan must not be read as "nothing generating".
+		if ctx.Err() != nil {
+			return true
+		}
+		content, err := os.ReadFile(
+			path,
+		) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			continue
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			continue
+		}
+		if status, ok := parsed.Frontmatter.String("status"); ok {
+			if strings.TrimSpace(status) == specStatusGenerating {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // anyPromptReferencesSpec reports whether any prompt in the inbox, the queue or

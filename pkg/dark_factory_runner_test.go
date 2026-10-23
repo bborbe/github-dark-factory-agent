@@ -217,6 +217,18 @@ var _ = Describe("darkFactoryRunner", func() {
 			).To(Equal("003-json-readiness"))
 		})
 
+		It("does not report an approved spec while a sibling is generating", func() {
+			// dark-factory generates prompts one spec at a time, so a second
+			// requested spec legitimately waits at `approved` for the whole
+			// generation (~7m). Flagging it would abort a healthy multi-spec run.
+			writeSpec("approved")
+			Expect(os.WriteFile(
+				filepath.Join(work, "specs", "in-progress", "004-other.md"),
+				[]byte("---\nstatus: generating\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
 		It("ignores a spec that already reached verifying", func() {
 			writeSpec("verifying")
 			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
