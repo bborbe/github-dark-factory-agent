@@ -195,8 +195,54 @@ var _ = Describe("darkFactoryRunner", func() {
 			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
 		})
 
-		It("ignores a spec that is not at prompted", func() {
+		It("ignores a spec that is still generating", func() {
 			writeSpec("generating")
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("reports a spec stranded at approved with no prompt in flight", func() {
+			// The 2026-10-22 shape: a spec never advanced past `approved`, so
+			// drained() stayed false while the daemon logged "nothing to do,
+			// waiting for changes" for 66 minutes until the Job deadline.
+			writeSpec("approved")
+			Expect(
+				pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"}),
+			).To(Equal("003-json-readiness"))
+		})
+
+		It("reports a spec stranded at draft with no prompt in flight", func() {
+			writeSpec("draft")
+			Expect(
+				pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"}),
+			).To(Equal("003-json-readiness"))
+		})
+
+		It("does not report an approved spec while a sibling is generating", func() {
+			// dark-factory generates prompts one spec at a time, so a second
+			// requested spec legitimately waits at `approved` for the whole
+			// generation (~7m). Flagging it would abort a healthy multi-spec run.
+			writeSpec("approved")
+			Expect(os.WriteFile(
+				filepath.Join(work, "specs", "in-progress", "004-other.md"),
+				[]byte("---\nstatus: generating\n---\n\nbody\n"), 0600,
+			)).To(BeNil())
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("ignores a spec that already reached verifying", func() {
+			writeSpec("verifying")
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("never reports a spec whose status is not yet readable", func() {
+			// The daemon writes the spec file asynchronously, so an early poll can
+			// read an empty status. Treating that as a stall aborted healthy runs
+			// (caught by the stub-daemon lifecycle test before this guard existed).
+			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
+		})
+
+		It("ignores a spec that is already completed", func() {
+			writeSpec("completed")
 			Expect(pkg.FindStalledSpec(ctx, work, []string{"003-json-readiness"})).To(BeEmpty())
 		})
 

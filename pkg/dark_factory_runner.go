@@ -39,19 +39,41 @@ const lifecyclePollInterval = 3 * time.Second
 // task frontmatter (the execution step resolves it and passes it down).
 const lifecycleTimeout = 90 * time.Minute
 
-// specStatusPrompted is the spec state that can strand a run. dark-factory moves
-// a spec to `verifying` only when every prompt carrying its `spec:` link has
-// completed; a spec at `prompted` with no such prompt is unreachable by any
-// daemon tick, so `drained()` waits for a transition that cannot happen.
-const specStatusPrompted = "prompted"
+// The statuses dark-factory can leave a spec in when nothing will advance it:
+// `draft` (never approved), `approved` (its prompt was never generated) and
+// `prompted` (its prompt exists but does not link back). Enumerated rather than
+// expressed as "anything not drained", because an unreadable or not-yet-written
+// spec file reads as the empty status and must never be mistaken for a stall.
+const (
+	specStatusDraft      = "draft"
+	specStatusApproved   = "approved"
+	specStatusPrompted   = "prompted"
+	specStatusGenerating = "generating"
+)
+
+// isStallableSpecStatus reports whether status is one that can strand a run.
+// `generating` is deliberately absent: dark-factory drives it and
+// runner/lifecycle.go resumes or resets it after a restart, so aborting there
+// would kill healthy work. `verifying` / `completed` are what drained() waits
+// for, and the empty status is the not-yet-readable file.
+func isStallableSpecStatus(status string) bool {
+	switch status {
+	case specStatusDraft, specStatusApproved, specStatusPrompted:
+		return true
+	}
+	return false
+}
 
 // stallGracePolls is how many consecutive polls the stalled-spec condition must
 // hold before waitForDrain aborts. Grace is required because a healthy run is
 // momentarily in this state: the spec flips to `prompted` while its prompt sits
 // in the inbox, and the sweeper promotes it to `verifying` only on a later tick.
-// Three polls (9s at the default interval) outlasts that window without letting
-// a genuinely stranded run sit for the whole lifecycle deadline.
-const stallGracePolls = 3
+//
+// Ten polls (30s at the default interval) rather than three: the condition now
+// also covers specs stranded at `draft` / `approved`, which have no prompt to
+// watch, so the grace must outlast the daemon's own pickup tick as well as the
+// `prompted` flicker. Still turns a 90-minute slot-hold into 30 seconds.
+const stallGracePolls = 10
 
 // darkFactoryRunner is the production ExecutionRunner: it shells `dark-factory`
 // and `git` with the worktree as cwd, inheriting the pod env (HOME for claude
@@ -204,18 +226,17 @@ func (r *darkFactoryRunner) waitForDrain(
 		if r.drained(ctx, workdir, specIDs) {
 			return nil
 		}
-		// A spec at `prompted` that no prompt references can never advance, so
-		// waiting for it only holds the Job's slot until the deadline. Fail on
-		// the first such spec after the grace window instead.
+		// A spec in a non-terminal status that no prompt references can never
+		// advance, so waiting for it only holds the Job's slot until the
+		// deadline. Fail on the first such spec after the grace window instead.
 		if id := findStalledSpec(ctx, workdir, specIDs); id != "" {
 			if stalledPolls++; stalledPolls >= stallGracePolls {
 				return errors.Errorf(
 					ctx,
-					"lifecycle stalled: spec %s is %q but no prompt references it, so "+
-						"dark-factory can never advance it (its spec-link scan no-ops "+
-						"when no prompt carries `spec:`) — holding the slot longer "+
-						"cannot change the outcome",
-					id, specStatusPrompted,
+					"lifecycle stalled: spec %s is %q with no prompt in flight "+
+						"referencing it, so dark-factory can never advance it — "+
+						"holding the slot longer cannot change the outcome",
+					id, readSpecStatus(ctx, workdir, id),
 				)
 			}
 		} else {
@@ -229,10 +250,10 @@ func (r *darkFactoryRunner) waitForDrain(
 	}
 }
 
-// findStalledSpec returns the id of a requested spec that is stranded at
-// `prompted` with no prompt anywhere referencing it, or "" when no spec is.
+// findStalledSpec returns the id of a requested spec that is stranded in a
+// status dark-factory cannot advance on its own, or "" when none is.
 //
-// This is the deadlock that cost a full lifecycle deadline on 2026-10-20: a
+// `prompted` is the case that cost a full lifecycle deadline on 2026-10-20: a
 // fallback path hand-authored a prompt with an empty `spec:` field, the
 // implementation executed and committed, and the spec then sat at `prompted`
 // forever because dark-factory's CheckAndComplete no-ops when no prompt carries
@@ -240,14 +261,26 @@ func (r *darkFactoryRunner) waitForDrain(
 // run holds its only agent slot until the deadline and reports failure over work
 // that actually succeeded.
 //
+// The same deadlock is not specific to `prompted`. drained() accepts only
+// `verifying` / `completed`, so a spec left at `draft` or `approved` keeps
+// drained() false forever too — and the original detector could not see either,
+// because it compared against `prompted` alone. Measured 2026-10-22 17:28Z →
+// 18:34Z: spec 063-a2a-default-cluster sat at `verifying` while the daemon
+// logged "nothing to do, waiting for changes" 45 times over ~66 min, because a
+// sibling spec in the same request never advanced and no prompt was in flight.
+//
+// `generating` is excluded and an unreadable status is excluded — see
+// isStallableSpecStatus.
+//
 // Returns "" while work is in flight — a prompt that has just landed in the
 // inbox is precisely the one about to be approved and executed.
 func findStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
+	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) ||
+		anySpecGenerating(ctx, workdir) {
 		return ""
 	}
 	for _, id := range specIDs {
-		if readSpecStatus(ctx, workdir, id) != specStatusPrompted {
+		if !isStallableSpecStatus(readSpecStatus(ctx, workdir, id)) {
 			continue
 		}
 		if !anyPromptReferencesSpec(ctx, workdir, id) {
@@ -255,6 +288,42 @@ func findStalledSpec(ctx context.Context, workdir string, specIDs []string) stri
 		}
 	}
 	return ""
+}
+
+// anySpecGenerating reports whether any spec under specs/in-progress is mid
+// generation.
+//
+// This is the guard that keeps the widened stall detector safe. dark-factory
+// generates prompts one spec at a time — specWatcher holds a mutex around
+// generator.Generate and the startup scan is sequential — so while one spec
+// generates, every other requested spec legitimately waits at `approved` for the
+// whole generation (~7m, see the lifecycleTimeout comment). Without this check a
+// healthy multi-spec run aborts ~30s in on a sibling that was merely queued
+// behind the generating one.
+func anySpecGenerating(ctx context.Context, workdir string) bool {
+	matches, _ := filepath.Glob(filepath.Join(workdir, "specs", "in-progress", "*.md"))
+	for _, path := range matches {
+		// A cancelled scan must not be read as "nothing generating".
+		if ctx.Err() != nil {
+			return true
+		}
+		content, err := os.ReadFile(
+			path,
+		) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			continue
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			continue
+		}
+		if status, ok := parsed.Frontmatter.String("status"); ok {
+			if strings.TrimSpace(status) == specStatusGenerating {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // anyPromptReferencesSpec reports whether any prompt in the inbox, the queue or
