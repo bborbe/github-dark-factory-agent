@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- fix: update github.com/bborbe/agent to v0.132.5 so the result deliverer stops restoring a stale phase. A result that advances no phase no longer republishes the Job-start phase over a park: the Kafka payload omits `phase` on those branches, so the controller's on-disk-first merge keeps the on-disk value, and the file deliverer carries the on-disk phase forward. Closes the prod-vs-sun duplicate class measured on v7.
+- fix: update github.com/bborbe/agent to v0.132.5 (with cqrs v0.6.13, errors v1.6.4, kafka v1.28.6, sentry v1.10.6, time v1.27.18, vault-cli v0.178.3 pulled in transitively) so the result deliverer stops restoring a stale phase. A result that advances no phase no longer republishes the Job-start phase over a park: the Kafka payload omits `phase` on those branches, so the controller's on-disk-first merge keeps the on-disk value, and the file deliverer carries the on-disk phase forward. Closes the prod-vs-sun duplicate class measured on v7.
 
 ## v0.5.6
 
