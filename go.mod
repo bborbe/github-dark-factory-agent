@@ -3,15 +3,15 @@ module github.com/bborbe/github-dark-factory-agent
 go 1.27.3
 
 require (
-	github.com/bborbe/agent v0.112.0
-	github.com/bborbe/cqrs v0.6.12
-	github.com/bborbe/errors v1.6.3
-	github.com/bborbe/kafka v1.28.4
+	github.com/bborbe/agent v0.132.5
+	github.com/bborbe/cqrs v0.6.13
+	github.com/bborbe/errors v1.6.4
+	github.com/bborbe/kafka v1.28.6
 	github.com/bborbe/maintainer v0.50.12
-	github.com/bborbe/sentry v1.10.5
+	github.com/bborbe/sentry v1.10.6
 	github.com/bborbe/service v1.11.0
-	github.com/bborbe/time v1.27.17
-	github.com/bborbe/vault-cli v0.177.0
+	github.com/bborbe/time v1.27.18
+	github.com/bborbe/vault-cli v0.178.3
 	github.com/golang/glog v1.2.5
 	github.com/onsi/ginkgo/v2 v2.33.1
 	github.com/onsi/gomega v1.44.0
@@ -22,17 +22,17 @@ require (
 	github.com/IBM/sarama v1.61.1 // indirect
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/bborbe/argument/v2 v2.13.6 // indirect
-	github.com/bborbe/collection v1.21.2 // indirect
-	github.com/bborbe/http v1.26.30 // indirect
-	github.com/bborbe/k8s v1.14.23 // indirect
-	github.com/bborbe/kv v1.21.18 // indirect
-	github.com/bborbe/log v1.7.4 // indirect
-	github.com/bborbe/math v1.4.15 // indirect
-	github.com/bborbe/metrics v0.6.7 // indirect
-	github.com/bborbe/parse v1.12.3 // indirect
-	github.com/bborbe/run v1.11.2 // indirect
-	github.com/bborbe/strimzi v1.8.21 // indirect
-	github.com/bborbe/validation v1.5.5 // indirect
+	github.com/bborbe/collection v1.21.4 // indirect
+	github.com/bborbe/http v1.26.31 // indirect
+	github.com/bborbe/k8s v1.14.24 // indirect
+	github.com/bborbe/kv v1.21.19 // indirect
+	github.com/bborbe/log v1.7.5 // indirect
+	github.com/bborbe/math v1.4.16 // indirect
+	github.com/bborbe/metrics v0.6.8 // indirect
+	github.com/bborbe/parse v1.12.4 // indirect
+	github.com/bborbe/run v1.11.3 // indirect
+	github.com/bborbe/strimzi v1.8.22 // indirect
+	github.com/bborbe/validation v1.5.6 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -79,7 +79,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/mod v0.42.0 // indirect
-	golang.org/x/net v0.61.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/oauth2 v0.37.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
