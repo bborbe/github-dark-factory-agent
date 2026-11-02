@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: give the execution runner the token its push needs. `PushBranch` shelled `git push` with `cmd.Env = os.Environ()` — the pod env, which carries the egress proxy variables but no credential, because the agent hands the minted installation token only to `pkg/git`'s `cmdEnv()`. Every cluster run therefore implemented its work and then lost it at the push: `remote: Invalid username or token. Password authentication is not supported for Git operation`. Measured 2026-11-02 on `bborbe/attention-controller#166` — the clone went through the proxy, `make precommit` exited 0, the changes were committed, and only the push failed, which is why it looked like a proxy problem one step later. The runner now carries `ghToken` and appends it in `pushEnv()`; `WithTimeout` was added to the `ExecutionRunner` interface so the per-task `lifecycle_timeout_minutes:` override copies the runner instead of building a fresh one and silently dropping the credential again.
+
 ## v0.5.8
 
 - fix: pass the egress proxy environment through to git subprocesses. `cmdEnv()` returned only `HOME`, `PATH` and `GH_TOKEN`, so a clone from a sandbox that admits egress only through the allowlisting proxy dialled `github.com:443` directly and was refused by the NetworkPolicy in 2–9 ms — every dark-factory run on nuke prod failed at `planning: ensure worktree` before any LLM work started. The six proxy variables (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` and their lowercase forms) are appended when set, mirroring `github-pr-review-agent`, `github-releaser-agent` and `github-update-go-agent`, which took the same fix on 2026-10-28; an unset variable still contributes no entry, so the allowlist does not become a pass-through.
