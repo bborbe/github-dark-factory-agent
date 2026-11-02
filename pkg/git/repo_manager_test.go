@@ -6,6 +6,7 @@ package git_test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -132,6 +133,20 @@ var _ = Describe("RepoManager", func() {
 	})
 
 	Describe("cmdEnv", func() {
+		proxyKeys := []string{
+			"HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY",
+			"http_proxy", "https_proxy", "no_proxy",
+		}
+
+		// Clear any proxy variables inherited from the test runner's own
+		// environment; specs in one process share the environment, so each spec
+		// opts in to exactly the proxy values it wants to observe.
+		BeforeEach(func() {
+			for _, key := range proxyKeys {
+				GinkgoT().Setenv(key, "")
+			}
+		})
+
 		It("returns nil when no token is configured", func() {
 			m := git.NewRepoManager(git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir}, "")
 			Expect(git.CmdEnv(m)).To(BeNil())
@@ -161,6 +176,104 @@ var _ = Describe("RepoManager", func() {
 				Expect(pathFound).To(BeTrue())
 			},
 		)
+
+		It("passes through proxy variables when a token is configured", func() {
+			// A sandbox that admits egress only through a proxy refuses a direct
+			// connection in milliseconds. The git child must see the proxy just
+			// like the agent process does, or every clone fails at 2-9 ms.
+			GinkgoT().Setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+			GinkgoT().Setenv("https_proxy", "http://proxy.internal:3128")
+
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				token,
+			)
+			env := git.CmdEnv(m)
+
+			Expect(env).To(ContainElement("HTTPS_PROXY=http://proxy.internal:3128"))
+			Expect(env).To(ContainElement("https_proxy=http://proxy.internal:3128"))
+			Expect(env).To(ContainElement("GH_TOKEN=" + token))
+		})
+
+		It("omits unset proxy variables entirely — no empty KEY= entries", func() {
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				token,
+			)
+			env := git.CmdEnv(m)
+
+			for _, e := range env {
+				for _, key := range proxyKeys {
+					Expect(e).NotTo(HavePrefix(key+"="),
+						"unset proxy %s must produce no entry at all", key)
+				}
+			}
+			Expect(env).To(HaveLen(3))
+		})
+
+		It("actually delivers the proxy to a child process", func() {
+			// The slice assertions above are necessary but not sufficient: this
+			// spec proves the child inherits the value through exec.Cmd.Env.
+			GinkgoT().Setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				token,
+			)
+
+			cmd := exec.CommandContext(ctx, "sh", "-c", `echo "$HTTPS_PROXY"`)
+			cmd.Env = git.CmdEnv(m)
+			out, err := cmd.Output()
+			Expect(err).To(BeNil())
+			Expect(strings.TrimSpace(string(out))).To(Equal("http://proxy.internal:3128"))
+		})
+
+		It("passes through every one of the six proxy variables when set", func() {
+			// libcurl (git over https) reads the lowercase forms and ignores an
+			// uppercase HTTP_PROXY, while other clients read the uppercase forms,
+			// so dropping either spelling breaks a real client.
+			for i, key := range proxyKeys {
+				GinkgoT().Setenv(key, fmt.Sprintf("value-%d", i))
+			}
+
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				token,
+			)
+			env := git.CmdEnv(m)
+
+			for i, key := range proxyKeys {
+				Expect(env).To(ContainElement(fmt.Sprintf("%s=value-%d", key, i)))
+			}
+			Expect(env).To(ContainElement("GH_TOKEN=" + token))
+			Expect(env).To(HaveLen(3 + len(proxyKeys)))
+		})
+
+		It("excludes an unrelated secret-shaped variable while proxies are set", func() {
+			// The allowlist exists so pod-level secrets never reach git or a
+			// helper it shells out to; admitting the proxy must not turn it into
+			// a pass-through.
+			GinkgoT().Setenv("SOME_TOKEN", "must-not-leak")
+			GinkgoT().Setenv("HTTPS_PROXY", "http://proxy.internal:3128")
+
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				token,
+			)
+			env := git.CmdEnv(m)
+
+			for _, e := range env {
+				Expect(e).NotTo(HavePrefix("SOME_TOKEN="))
+				Expect(e).NotTo(ContainSubstring("must-not-leak"))
+			}
+			Expect(env).To(ContainElement("GH_TOKEN=" + token))
+			Expect(env).To(ContainElement("HTTPS_PROXY=http://proxy.internal:3128"))
+		})
 	})
 })
 
