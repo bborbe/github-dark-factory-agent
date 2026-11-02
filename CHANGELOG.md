@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.8
 
 - fix: pass the egress proxy environment through to git subprocesses. `cmdEnv()` returned only `HOME`, `PATH` and `GH_TOKEN`, so a clone from a sandbox that admits egress only through the allowlisting proxy dialled `github.com:443` directly and was refused by the NetworkPolicy in 2–9 ms — every dark-factory run on nuke prod failed at `planning: ensure worktree` before any LLM work started. The six proxy variables (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` and their lowercase forms) are appended when set, mirroring `github-pr-review-agent`, `github-releaser-agent` and `github-update-go-agent`, which took the same fix on 2026-10-28; an unset variable still contributes no entry, so the allowlist does not become a pass-through.
 
