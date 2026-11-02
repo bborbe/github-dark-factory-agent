@@ -141,10 +141,16 @@ var _ = Describe("RepoManager", func() {
 		// Clear any proxy variables inherited from the test runner's own
 		// environment; specs in one process share the environment, so each spec
 		// opts in to exactly the proxy values it wants to observe.
+		//
+		// GH_TOKEN is cleared for the same reason and is load-bearing: cmdEnv
+		// prefers the live value, so a GH_TOKEN exported by the runner (a dev
+		// shell, or the dark-factory execution phase that exports it) would
+		// silently override the captured token these specs assert on.
 		BeforeEach(func() {
 			for _, key := range proxyKeys {
 				GinkgoT().Setenv(key, "")
 			}
+			GinkgoT().Setenv("GH_TOKEN", "")
 		})
 
 		It("returns nil when no token is configured", func() {
