@@ -4,6 +4,7 @@ package mocks
 import (
 	"context"
 	"sync"
+	"time"
 
 	"github.com/bborbe/github-dark-factory-agent/pkg"
 )
@@ -47,6 +48,15 @@ type ExecutionRunner struct {
 		result1 *pkg.LifecycleResult
 		result2 error
 	}
+	WithTimeoutStub        func(time.Duration) pkg.ExecutionRunner
+	withTimeoutMutex       sync.RWMutex
+	withTimeoutArgsForCall []ExecutionRunnerWithTimeoutArgs
+	withTimeoutReturns     struct {
+		result1 pkg.ExecutionRunner
+	}
+	withTimeoutReturnsOnCall map[int]struct {
+		result1 pkg.ExecutionRunner
+	}
 	invocations      map[string][][]interface{}
 	callOrder        []string
 	invocationsMutex sync.RWMutex
@@ -78,6 +88,11 @@ type ExecutionRunnerRunLifecycleArgs struct {
 	Arg2 string
 	Arg3 []string
 	Arg4 []string
+}
+
+// ExecutionRunnerWithTimeoutArgs holds the arguments of one call to WithTimeout.
+type ExecutionRunnerWithTimeoutArgs struct {
+	Arg1 time.Duration
 }
 
 func (fake *ExecutionRunner) CommitSpecChanges(arg1 context.Context, arg2 string) error {
@@ -359,6 +374,73 @@ func (fake *ExecutionRunner) RunLifecycleReturnsOnCall(i int, result1 *pkg.Lifec
 		result1 *pkg.LifecycleResult
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *ExecutionRunner) WithTimeout(arg1 time.Duration) pkg.ExecutionRunner {
+	fake.withTimeoutMutex.Lock()
+	ret, specificReturn := fake.withTimeoutReturnsOnCall[len(fake.withTimeoutArgsForCall)]
+	fake.withTimeoutArgsForCall = append(fake.withTimeoutArgsForCall, ExecutionRunnerWithTimeoutArgs{arg1})
+	stub := fake.WithTimeoutStub
+	fakeReturns := fake.withTimeoutReturns
+	fake.recordInvocation("WithTimeout", []interface{}{arg1})
+	fake.withTimeoutMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *ExecutionRunner) WithTimeoutCallCount() int {
+	fake.withTimeoutMutex.RLock()
+	defer fake.withTimeoutMutex.RUnlock()
+	return len(fake.withTimeoutArgsForCall)
+}
+
+func (fake *ExecutionRunner) WithTimeoutCalls(stub func(time.Duration) pkg.ExecutionRunner) {
+	fake.withTimeoutMutex.Lock()
+	defer fake.withTimeoutMutex.Unlock()
+	fake.WithTimeoutStub = stub
+}
+
+func (fake *ExecutionRunner) WithTimeoutArgsForCall(i int) time.Duration {
+	fake.withTimeoutMutex.RLock()
+	defer fake.withTimeoutMutex.RUnlock()
+	argsForCall := fake.withTimeoutArgsForCall[i]
+	return argsForCall.Arg1
+}
+
+func (fake *ExecutionRunner) WithTimeoutArgs() []ExecutionRunnerWithTimeoutArgs {
+	fake.withTimeoutMutex.RLock()
+	defer fake.withTimeoutMutex.RUnlock()
+	args := make([]ExecutionRunnerWithTimeoutArgs, len(fake.withTimeoutArgsForCall))
+	copy(args, fake.withTimeoutArgsForCall)
+	return args
+}
+
+func (fake *ExecutionRunner) WithTimeoutReturns(result1 pkg.ExecutionRunner) {
+	fake.withTimeoutMutex.Lock()
+	defer fake.withTimeoutMutex.Unlock()
+	fake.WithTimeoutStub = nil
+	fake.withTimeoutReturns = struct {
+		result1 pkg.ExecutionRunner
+	}{result1}
+}
+
+func (fake *ExecutionRunner) WithTimeoutReturnsOnCall(i int, result1 pkg.ExecutionRunner) {
+	fake.withTimeoutMutex.Lock()
+	defer fake.withTimeoutMutex.Unlock()
+	fake.WithTimeoutStub = nil
+	if fake.withTimeoutReturnsOnCall == nil {
+		fake.withTimeoutReturnsOnCall = make(map[int]struct {
+			result1 pkg.ExecutionRunner
+		})
+	}
+	fake.withTimeoutReturnsOnCall[i] = struct {
+		result1 pkg.ExecutionRunner
+	}{result1}
 }
 
 func (fake *ExecutionRunner) Invocations() map[string][][]interface{} {

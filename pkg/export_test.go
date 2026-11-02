@@ -18,6 +18,22 @@ func NewTestExecutionRunner(binary string, poll, timeout time.Duration) Executio
 	return &darkFactoryRunner{binary: binary, pollInterval: poll, timeout: timeout}
 }
 
+// NewTestExecutionRunnerWithToken is NewTestExecutionRunner plus the minted
+// installation token, so tests can assert what the push subprocess actually
+// sees. Kept separate so the existing call sites stay one argument shorter.
+func NewTestExecutionRunnerWithToken(
+	binary string,
+	poll, timeout time.Duration,
+	ghToken string,
+) ExecutionRunner {
+	return &darkFactoryRunner{
+		binary:       binary,
+		pollInterval: poll,
+		timeout:      timeout,
+		ghToken:      ghToken,
+	}
+}
+
 // ReadSpecStatus exposes the spec-status frontmatter reader for tests.
 func ReadSpecStatus(ctx context.Context, workdir, id string) string {
 	return readSpecStatus(ctx, workdir, id)

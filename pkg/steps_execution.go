@@ -116,6 +116,10 @@ type ExecutionRunner interface {
 	CommitSpecChanges(ctx context.Context, workdir string) error
 	// PushBranch pushes the per-prompt commits on HEAD to origin/<branch>.
 	PushBranch(ctx context.Context, workdir, branch string) error
+	// WithTimeout returns a copy of the runner with a different lifecycle
+	// timeout, preserving everything else — in particular the credential the
+	// push needs. Used for the per-task `lifecycle_timeout_minutes:` override.
+	WithTimeout(timeout time.Duration) ExecutionRunner
 }
 
 // ExecutionOutput is the typed contract for the ## Result section. Round-trips
@@ -288,7 +292,7 @@ func (s *executionStep) runLifecycle(
 	// Per-task `lifecycle_timeout_minutes:` frontmatter override: build a
 	// runner with that timeout for THIS run only (default/env runner untouched).
 	if t := resolveLifecycleTimeout(md); t > 0 {
-		runner = NewExecutionRunnerWithTimeout(t)
+		runner = s.runner.WithTimeout(t)
 		glog.V(2).Infof("execution: lifecycle timeout overridden by task frontmatter: %s", t)
 	}
 	result, err := runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())

@@ -487,5 +487,55 @@ esac
 			Expect(err).NotTo(BeNil())
 			Expect(err.Error()).To(ContainSubstring("git push"))
 		})
+
+		// stubGitRecordingToken puts a `git` on PATH that records the GH_TOKEN
+		// its subprocess actually received, and returns the file it writes.
+		// The push never runs for real: this asserts what the child sees.
+		stubGitRecordingToken := func() string {
+			dir := GinkgoT().TempDir()
+			seen := filepath.Join(dir, "gh-token-seen")
+			stub := filepath.Join(dir, "git")
+			Expect(os.WriteFile(
+				stub,
+				[]byte("#!/bin/sh\nprintf '%s' \"$GH_TOKEN\" > "+seen+"\n"),
+				0700,
+			)).To(BeNil()) // #nosec G306
+			GinkgoT().Setenv("PATH", dir+":"+os.Getenv("PATH"))
+			// The pod env carries no credential — that is the defect. Prove the
+			// token comes from the runner, not from an inherited value.
+			GinkgoT().Setenv("GH_TOKEN", "")
+			return seen
+		}
+
+		It("supplies GH_TOKEN to the git push subprocess", func() {
+			// Without this the cluster run implements the work and then loses it:
+			// `remote: Invalid username or token. Password authentication is not
+			// supported for Git operation`, because the agent hands the minted
+			// token only to pkg/git's cmdEnv().
+			seen := stubGitRecordingToken()
+			const token = "ghs-TEST-IAT-NOT-REAL" //nolint:gosec // test literal, not a real credential
+
+			runner := pkg.NewTestExecutionRunnerWithToken(
+				"dark-factory", time.Millisecond, time.Second, token,
+			)
+			Expect(runner.PushBranch(ctx, work, "master")).To(BeNil())
+
+			got, err := os.ReadFile(seen)
+			Expect(err).To(BeNil())
+			Expect(string(got)).To(Equal(token))
+		})
+
+		It("omits GH_TOKEN from the push when no token is configured", func() {
+			// The local/ambient path keeps working: no token, no entry, and the
+			// push still inherits the rest of the env unchanged.
+			seen := stubGitRecordingToken()
+
+			runner := pkg.NewTestExecutionRunner("dark-factory", time.Millisecond, time.Second)
+			Expect(runner.PushBranch(ctx, work, "master")).To(BeNil())
+
+			got, err := os.ReadFile(seen)
+			Expect(err).To(BeNil())
+			Expect(string(got)).To(BeEmpty())
+		})
 	})
 })

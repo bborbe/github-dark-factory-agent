@@ -77,19 +77,27 @@ const stallGracePolls = 10
 
 // darkFactoryRunner is the production ExecutionRunner: it shells `dark-factory`
 // and `git` with the worktree as cwd, inheriting the pod env (HOME for claude
-// auth, GH_TOKEN for push). It is exercised by the live smoke, not unit tests
-// (the step's own tests fake this seam).
+// auth, the egress proxy variables for network access). GH_TOKEN is NOT in the
+// pod env — the agent mints the installation token at startup and hands it to
+// pkg/git's cmdEnv() only — so the push carries it explicitly via pushEnv.
+// It is exercised by the live smoke, not unit tests (the step's own tests fake
+// this seam).
 type darkFactoryRunner struct {
 	binary       string
 	pollInterval time.Duration
 	timeout      time.Duration
+	ghToken      string
 }
 
 // NewExecutionRunner constructs the production dark-factory/git lifecycle runner
 // with the package-default lifecycleTimeout (90m), honoring a LIFECYCLE_TIMEOUT
 // env override (Go duration, e.g. "90m", "2h") when set.
-func NewExecutionRunner() ExecutionRunner {
-	return NewExecutionRunnerWithTimeout(resolveLifecycleTimeoutFromEnv(lifecycleTimeout))
+//
+// ghToken is the installation token minted at startup. It is required: the pod
+// env carries no credential, so a push without it fails with "Invalid username
+// or token. Password authentication is not supported".
+func NewExecutionRunner(ghToken string) ExecutionRunner {
+	return NewExecutionRunnerWithTimeout(ghToken, resolveLifecycleTimeoutFromEnv(lifecycleTimeout))
 }
 
 // resolveLifecycleTimeoutFromEnv returns the LIFECYCLE_TIMEOUT env value parsed
@@ -115,12 +123,24 @@ func resolveLifecycleTimeoutFromEnv(fallback time.Duration) time.Duration {
 // NewExecutionRunnerWithTimeout constructs the lifecycle runner with an explicit
 // timeout. Used when the caller resolves a per-task `lifecycle_timeout_minutes:`
 // frontmatter override (execution step) or a LIFECYCLE_TIMEOUT env override.
-func NewExecutionRunnerWithTimeout(timeout time.Duration) ExecutionRunner {
+func NewExecutionRunnerWithTimeout(ghToken string, timeout time.Duration) ExecutionRunner {
 	return &darkFactoryRunner{
 		binary:       darkFactoryBinary,
 		pollInterval: lifecyclePollInterval,
 		timeout:      timeout,
+		ghToken:      ghToken,
 	}
+}
+
+// WithTimeout returns a copy of the runner with a different lifecycle timeout,
+// carrying the credential and the binary/poll settings over. The execution step
+// uses it for the per-task `lifecycle_timeout_minutes:` override: building a
+// fresh runner there would silently drop ghToken and turn the override into a
+// push failure.
+func (r *darkFactoryRunner) WithTimeout(timeout time.Duration) ExecutionRunner {
+	clone := *r
+	clone.timeout = timeout
+	return &clone
 }
 
 // RunLifecycle starts `dark-factory daemon` (backend:local) in the background,
@@ -501,12 +521,29 @@ func (r *darkFactoryRunner) hasStagedChanges(ctx context.Context, workdir string
 	return cmd.Run() != nil
 }
 
+// pushEnv returns the pod env plus GH_TOKEN when a token is configured.
+//
+// The push shells `git` directly rather than going through pkg/git's cmdEnv(),
+// so it inherits the pod env — which carries the egress proxy variables but no
+// credential, because the agent injects the minted installation token only into
+// its own git subprocesses. Without this, every cluster run implements the work
+// and then loses it at the push: `remote: Invalid username or token. Password
+// authentication is not supported for Git operation`. Appending rather than
+// replacing keeps the proxy and HOME/PATH the push needs to reach GitHub at all.
+func (r *darkFactoryRunner) pushEnv() []string {
+	env := os.Environ()
+	if r.ghToken != "" {
+		env = append(env, "GH_TOKEN="+r.ghToken)
+	}
+	return env
+}
+
 // PushBranch pushes the per-prompt commits on HEAD to origin/<branch>.
 func (r *darkFactoryRunner) PushBranch(ctx context.Context, workdir, branch string) error {
 	// #nosec G204 -- git is fixed; branch is validated frontmatter (branch-name shaped)
 	cmd := exec.CommandContext(ctx, "git", "push", "origin", "HEAD:"+branch)
 	cmd.Dir = workdir
-	cmd.Env = os.Environ()
+	cmd.Env = r.pushEnv()
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {

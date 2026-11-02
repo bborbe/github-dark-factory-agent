@@ -131,7 +131,10 @@ func CreateAgent(
 	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
 	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
 	planning := dfpkg.NewPlanningStep(repoManager, githubClient)
-	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner(), model)
+	// The execution runner pushes with the same minted token the repo manager
+	// clones with: the pod env carries no credential, so without it every run
+	// implements the work and then loses it at `git push`.
+	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner(ghToken), model)
 	reviewRunner := CreateClaudeRunner(claudeConfigDir, agentDir, reviewTools, model, env)
 	review := dfpkg.NewAIReviewStep(githubClient, repoManager, reviewRunner)
 
