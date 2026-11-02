@@ -49,6 +49,10 @@ type RepoManager interface {
 // git-credential` returns nothing → clone fails with "authentication required"
 // even though the token was minted successfully at startup.
 //
+// The egress proxy variables (HTTP_PROXY, HTTPS_PROXY, NO_PROXY and their
+// lowercase forms) are passed through when set, so a sandbox that admits only
+// the proxy can still clone with a token.
+//
 // When ghToken is empty, git subprocesses inherit the parent env unchanged so
 // the local-CLI / ambient-gh path (using the operator's own gh state) keeps
 // working.
@@ -63,8 +67,11 @@ type repoManager struct {
 
 // cmdEnv returns the allowlisted env for git subprocesses: HOME (for
 // ~/.gitconfig), PATH (to resolve git + gh), GH_TOKEN (for the gh credential
-// helper). Prevents unrelated pod secrets (DATABASE_URL, ANTHROPIC_AUTH_TOKEN,
-// etc.) from leaking into git or any helper it shells out to.
+// helper), plus any egress proxy variable that is set (HTTP_PROXY, HTTPS_PROXY,
+// NO_PROXY and their lowercase forms). Mirrors the env-allowlist hardening in
+// the sibling agents — prevents unrelated pod secrets (DATABASE_URL,
+// ANTHROPIC_AUTH_TOKEN, etc.) from leaking into git or any helper it shells out
+// to. An unset proxy variable contributes no entry at all.
 //
 // When ghToken is empty the parent env is returned unchanged so ambient paths
 // (cmd/run-task with operator's own gh state) keep working.
@@ -72,11 +79,24 @@ func (r *repoManager) cmdEnv() []string {
 	if r.ghToken == "" {
 		return nil
 	}
-	return []string{
+	env := []string{
 		"HOME=" + os.Getenv("HOME"),
 		"PATH=" + os.Getenv("PATH"),
 		"GH_TOKEN=" + r.ghToken,
 	}
+	for _, key := range []string{
+		"HTTP_PROXY",
+		"HTTPS_PROXY",
+		"NO_PROXY",
+		"http_proxy",
+		"https_proxy",
+		"no_proxy",
+	} {
+		if value := os.Getenv(key); value != "" {
+			env = append(env, key+"="+value)
+		}
+	}
+	return env
 }
 
 // shaRegexp matches a full 40-character commit SHA. Both operands of
