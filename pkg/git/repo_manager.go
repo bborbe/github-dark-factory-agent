@@ -79,10 +79,19 @@ func (r *repoManager) cmdEnv() []string {
 	if r.ghToken == "" {
 		return nil
 	}
+	// Prefer the live process value over the token captured at construction:
+	// installation tokens expire after 60 minutes and a long execution phase
+	// re-mints immediately before its push, so a captured value would go stale
+	// mid-run and every later git call (headAfterPush, ai_review's fetch) would
+	// authenticate with the expired one.
+	token := r.ghToken
+	if live := os.Getenv("GH_TOKEN"); live != "" {
+		token = live
+	}
 	env := []string{
 		"HOME=" + os.Getenv("HOME"),
 		"PATH=" + os.Getenv("PATH"),
-		"GH_TOKEN=" + r.ghToken,
+		"GH_TOKEN=" + token,
 	}
 	for _, key := range []string{
 		"HTTP_PROXY",

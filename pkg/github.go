@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/bborbe/errors"
@@ -110,6 +111,18 @@ func (c *httpGitHubClient) ListPullRequestFiles(
 	return files, nil
 }
 
+// currentToken returns the credential to authenticate with, preferring the live
+// process value over the one captured at construction. Installation tokens
+// expire after 60 minutes and the execution phase re-mints immediately before
+// its push, so ai_review — which runs later in the same process — must read the
+// refreshed value rather than the startup one.
+func (c *httpGitHubClient) currentToken() string {
+	if live := os.Getenv("GH_TOKEN"); live != "" {
+		return live
+	}
+	return c.token
+}
+
 // get performs an authenticated GET and returns the body on HTTP 200.
 func (c *httpGitHubClient) get(ctx context.Context, url string) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -117,8 +130,8 @@ func (c *httpGitHubClient) get(ctx context.Context, url string) ([]byte, error) 
 		return nil, errors.Wrapf(ctx, err, "build request")
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
-	if c.token != "" {
-		req.Header.Set("Authorization", "token "+c.token)
+	if token := c.currentToken(); token != "" {
+		req.Header.Set("Authorization", "token "+token)
 	}
 	resp, err := c.client.Do(req)
 	if err != nil {

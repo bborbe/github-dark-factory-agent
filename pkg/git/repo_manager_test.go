@@ -152,6 +152,23 @@ var _ = Describe("RepoManager", func() {
 			Expect(git.CmdEnv(m)).To(BeNil())
 		})
 
+		It("prefers the live GH_TOKEN over the one captured at construction", func() {
+			// Installation tokens expire after 60 minutes, and the execution phase
+			// re-mints immediately before its push. A value captured at
+			// construction would go stale, and every later git call in the same
+			// run — headAfterPush, ai_review's fetch — would authenticate with the
+			// expired token.
+			GinkgoT().Setenv("GH_TOKEN", "ghs-LIVE-NOT-REAL")
+
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				"ghs-CAPTURED-NOT-REAL",
+			)
+			env := git.CmdEnv(m)
+			Expect(env).To(ContainElement("GH_TOKEN=ghs-LIVE-NOT-REAL"))
+			Expect(env).NotTo(ContainElement("GH_TOKEN=ghs-CAPTURED-NOT-REAL"))
+		})
+
 		It(
 			"returns an allowlist env with GH_TOKEN, HOME and PATH when a token is configured",
 			func() {

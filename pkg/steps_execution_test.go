@@ -165,7 +165,8 @@ var _ = Describe("ExecutionStep", func() {
 		It("still pushes when the refresh fails, keeping the existing token", func() {
 			// A refresh failure must not fail the step: on a short run the
 			// startup token is still valid and the push would otherwise be lost.
-			GinkgoT().Setenv("GH_TOKEN", "ghs-STILL-VALID-NOT-REAL")
+			const stillValid = "ghs-STILL-VALID-NOT-REAL"
+			GinkgoT().Setenv("GH_TOKEN", stillValid)
 
 			step = pkg.NewExecutionStep(
 				fakeRepo,
@@ -176,9 +177,18 @@ var _ = Describe("ExecutionStep", func() {
 				},
 			)
 
+			seenAtPush := ""
+			fakeRunner.PushBranchStub = func(context.Context, string, string) error {
+				seenAtPush = os.Getenv("GH_TOKEN")
+				return nil
+			}
+
 			result, _ := run(execTask())
 			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
 			Expect(fakeRunner.PushBranchCallCount()).To(Equal(1))
+			// The existing token must survive: clobbering it with the empty
+			// refresh result would push unauthenticated.
+			Expect(seenAtPush).To(Equal(stillValid))
 		})
 
 		It(
