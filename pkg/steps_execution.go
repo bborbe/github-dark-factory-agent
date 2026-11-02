@@ -7,6 +7,7 @@ package pkg
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -146,17 +147,59 @@ type executionStep struct {
 	// so backend:local never falls back to its built-in Claude default when a
 	// repo's .dark-factory.yaml omits `model:` (empty = no override).
 	model claudelib.ClaudeModel
+	// refreshToken re-mints the GitHub credential. The token is minted once at
+	// startup and GitHub App installation tokens expire after 60 minutes, while
+	// the execution phase routinely runs longer than that — so a push at the end
+	// of a long run is refused with "Invalid username or token. Password
+	// authentication is not supported for Git operation". Calling this
+	// immediately before the push turns that into a success. Nil disables the
+	// refresh (local / raw-GH_TOKEN paths, and tests).
+	refreshToken func(ctx context.Context) (string, error)
 }
 
 // NewExecutionStep wires the execution step with its IO seams — the repo manager
 // (worktree) and the dark-factory/git lifecycle runner — plus the fleet model
-// forwarded to the daemon so backend:local uses it instead of its Claude default.
+// forwarded to the daemon so backend:local uses it instead of its Claude default,
+// and the credential refresher used before the push.
 func NewExecutionStep(
 	repoManager git.RepoManager,
 	runner ExecutionRunner,
 	model claudelib.ClaudeModel,
+	refreshToken func(ctx context.Context) (string, error),
 ) agentlib.Step {
-	return &executionStep{repoManager: repoManager, runner: runner, model: model}
+	return &executionStep{
+		repoManager:  repoManager,
+		runner:       runner,
+		model:        model,
+		refreshToken: refreshToken,
+	}
+}
+
+// refreshTokenForPush re-mints the GitHub credential and exports it into the
+// process env, which is what the push actually reads: PushBranch inherits
+// os.Environ(). The installation token is minted once at startup and expires
+// after 60 minutes, while a lifecycle run routinely takes longer — measured
+// 2026-11-02 on bborbe/attention-controller#166, minted 14:54Z, push attempted
+// 16:07Z, refused with "Invalid username or token. Password authentication is
+// not supported for Git operation" after the implementation itself succeeded.
+//
+// A refresh failure is never fatal: on a short run the existing token is still
+// valid, and failing the step here would turn a working push into a failed run.
+func (s *executionStep) refreshTokenForPush(ctx context.Context) {
+	if s.refreshToken == nil {
+		return
+	}
+	token, err := s.refreshToken(ctx)
+	if err != nil {
+		glog.Warningf("refresh GH_TOKEN before push failed, keeping the existing one: %v", err)
+		return
+	}
+	if token == "" {
+		return
+	}
+	if err := os.Setenv("GH_TOKEN", token); err != nil {
+		glog.Warningf("export refreshed GH_TOKEN failed: %v", err)
+	}
 }
 
 // daemonFlags returns the static executionFlags plus a `--set model=<model>`
@@ -310,6 +353,8 @@ func (s *executionStep) runLifecycle(
 	if err := s.runner.CommitSpecChanges(ctx, worktree); err != nil {
 		return failed("execution: commit spec completions: " + err.Error()), nil
 	}
+
+	s.refreshTokenForPush(ctx)
 
 	if err := s.runner.PushBranch(ctx, worktree, p.branch); err != nil {
 		return failed("execution: push branch " + p.branch + ": " + err.Error()), nil

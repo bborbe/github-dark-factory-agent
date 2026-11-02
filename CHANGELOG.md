@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: re-mint the GitHub credential immediately before the push. The installation token is minted once at startup (`resolveAuth` → `githubapp.MintIAT`) and GitHub App installation tokens expire after 60 minutes, while the execution phase routinely runs longer — so the final `git push` was refused with `remote: Invalid username or token. Password authentication is not supported for Git operation`, after the implementation itself had succeeded. Measured 2026-11-02 on `bborbe/attention-controller#166`: token minted 14:54Z, push attempted 16:07Z, 73 minutes later. The execution step now calls a `refreshToken` seam right before `PushBranch` and exports the fresh value into the process env the push inherits; a refresh failure is logged and the step continues, so a short run that still holds a valid token is unaffected. (`Permission to … denied` would have meant the App lacked write access — it did not, which is what ruled that out.)
+
 ## v0.5.8
 
 - fix: pass the egress proxy environment through to git subprocesses. `cmdEnv()` returned only `HOME`, `PATH` and `GH_TOKEN`, so a clone from a sandbox that admits egress only through the allowlisting proxy dialled `github.com:443` directly and was refused by the NetworkPolicy in 2–9 ms — every dark-factory run on nuke prod failed at `planning: ensure worktree` before any LLM work started. The six proxy variables (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` and their lowercase forms) are appended when set, mirroring `github-pr-review-agent`, `github-releaser-agent` and `github-update-go-agent`, which took the same fix on 2026-10-28; an unset variable still contributes no entry, so the allowlist does not become a pass-through.

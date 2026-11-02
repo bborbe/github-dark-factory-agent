@@ -127,11 +127,14 @@ func CreateAgent(
 	repoManager git.RepoManager,
 	githubClient dfpkg.GitHubClient,
 	claudeProber dfpkg.ClaudeProber,
+	refreshToken func(ctx context.Context) (string, error),
 ) *agentlib.Agent {
 	claudeAuth := dfpkg.NewClaudeAuthStep(claudeProber)
 	ghTokenCheck := dfpkg.NewGHTokenCheckStep(ghToken)
 	planning := dfpkg.NewPlanningStep(repoManager, githubClient)
-	execution := dfpkg.NewExecutionStep(repoManager, dfpkg.NewExecutionRunner(), model)
+	execution := dfpkg.NewExecutionStep(
+		repoManager, dfpkg.NewExecutionRunner(), model, refreshToken,
+	)
 	reviewRunner := CreateClaudeRunner(claudeConfigDir, agentDir, reviewTools, model, env)
 	review := dfpkg.NewAIReviewStep(githubClient, repoManager, reviewRunner)
 
@@ -156,6 +159,7 @@ func CreateAgentProvider(
 	repoManager git.RepoManager,
 	githubClient dfpkg.GitHubClient,
 	claudeProber dfpkg.ClaudeProber,
+	refreshToken func(ctx context.Context) (string, error),
 ) agentlib.AgentProvider {
 	domainAgent := CreateAgent(
 		claudeConfigDir,
@@ -166,6 +170,7 @@ func CreateAgentProvider(
 		repoManager,
 		githubClient,
 		claudeProber,
+		refreshToken,
 	)
 	healthcheckRunner := CreateClaudeRunner(
 		claudeConfigDir,

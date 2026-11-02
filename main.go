@@ -182,6 +182,10 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 		repoManager,
 		githubClient,
 		claudeProber,
+		// Re-mint before the push: the installation token is minted once here at
+		// startup and expires after 60 minutes, but a lifecycle run routinely
+		// takes longer, so the final push would be refused as an invalid token.
+		a.resolveAuth,
 	)
 	agent, err := provider.Get(ctx, agentlib.TaskType(a.TaskType))
 	if err != nil {
