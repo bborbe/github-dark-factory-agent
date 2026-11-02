@@ -63,6 +63,7 @@ var _ = Describe("ExecutionStep", func() {
 			fakeRepo,
 			fakeRunner,
 			claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+			nil,
 		)
 	})
 
@@ -135,6 +136,61 @@ var _ = Describe("ExecutionStep", func() {
 			},
 		)
 
+		It("exports a freshly minted GH_TOKEN immediately before the push", func() {
+			// The installation token is minted once at startup and expires after
+			// 60 minutes, while a lifecycle run routinely takes longer — so a push
+			// that reuses the startup token is refused as invalid. Measured
+			// 2026-11-02: minted 14:54Z, push at 16:07Z, "Invalid username or
+			// token". The push must therefore see the refreshed value.
+			const fresh = "ghs-FRESH-NOT-REAL" //nolint:gosec // test literal, not a real credential
+			GinkgoT().Setenv("GH_TOKEN", "ghs-STALE-NOT-REAL")
+
+			step = pkg.NewExecutionStep(
+				fakeRepo,
+				fakeRunner,
+				claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+				func(context.Context) (string, error) { return fresh, nil },
+			)
+
+			seenAtPush := ""
+			fakeRunner.PushBranchStub = func(context.Context, string, string) error {
+				seenAtPush = os.Getenv("GH_TOKEN")
+				return nil
+			}
+
+			run(execTask())
+			Expect(seenAtPush).To(Equal(fresh))
+		})
+
+		It("still pushes when the refresh fails, keeping the existing token", func() {
+			// A refresh failure must not fail the step: on a short run the
+			// startup token is still valid and the push would otherwise be lost.
+			const stillValid = "ghs-STILL-VALID-NOT-REAL"
+			GinkgoT().Setenv("GH_TOKEN", stillValid)
+
+			step = pkg.NewExecutionStep(
+				fakeRepo,
+				fakeRunner,
+				claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+				func(context.Context) (string, error) {
+					return "", testError("mint failed")
+				},
+			)
+
+			seenAtPush := ""
+			fakeRunner.PushBranchStub = func(context.Context, string, string) error {
+				seenAtPush = os.Getenv("GH_TOKEN")
+				return nil
+			}
+
+			result, _ := run(execTask())
+			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+			Expect(fakeRunner.PushBranchCallCount()).To(Equal(1))
+			// The existing token must survive: clobbering it with the empty
+			// refresh result would push unauthenticated.
+			Expect(seenAtPush).To(Equal(stillValid))
+		})
+
 		It(
 			"passes --set hideGit=true so dark-factory runs inside the git worktree (spec-084 gate)",
 			func() {
@@ -167,7 +223,7 @@ var _ = Describe("ExecutionStep", func() {
 				// Empty model → no `--set model=` override, so the daemon keeps its own
 				// default. Guards the fallback branch of daemonFlags against a regression
 				// that would smuggle an empty `model=` (or drop backend=local).
-				step = pkg.NewExecutionStep(fakeRepo, fakeRunner, claudelib.ClaudeModel(""))
+				step = pkg.NewExecutionStep(fakeRepo, fakeRunner, claudelib.ClaudeModel(""), nil)
 				run(execTask())
 				Expect(fakeRunner.RunLifecycleCallCount()).To(Equal(1))
 				_, _, _, flags := fakeRunner.RunLifecycleArgsForCall(0)

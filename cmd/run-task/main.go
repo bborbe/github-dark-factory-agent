@@ -117,6 +117,9 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 		repoManager,
 		githubClient,
 		claudeProber,
+		// Local CLI path: the credential is the operator's own long-lived gh
+		// token, so there is nothing to refresh before the push.
+		nil,
 	)
 
 	result, err := agent.Run(ctx, a.Phase, string(taskContent), deliverer)

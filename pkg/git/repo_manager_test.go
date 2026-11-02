@@ -141,15 +141,38 @@ var _ = Describe("RepoManager", func() {
 		// Clear any proxy variables inherited from the test runner's own
 		// environment; specs in one process share the environment, so each spec
 		// opts in to exactly the proxy values it wants to observe.
+		//
+		// GH_TOKEN is cleared for the same reason and is load-bearing: cmdEnv
+		// prefers the live value, so a GH_TOKEN exported by the runner (a dev
+		// shell, or the dark-factory execution phase that exports it) would
+		// silently override the captured token these specs assert on.
 		BeforeEach(func() {
 			for _, key := range proxyKeys {
 				GinkgoT().Setenv(key, "")
 			}
+			GinkgoT().Setenv("GH_TOKEN", "")
 		})
 
 		It("returns nil when no token is configured", func() {
 			m := git.NewRepoManager(git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir}, "")
 			Expect(git.CmdEnv(m)).To(BeNil())
+		})
+
+		It("prefers the live GH_TOKEN over the one captured at construction", func() {
+			// Installation tokens expire after 60 minutes, and the execution phase
+			// re-mints immediately before its push. A value captured at
+			// construction would go stale, and every later git call in the same
+			// run — headAfterPush, ai_review's fetch — would authenticate with the
+			// expired token.
+			GinkgoT().Setenv("GH_TOKEN", "ghs-LIVE-NOT-REAL")
+
+			m := git.NewRepoManager(
+				git.WorkdirConfig{ReposPath: reposDir, WorkPath: workDir},
+				"ghs-CAPTURED-NOT-REAL",
+			)
+			env := git.CmdEnv(m)
+			Expect(env).To(ContainElement("GH_TOKEN=ghs-LIVE-NOT-REAL"))
+			Expect(env).NotTo(ContainElement("GH_TOKEN=ghs-CAPTURED-NOT-REAL"))
 		})
 
 		It(

@@ -33,6 +33,7 @@ var _ = Describe("CreateAgentProvider", func() {
 			nil,
 			nil,
 			nil,
+			nil,
 		)
 	})
 
@@ -133,6 +134,7 @@ var _ = Describe("CreateAgent", func() {
 			"",
 			claudelib.ClaudeModel("sonnet"),
 			"",
+			nil,
 			nil,
 			nil,
 			nil,
