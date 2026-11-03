@@ -61,12 +61,12 @@ var _ = Describe("FileBackedHelper", func() {
 	})
 
 	It("refuses to write an empty token file", func() {
-		Expect(githubauth.WriteTokenFile("")).NotTo(Succeed())
+		Expect(githubauth.WriteTokenFile(ctx, "")).NotTo(Succeed())
 	})
 
 	It("replaces the file contents on a refresh", func() {
-		Expect(githubauth.WriteTokenFile("first")).To(Succeed())
-		Expect(githubauth.WriteTokenFile("second")).To(Succeed())
+		Expect(githubauth.WriteTokenFile(ctx, "first")).To(Succeed())
+		Expect(githubauth.WriteTokenFile(ctx, "second")).To(Succeed())
 		content, err := os.ReadFile(githubauth.TokenFilePath()) // #nosec G304 -- test-only path
 		Expect(err).To(BeNil())
 		Expect(string(content)).To(Equal("second"))
