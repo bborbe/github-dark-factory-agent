@@ -19,6 +19,7 @@ import (
 	"github.com/golang/glog"
 
 	"github.com/bborbe/github-dark-factory-agent/pkg/git"
+	"github.com/bborbe/github-dark-factory-agent/pkg/githubauth"
 )
 
 // resultSectionHeading is the body section the execution phase produces. Its
@@ -202,6 +203,54 @@ func (s *executionStep) refreshTokenForPush(ctx context.Context) {
 	}
 }
 
+// tokenFileRefreshInterval is well inside the 60-minute installation-token TTL,
+// so the file the credential helper reads is never near expiry.
+const tokenFileRefreshInterval = 40 * time.Minute
+
+// startTokenFileRefresher rewrites the token file on an interval for as long as
+// the returned stop function has not been called.
+//
+// The file-backed credential helper makes a refresh effective for the already
+// running daemon — git re-reads the file at every credential lookup, whereas an
+// environment variable was copied at exec time. This is the writer that keeps
+// that file fresh: without it the file would hold the startup token and expire
+// exactly like the env var it replaced.
+//
+// A refresh failure is never fatal: the current file is still valid until the
+// next tick, and failing the run here would turn a working run into a failed one.
+func (s *executionStep) startTokenFileRefresher(ctx context.Context) func() {
+	if s.refreshToken == nil {
+		return func() {}
+	}
+	refreshCtx, cancel := context.WithCancel(ctx)
+	go func() {
+		ticker := time.NewTicker(tokenFileRefreshInterval)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-refreshCtx.Done():
+				return
+			case <-ticker.C:
+				token, err := s.refreshToken(refreshCtx)
+				if err != nil {
+					glog.Warningf(
+						"refresh GH_TOKEN during lifecycle failed, keeping the current token file: %v",
+						err,
+					)
+					continue
+				}
+				if token == "" {
+					continue
+				}
+				if err := githubauth.WriteTokenFile(token); err != nil {
+					glog.Warningf("rewrite token file during lifecycle failed: %v", err)
+				}
+			}
+		}
+	}()
+	return cancel
+}
+
 // daemonFlags returns the static executionFlags plus a `--set model=<model>`
 // override derived from the injected fleet model. The daemon resolves its model
 // from --set > .dark-factory.yaml `model:` > a built-in Claude default; the fleet
@@ -334,7 +383,9 @@ func (s *executionStep) runLifecycle(
 		runner = NewExecutionRunnerWithTimeout(t)
 		glog.V(2).Infof("execution: lifecycle timeout overridden by task frontmatter: %s", t)
 	}
+	stopTokenRefresh := s.startTokenFileRefresher(ctx)
 	result, err := runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())
+	stopTokenRefresh()
 	if err != nil {
 		// A dark-factory / DoD / audit failure (spec-078 fail-closed). Escalate;
 		// NO auto-fix loop, NO assignee mutation.
