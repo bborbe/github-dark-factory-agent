@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: **exit non-zero when the agent publishes `Status: failed`.** The result was still published to the task, but the process returned nil, so the Job completed and the executor — which records a phase success on exit 0 alone (`IsJobSucceeded` in `agent-task-executor`'s `job_watcher`) and never reads the published Status — wrote a *phase success* for a run that had failed. Once the success grace expired the task was parked at `human_review` as though a human had parked it deliberately. Observed 2026-11-03 on task `ceb79961`: a Job that published `Status: failed` for `git clone --bare: Failed to connect to github.com port 443` exited 0 and parked the task. `needs_input` is deliberately unchanged — parking for a human answer is that status's intent
+
 ## v0.5.10
 
 - chore: update github.com/bborbe/agent to v0.138.0, github.com/bborbe/cqrs to v0.6.15, github.com/bborbe/errors to v1.6.6, github.com/bborbe/kafka to v1.29.11, github.com/bborbe/maintainer to v0.51.0, github.com/bborbe/sentry to v1.10.7, github.com/bborbe/service to v1.11.2, github.com/bborbe/time to v1.27.25, github.com/bborbe/vault-cli to v0.186.2, github.com/onsi/ginkgo/v2 to v2.34.0
