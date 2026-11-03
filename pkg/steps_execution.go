@@ -19,6 +19,7 @@ import (
 	"github.com/golang/glog"
 
 	"github.com/bborbe/github-dark-factory-agent/pkg/git"
+	"github.com/bborbe/github-dark-factory-agent/pkg/githubauth"
 )
 
 // resultSectionHeading is the body section the execution phase produces. Its
@@ -155,6 +156,10 @@ type executionStep struct {
 	// immediately before the push turns that into a success. Nil disables the
 	// refresh (local / raw-GH_TOKEN paths, and tests).
 	refreshToken func(ctx context.Context) (string, error)
+	// tokenFileRefreshInterval overrides how often the token file is rewritten
+	// during the lifecycle. Zero means defaultTokenFileRefreshInterval; tests set
+	// it short so the loop can be exercised without waiting 40 minutes.
+	tokenFileRefreshInterval time.Duration
 }
 
 // NewExecutionStep wires the execution step with its IO seams — the repo manager
@@ -199,6 +204,74 @@ func (s *executionStep) refreshTokenForPush(ctx context.Context) {
 	}
 	if err := os.Setenv("GH_TOKEN", token); err != nil {
 		glog.Warningf("export refreshed GH_TOKEN failed: %v", err)
+	}
+	// The push resolves its credential from the file-backed helper, NOT from
+	// GH_TOKEN: that helper replaced gh's env-reading one. Refreshing only the env
+	// would leave the push reading a stale file — the same expired-token failure
+	// this refresh exists to prevent, reintroduced by the helper.
+	if err := githubauth.WriteTokenFile(ctx, token); err != nil {
+		glog.Warningf("rewrite token file before push failed, keeping the existing one: %v", err)
+	}
+}
+
+// defaultTokenFileRefreshInterval is well inside the 60-minute installation-token
+// TTL, so the file the credential helper reads is never near expiry. It is a
+// field default rather than a const so tests can drive the loop at a short
+// interval instead of waiting 40 minutes.
+const defaultTokenFileRefreshInterval = 40 * time.Minute
+
+// startTokenFileRefresher rewrites the token file on an interval for as long as
+// the returned stop function has not been called.
+//
+// The file-backed credential helper makes a refresh effective for the already
+// running daemon — git re-reads the file at every credential lookup, whereas an
+// environment variable was copied at exec time. This is the writer that keeps
+// that file fresh: without it the file would hold the startup token and expire
+// exactly like the env var it replaced.
+//
+// A refresh failure is never fatal: the current file is still valid until the
+// next tick, and failing the run here would turn a working run into a failed one.
+func (s *executionStep) startTokenFileRefresher(ctx context.Context) func() {
+	if s.refreshToken == nil {
+		return func() {}
+	}
+	interval := s.tokenFileRefreshInterval
+	if interval <= 0 {
+		interval = defaultTokenFileRefreshInterval
+	}
+	refreshCtx, cancel := context.WithCancel(ctx)
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-refreshCtx.Done():
+				return
+			case <-ticker.C:
+				token, err := s.refreshToken(refreshCtx)
+				if err != nil {
+					glog.Warningf(
+						"refresh GH_TOKEN during lifecycle failed, keeping the current token file: %v",
+						err,
+					)
+					continue
+				}
+				if token == "" {
+					continue
+				}
+				if err := githubauth.WriteTokenFile(refreshCtx, token); err != nil {
+					glog.Warningf("rewrite token file during lifecycle failed: %v", err)
+				}
+			}
+		}
+	}()
+	return func() {
+		cancel()
+		// Wait for the goroutine so a WriteTokenFile cannot still be in flight
+		// when the caller returns, and a panic in RunLifecycle cannot leak it.
+		<-done
 	}
 }
 
@@ -334,6 +407,10 @@ func (s *executionStep) runLifecycle(
 		runner = NewExecutionRunnerWithTimeout(t)
 		glog.V(2).Infof("execution: lifecycle timeout overridden by task frontmatter: %s", t)
 	}
+	// Deferred, not called inline: a panic in RunLifecycle must not leak the
+	// goroutine, and keeping it alive through the push is harmless.
+	stopTokenRefresh := s.startTokenFileRefresher(ctx)
+	defer stopTokenRefresh()
 	result, err := runner.RunLifecycle(ctx, worktree, specIDs, s.daemonFlags())
 	if err != nil {
 		// A dark-factory / DoD / audit failure (spec-078 fail-closed). Escalate;

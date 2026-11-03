@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: **install a file-backed git credential helper so a long lifecycle run never uses an expired token.** The GitHub App installation token lives 60 minutes and is minted once at startup; `gh auth setup-git` binds it into a helper that resolves `GH_TOKEN` from the environment of whatever runs git, and the dark-factory daemon captured that environment when it was started — so no refresh in the parent process can reach it. A token file has no such lifetime: git re-reads it at every credential lookup. Observed 2026-11-03 on `bborbe/trading#433`: token minted 18:10Z, the daemon's own `git fetch origin` refused at 19:15Z with `Invalid username or token. Password authentication is not supported`
+
 ## v0.5.11
 
 - fix: **exit non-zero when the agent publishes `Status: failed`.** The result was still published to the task, but the process returned nil, so the Job completed and the executor — which records a phase success on exit 0 alone (`IsJobSucceeded` in `agent-task-executor`'s `job_watcher`) and never reads the published Status — wrote a *phase success* for a run that had failed. Once the success grace expired the task was parked at `human_review` as though a human had parked it deliberately. Observed 2026-11-03 on task `ceb79961`: a Job that published `Status: failed` for `git clone --bare: Failed to connect to github.com port 443` exited 0 and parked the task. `needs_input` is deliberately unchanged — parking for a human answer is that status's intent
