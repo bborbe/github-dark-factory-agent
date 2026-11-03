@@ -294,6 +294,13 @@ func (a *application) prepareAuth(ctx context.Context) (string, error) {
 	if err := githubauth.NewGhAuthSetupGit(resolvedToken).Setup(ctx); err != nil {
 		return "", errors.Wrap(ctx, err, "gh auth setup-git")
 	}
+	// A file the daemon re-reads outlives the token bound into gh's helper: the
+	// installation token expires after 60 minutes and the lifecycle daemon keeps
+	// its startup environment, so a long run's own `git fetch` would use a dead
+	// token (2026-11-03, bborbe/trading#433).
+	if err := githubauth.NewFileBackedHelper(resolvedToken).Setup(ctx); err != nil {
+		return "", errors.Wrap(ctx, err, "configure file-backed credential helper")
+	}
 	return resolvedToken, nil
 }
 
