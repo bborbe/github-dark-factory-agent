@@ -202,7 +202,50 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 	}
 	jobMetrics.RecordRun(result.Status)
 	jobMetrics.RecordDuration(time.Since(start))
-	return agentlib.PrintResult(ctx, result)
+	return finishRun(ctx, result, a.Phase)
+}
+
+// finishRun publishes the agent's result and then decides the Job's exit code.
+// It exists as one call so Run stays within its funlen budget.
+func finishRun(
+	ctx context.Context,
+	result *agentlib.Result,
+	phase domain.TaskPhase,
+) error {
+	if err := agentlib.PrintResult(ctx, result); err != nil {
+		return err
+	}
+	return exitErrorForStatus(ctx, result.Status, phase)
+}
+
+// exitErrorForStatus returns a non-nil error when the agent's published status
+// must fail the Job, and nil when the Job may exit 0.
+//
+// A failed result is still published to the task, but the Job must also exit
+// non-zero. The executor records a phase success on exit 0 alone (IsJobSucceeded
+// in agent-task-executor's job_watcher), so returning nil here makes a failed run
+// indistinguishable from a completed one: the failure is written as a phase
+// success, and once the success grace expires the task is parked at human_review
+// as though a human had parked it deliberately (2026-11-03, task ceb79961: a Job
+// that published Status=failed for a git clone error exited 0 and parked the
+// task).
+//
+// needs_input is deliberately NOT a failure: parking for a human answer is that
+// status's intent, and it reaches the same park path on purpose.
+func exitErrorForStatus(
+	ctx context.Context,
+	status agentlib.AgentStatus,
+	phase domain.TaskPhase,
+) error {
+	if status == agentlib.AgentStatusFailed {
+		return errors.Errorf(
+			ctx,
+			"agent reported status %q for phase %q",
+			status,
+			phase,
+		)
+	}
+	return nil
 }
 
 // buildClaudeEnv assembles the Claude CLI subprocess env from the raw env
