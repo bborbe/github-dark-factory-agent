@@ -87,6 +87,12 @@ func TestExitErrorForStatus(t *testing.T) {
 // not implement — so each Job start wrote the live model-router credential in
 // cleartext. This test drives the real printer over the real struct, so removing
 // the display:"length" tag turns it red.
+//
+// Plain testing rather than Ginkgo on purpose: application is unexported, so the
+// assertion must live in package main, and package main_test (main_test.go) shares
+// this test binary — where a second RunSpecs fails with "calling RunSpecs more than
+// once". An internal spec therefore cannot join the existing suite. Same shape as
+// TestExitErrorForStatus above.
 func TestPrintRedactsAnthropicAuthToken(t *testing.T) {
 	const sentinel = "sentinel-token-do-not-log-9f3a2b7c1d"
 
