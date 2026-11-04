@@ -1,6 +1,36 @@
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
 
+# BUILD_TARGET selects where `make build` runs. `local` (the default) builds on
+# this machine with the local Docker daemon; any other value names a cluster
+# alias (sun, nukedev, nukeprod) and the build runs there as a Job rendered from
+# hack/build-job.yaml, pushing from inside the cluster.
+#
+# Why this exists: a release image must be buildable without a local Docker daemon
+# and without `docker push` on the workstation. Agents are refused `docker push`,
+# so the local arm alone cannot publish a release at all.
+BUILD_TARGET ?= local
+BUILD_NAMESPACE ?= build
+BUILD_TIMEOUT ?= 3600
+BUILD_REPO_URL ?= https://github.com/$(IMAGE).git
+BUILD_DOCKERFILE ?= Dockerfile
+BUILD_PUSH_SECRET ?= buildkit-push
+
+# The ref the cluster clones. Empty on purpose: the cluster arm must be told what
+# to build, and hack/build-cluster.sh refuses to run without it.
+REF ?=
+
+# The build clock comes from the commit, not the wall clock, so two builds of one
+# commit agree. BuildKit reads SOURCE_DATE_EPOCH when it rewrites file timestamps.
+SOURCE_DATE_EPOCH ?= $(shell git log -1 --format=%ct)
+BUILD_DATE ?= $(shell git log -1 --format=%cI)
+
+# ⚠️ The prerequisites are LOCAL-ARM ONLY, and that is load-bearing rather than
+# tidiness. check-version-tag asserts the tree sits at the tag it claims to build,
+# and check-go-mod runs `go mod vendor` — both describe local HEAD. The cluster arm
+# builds REF, which need not be HEAD and need not exist locally at all, so running
+# them there would validate a different commit than the one built.
 .PHONY: build
+ifeq ($(BUILD_TARGET),local)
 build: check-version-tag check-go-mod
 	@if [ -z "$(VERSION)" ]; then echo "ERROR: no VERSION set and no git tag found — set VERSION=vX.Y.Z or create a tag" >&2; exit 1; fi
 	DOCKER_BUILDKIT=1 \
@@ -15,6 +45,36 @@ build: check-version-tag check-go-mod
 	--build-arg BUILD_DATE=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
 	-t $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION) \
 	-f Dockerfile .
+else
+build:
+	@if [ "$(origin VERSION)" = "file" ] || [ "$(origin VERSION)" = "undefined" ]; then \
+		echo "ERROR: VERSION is not set, and the Makefile's default is the newest release tag ($(VERSION))." >&2; \
+		echo "  The cluster arm pushes with PUSH=true, so building REF=$(REF) would overwrite the" >&2; \
+		echo "  published image for that release tag with an image built from a different commit." >&2; \
+		echo "  Set it explicitly: make build BUILD_TARGET=$(BUILD_TARGET) REF=<ref> VERSION=<tag>" >&2; \
+		exit 1; \
+	fi
+	@case "$(VERSION)" in \
+		v[0-9]*.[0-9]*.[0-9]*) \
+			if [ "$(REF)" != "$(VERSION)" ]; then \
+				echo "ERROR: refusing to push release tag $(VERSION) from REF=$(REF)." >&2; \
+				echo "  A release image must be built from its own tag: REF=$(VERSION)." >&2; \
+				exit 1; \
+			fi ;; \
+	esac
+	BUILD_TARGET='$(BUILD_TARGET)' \
+	NAMESPACE='$(BUILD_NAMESPACE)' \
+	TIMEOUT='$(BUILD_TIMEOUT)' \
+	REPO_URL='$(BUILD_REPO_URL)' \
+	REF='$(REF)' \
+	TAG='$(VERSION)' \
+	DOCKERFILE='$(BUILD_DOCKERFILE)' \
+	IMAGE='$(DOCKER_REGISTRY)/$(IMAGE)' \
+	DOCKER_REGISTRY='$(DOCKER_REGISTRY)' \
+	PUSH='true' \
+	PUSH_SECRET='$(BUILD_PUSH_SECRET)' \
+	hack/build-cluster.sh
+endif
 
 .PHONY: check-version-tag
 check-version-tag:
@@ -41,29 +101,25 @@ check-go-mod:
 		echo "go.mod not found, skipping go mod vendor."; \
 	fi
 
+# A remote build pushes from inside the cluster and never loads the image on this
+# machine, so there is nothing here to push. Guarding it matters: without the
+# guard `make buca BUILD_TARGET=<cluster>` fails at the push step after a build
+# that actually succeeded, with "An image does not exist locally".
 .PHONY: upload
 upload:
+ifeq ($(BUILD_TARGET),local)
 	docker push $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION)
+else
+	@echo "upload: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job already pushed $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION)"
+endif
 
 .PHONY: clean
 clean:
+ifeq ($(BUILD_TARGET),local)
 	docker rmi $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION) || true
 	docker image prune -f || true
 	docker builder prune --all -f || true
 	rm -rf vendor
-
-.PHONY: apply
-apply:
-	@for i in $(DIRS); do \
-		cd $$i; \
-		echo "apply $${i}"; \
-		make apply; \
-		cd ..; \
-	done
-
-# Operator-run publish to Docker Hub (requires `docker login`). CI runs
-# `make precommit`, never `buca`, so the unconditional push is safe. `apply` is a
-# no-op placeholder (no k8s in this repo — deployment lives in the quant config
-# repo as mirror + keel-pattern). Shape mirrors bborbe/kafka-topic-reader.
-.PHONY: buca
-buca: build upload clean apply
+else
+	@echo "clean: skipped — BUILD_TARGET=$(BUILD_TARGET); no local image to remove"
+endif
