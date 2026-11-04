@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.14
 
 - fix: **redact the `AnthropicAuthToken` value from the startup argument dump.** The root binary's `application` struct carried `display:"password"` — a tag the argument printer does not implement. It honours only `display:"hidden"` and `display:"length"`, so every other value fell through to the plaintext branch (`Argument: %s '%v'`) and each Job start wrote the live model-router credential in cleartext into the cluster Job log. The field now carries `display:"length"`, matching the sibling in `cmd/run-task`, so the dump names the key and its length and never the value. A regression spec drives the real printer over the real struct and fails if the redaction is removed
 
