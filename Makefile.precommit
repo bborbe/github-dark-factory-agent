@@ -2,8 +2,17 @@ include tools.env
 
 default: precommit
 
-precommit: ensure format generate test check addlicense
+precommit: ensure format generate shellcheck test check addlicense
 	@echo "ready to commit"
+
+# The cluster-build scripts under hack/ handle credentials (teamvault → Secret)
+# and run as root inside a Job, so they get a lint pass. `-S warning` keeps it to
+# real defects: the SC1091 infos are dynamic `source "${SCRIPT_DIR}/…"` paths
+# shellcheck cannot resolve, and they are present in every repo that vendors this
+# set. shellcheck ships on GitHub's ubuntu-latest runners, so CI needs no install.
+.PHONY: shellcheck
+shellcheck:
+	shellcheck -S warning hack/*.sh
 
 ensure:
 	go mod tidy

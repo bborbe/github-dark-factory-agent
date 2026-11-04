@@ -17,12 +17,12 @@ BUILD_PUSH_SECRET ?= buildkit-push
 
 # The ref the cluster clones. Empty on purpose: the cluster arm must be told what
 # to build, and hack/build-cluster.sh refuses to run without it.
+#
+# No SOURCE_DATE_EPOCH / BUILD_DATE here: hack/build-cluster.sh derives both from
+# REF's own commit and passes them into the Job, and an unexported make variable
+# would never reach that recipe anyway. The local arm keeps its wall-clock
+# BUILD_DATE, unchanged from before this arm existed.
 REF ?=
-
-# The build clock comes from the commit, not the wall clock, so two builds of one
-# commit agree. BuildKit reads SOURCE_DATE_EPOCH when it rewrites file timestamps.
-SOURCE_DATE_EPOCH ?= $(shell git log -1 --format=%ct)
-BUILD_DATE ?= $(shell git log -1 --format=%cI)
 
 # ⚠️ The prerequisites are LOCAL-ARM ONLY, and that is load-bearing rather than
 # tidiness. check-version-tag asserts the tree sits at the tag it claims to build,
@@ -123,3 +123,21 @@ ifeq ($(BUILD_TARGET),local)
 else
 	@echo "clean: skipped — BUILD_TARGET=$(BUILD_TARGET); no local image to remove"
 endif
+
+.PHONY: apply
+apply:
+	@for i in $(DIRS); do \
+		cd $$i; \
+		echo "apply $${i}"; \
+		make apply; \
+		cd ..; \
+	done
+
+# Operator-run publish to Docker Hub (requires `docker login`) — or, with
+# BUILD_TARGET set to a cluster, a build+push that runs entirely inside it and
+# needs no local Docker daemon. CI runs `make precommit`, never `buca`, so the
+# unconditional push is safe. `apply` is a no-op placeholder (no k8s in this repo
+# — deployment lives in the quant config repo as mirror + keel-pattern). Shape
+# mirrors bborbe/kafka-topic-reader.
+.PHONY: buca
+buca: build upload clean apply

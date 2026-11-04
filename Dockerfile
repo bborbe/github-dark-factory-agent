@@ -13,6 +13,12 @@ ARG BUILD_GIT_COMMIT=none
 ARG BUILD_DATE=unknown
 COPY . /workspace
 WORKDIR /workspace
+# Generate the vendor tree inside the build stage. The local arm gets one from
+# `check-go-mod` (`go mod vendor` on the workstation), but the cluster arm clones
+# REF from git, where vendor/ is gitignored and therefore absent — so the
+# `-mod=vendor` build below would fail there without this line. Idempotent when
+# vendor/ is already present.
+RUN go mod vendor
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -mod=vendor -ldflags "-s" -a -installsuffix cgo -o /main
 
 # --- Runtime = the claude-yolo execution environment ------------------------
