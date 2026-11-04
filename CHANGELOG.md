@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.5.13
 
 - test: **cover the per-prompt setup fetch, not only the push.** `v0.5.12` moved the credential to a file-backed git helper, but only the push site had a regression spec — the fetch site (the one that failed first on 2026-11-03) was pinned by nothing. The new spec starts with token `A`, lets the lifecycle refresher mint `B`, and asserts the credential `git credential fill` resolves *during* the run is `B` — the A→B shape a "file is non-empty" check would not discriminate. No production code changes
 
