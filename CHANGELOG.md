@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: **redact the `AnthropicAuthToken` value from the startup argument dump.** The root binary's `application` struct carried `display:"password"` — a tag the argument printer does not implement. It honours only `display:"hidden"` and `display:"length"`, so every other value fell through to the plaintext branch (`Argument: %s '%v'`) and each Job start wrote the live model-router credential in cleartext into the cluster Job log. The field now carries `display:"length"`, matching the sibling in `cmd/run-task`, so the dump names the key and its length and never the value. A regression spec drives the real printer over the real struct and fails if the redaction is removed
+
 ## v0.5.13
 
 - test: **cover the per-prompt setup fetch, not only the push.** `v0.5.12` moved the credential to a file-backed git helper, but only the push site had a regression spec — the fetch site (the one that failed first on 2026-11-03) was pinned by nothing. The new spec starts with token `A`, lets the lifecycle refresher mint `B`, and asserts the credential `git credential fill` resolves *during* the run is `B` — the A→B shape a "file is non-empty" check would not discriminate. No production code changes
