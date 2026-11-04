@@ -9,7 +9,28 @@ import (
 	"time"
 
 	agentlib "github.com/bborbe/agent"
+	claudelib "github.com/bborbe/agent/claude"
+
+	"github.com/bborbe/github-dark-factory-agent/pkg/git"
 )
+
+// NewExecutionStepWithTokenFileRefreshInterval exposes the execution step with a
+// short token-file refresh interval, so the refresher loop can be exercised in
+// a test without waiting the production 40 minutes.
+func NewExecutionStepWithTokenFileRefreshInterval(
+	repoManager git.RepoManager,
+	runner ExecutionRunner,
+	model claudelib.ClaudeModel,
+	refreshToken func(ctx context.Context) (string, error),
+	interval time.Duration,
+) agentlib.Step {
+	step, ok := NewExecutionStep(repoManager, runner, model, refreshToken).(*executionStep)
+	if !ok {
+		panic("NewExecutionStep no longer returns *executionStep — update this test seam")
+	}
+	step.tokenFileRefreshInterval = interval
+	return step
+}
 
 // NewTestExecutionRunner exposes the production runner with an injectable
 // binary + fast poll/timeout so tests can point it at a stub `dark-factory`

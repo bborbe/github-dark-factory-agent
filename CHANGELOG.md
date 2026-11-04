@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- test: **cover the per-prompt setup fetch, not only the push.** `v0.5.12` moved the credential to a file-backed git helper, but only the push site had a regression spec — the fetch site (the one that failed first on 2026-11-03) was pinned by nothing. The new spec starts with token `A`, lets the lifecycle refresher mint `B`, and asserts the credential `git credential fill` resolves *during* the run is `B` — the A→B shape a "file is non-empty" check would not discriminate. No production code changes
+
 ## v0.5.12
 
 - fix: **install a file-backed git credential helper so a long lifecycle run never uses an expired token.** The GitHub App installation token lives 60 minutes and is minted once at startup; `gh auth setup-git` binds it into a helper that resolves `GH_TOKEN` from the environment of whatever runs git, and the dark-factory daemon captured that environment when it was started — so no refresh in the parent process can reach it. A token file has no such lifetime: git re-reads it at every credential lookup. Observed 2026-11-03 on `bborbe/trading#433`: token minted 18:10Z, the daemon's own `git fetch origin` refused at 19:15Z with `Invalid username or token. Password authentication is not supported`

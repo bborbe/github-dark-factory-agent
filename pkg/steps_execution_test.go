@@ -7,7 +7,10 @@ package pkg_test
 import (
 	"context"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
+	"time"
 
 	agentlib "github.com/bborbe/agent"
 	claudelib "github.com/bborbe/agent/claude"
@@ -16,6 +19,7 @@ import (
 
 	"github.com/bborbe/github-dark-factory-agent/mocks"
 	"github.com/bborbe/github-dark-factory-agent/pkg"
+	"github.com/bborbe/github-dark-factory-agent/pkg/githubauth"
 )
 
 // execTask builds a planning-complete task: full frontmatter plus a ## Plan
@@ -189,6 +193,73 @@ var _ = Describe("ExecutionStep", func() {
 			// The existing token must survive: clobbering it with the empty
 			// refresh result would push unauthenticated.
 			Expect(seenAtPush).To(Equal(stillValid))
+		})
+
+		It("resolves the refreshed token at fetch time, not the startup token", func() {
+			// The per-prompt setup fetch (`git fetch origin`) resolves its
+			// credential through git's credential helper, which reads the token
+			// FILE at every lookup — so a run that outlives the 60-minute
+			// installation-token lifetime needs the file rewritten while the
+			// lifecycle is still in flight. Measured 2026-11-03 on
+			// bborbe/trading#433: the daemon's own fetch was refused 65 minutes
+			// after start with "Invalid username or token", and the push-site
+			// refresh (asserted above) never ran because the run died first.
+			//
+			// The assertion is A→B, not "Fetch returned nil": the startup token
+			// must be what git resolves before the refresher ticks, and the
+			// refreshed token must be what it resolves during the lifecycle. A
+			// test that only checked the file was non-empty would pass on a
+			// build that never refreshed at all.
+			const (
+				startupToken   = "ghs-STARTUP-NOT-REAL"   //nolint:gosec // test literal, not a credential
+				refreshedToken = "ghs-REFRESHED-NOT-REAL" //nolint:gosec // test literal, not a credential
+			)
+			// A throwaway HOME keeps the helper and its gitconfig out of the
+			// developer's real one; the helper writes $HOME/.gitconfig.
+			GinkgoT().Setenv("HOME", GinkgoT().TempDir())
+			GinkgoT().Setenv("GH_TOKEN", startupToken)
+
+			// What prepareAuth does at startup: write the startup token and point
+			// git's github.com credential helper at the file.
+			Expect(githubauth.NewFileBackedHelper(startupToken).Setup(ctx)).To(Succeed())
+
+			// resolveCredential asks git for the credential exactly as
+			// `git fetch origin` does, without needing a remote.
+			resolveCredential := func() string {
+				cmd := exec.Command("git", "credential", "fill")
+				cmd.Stdin = strings.NewReader("protocol=https\nhost=github.com\n\n")
+				out, err := cmd.Output()
+				Expect(err).To(BeNil())
+				return string(out)
+			}
+			Expect(resolveCredential()).To(ContainSubstring("password=" + startupToken))
+
+			step = pkg.NewExecutionStepWithTokenFileRefreshInterval(
+				fakeRepo,
+				fakeRunner,
+				claudelib.ClaudeModel("MiniMax-M2.7-highspeed"),
+				func(context.Context) (string, error) { return refreshedToken, nil },
+				20*time.Millisecond,
+			)
+
+			// Resolve the credential from inside the lifecycle, so the push-site
+			// refresh (which also writes the file, after this point) cannot make
+			// the assertion pass for the wrong reason.
+			seenAtFetch := ""
+			fakeRunner.RunLifecycleStub = func(
+				context.Context, string, []string, []string,
+			) (*pkg.LifecycleResult, error) {
+				time.Sleep(120 * time.Millisecond) // several refresh ticks
+				seenAtFetch = resolveCredential()
+				return &pkg.LifecycleResult{
+					PromptsExecuted: 1,
+					SpecStatuses:    map[string]string{"001-hello": "verifying"},
+				}, nil
+			}
+
+			run(execTask())
+			Expect(seenAtFetch).To(ContainSubstring("password=" + refreshedToken))
+			Expect(seenAtFetch).NotTo(ContainSubstring(startupToken))
 		})
 
 		It(
