@@ -5,10 +5,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"log"
+	"os"
+	"strings"
 	"testing"
 
 	agentlib "github.com/bborbe/agent"
+	"github.com/bborbe/argument/v2"
 	"github.com/bborbe/vault-cli/pkg/domain"
 )
 
@@ -70,5 +75,51 @@ func TestExitErrorForStatus(t *testing.T) {
 				t.Fatalf("status %q: expected nil, got %v", c.status, err)
 			}
 		})
+	}
+}
+
+// TestPrintRedactsAnthropicAuthToken guards the startup argument dump against
+// republishing the ANTHROPIC_AUTH_TOKEN value into the Job log.
+//
+// argument.Print honours only display:"hidden" and display:"length"; every other
+// tag value falls through to the plaintext branch (`Argument: %s '%v'`). The root
+// binary's application struct carried display:"password" — a value the printer does
+// not implement — so each Job start wrote the live model-router credential in
+// cleartext. This test drives the real printer over the real struct, so removing
+// the display:"length" tag turns it red.
+//
+// Plain testing rather than Ginkgo on purpose: application is unexported, so the
+// assertion must live in package main, and package main_test (main_test.go) shares
+// this test binary — where a second RunSpecs fails with "calling RunSpecs more than
+// once". An internal spec therefore cannot join the existing suite. Same shape as
+// TestExitErrorForStatus above.
+func TestPrintRedactsAnthropicAuthToken(t *testing.T) {
+	const sentinel = "sentinel-token-do-not-log-9f3a2b7c1d"
+
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	log.SetFlags(0)
+	defer func() {
+		log.SetOutput(os.Stderr)
+		log.SetFlags(log.LstdFlags)
+	}()
+
+	if err := argument.Print(context.Background(), &application{AnthropicAuthToken: sentinel}); err != nil {
+		t.Fatalf("print: %v", err)
+	}
+
+	rendered := buf.String()
+	if got := strings.Count(rendered, sentinel); got != 0 {
+		t.Fatalf(
+			"token value leaked into the argument dump: sentinel appeared %d times\n%s",
+			got,
+			rendered,
+		)
+	}
+	if got := strings.Count(rendered, "AnthropicAuthToken"); got != 1 {
+		t.Fatalf("want the field named exactly once, got %d\n%s", got, rendered)
+	}
+	if !strings.Contains(rendered, "Argument: AnthropicAuthToken length ") {
+		t.Fatalf("want the length form, got:\n%s", rendered)
 	}
 }

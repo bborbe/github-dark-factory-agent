@@ -4,6 +4,7 @@ go 1.27.3
 
 require (
 	github.com/bborbe/agent v0.138.0
+	github.com/bborbe/argument/v2 v2.13.9
 	github.com/bborbe/cqrs v0.6.15
 	github.com/bborbe/errors v1.6.6
 	github.com/bborbe/kafka v1.29.11
@@ -21,7 +22,6 @@ require (
 require (
 	github.com/IBM/sarama v1.61.1 // indirect
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
-	github.com/bborbe/argument/v2 v2.13.9 // indirect
 	github.com/bborbe/collection v1.21.6 // indirect
 	github.com/bborbe/http v1.26.32 // indirect
 	github.com/bborbe/k8s v1.14.31 // indirect
