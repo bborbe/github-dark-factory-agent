@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- chore: restate the `do-not-merge` gate message to name its bypass actors — the Admin repository role and Integration `3907226`, both `bypass_mode: always` in the `master-protection` ruleset — instead of asserting an unqualified block
+
 ## v0.6.0
 
 - feat: **build the release image on a cluster (`BUILD_TARGET=sun`), not only locally.** `make build` had a single arm — a local `docker build` — so publishing a release required a Docker daemon and `docker push` on the workstation. An agent is refused `docker push`, which made a release image unpublishable without a human at the keyboard. `Makefile.docker` now carries two arms, ported from `bborbe/a2a-worker-controller` and `bborbe/agent-claude`: `BUILD_TARGET=local` (the default, unchanged behaviour) and any other value, which renders `hack/build-job.yaml` as a Job on that cluster and pushes from inside it. The vendored `hack/` set is `a2a-worker-controller`'s hardened copy — templated namespace, `case`-based value whitelisting, no service-account token — rather than `agent-claude`'s older one. The cluster arm refuses to run without an explicit `VERSION` (the Makefile default is the newest release tag, so a defaulted build would overwrite a published image with one built from a different commit) and refuses to push a `vX.Y.Z` tag from any `REF` other than that tag. `upload` and `clean` are guarded so a remote build does not fail at a push step for an image that was never local. `Dockerfile` gains a `go mod vendor` step in its build stage: the local arm got `vendor/` from `check-go-mod`, but the cluster arm clones a git ref where `vendor/` is gitignored, so `-mod=vendor` would have failed there. `make precommit` now runs `shellcheck -S warning` over `hack/*.sh`, since those scripts handle the teamvault→Secret credential path
