@@ -80,6 +80,20 @@ USER node
 # would then collide, so we rm the clone dir and drop any existing `dark-factory`
 # marketplace before re-adding ours — making this RUN safe to re-run and immune to
 # base-image state.
+#
+# The clone ALSO has to be reachable at
+# `<CLAUDE_CONFIG_DIR>/plugins/marketplaces/dark-factory`, which is where
+# dark-factory's own agents read their authoring rules: `agents/prompt-creator.md`
+# and `agents/spec-creator.md` both hardcode
+# `/home/node/.claude/plugins/marketplaces/dark-factory/docs/rules/<file>.md`.
+# A LOCAL-path `marketplace add` registers the source in place and never creates
+# that directory — only a GitHub-form add does (compare `coding` below, which
+# lands at `plugins/marketplaces/coding/`). Without the link, prompt generation
+# runs with no guides at all: the 2026-11-10 `go-version-watcher` failure,
+# `ls: cannot access '/home/node/.claude/plugins/marketplaces/dark-factory/'`.
+# The link is created LAST, after `marketplace remove`, so the remove cannot
+# unlink the marketplace source through it, and the `test -f` turns a wrong path
+# into a build failure instead of a silent runtime one.
 RUN set -eux \
  && rm -rf /home/node/dark-factory-marketplace \
  && git clone --depth 1 --branch "${DARK_FACTORY_VERSION}" https://github.com/bborbe/dark-factory /home/node/dark-factory-marketplace \
@@ -88,7 +102,12 @@ RUN set -eux \
  && (claude plugin marketplace remove dark-factory 2>/dev/null || true) \
  && claude plugin marketplace add /home/node/dark-factory-marketplace \
  && claude plugin install dark-factory@dark-factory \
- && claude plugin list | grep -q dark-factory
+ && claude plugin list | grep -q dark-factory \
+ && mkdir -p /home/node/.claude/plugins/marketplaces \
+ && rm -rf /home/node/.claude/plugins/marketplaces/dark-factory \
+ && ln -s /home/node/dark-factory-marketplace /home/node/.claude/plugins/marketplaces/dark-factory \
+ && test -f /home/node/.claude/plugins/marketplaces/dark-factory/docs/rules/prompt-writing.md \
+ && test -f /home/node/.claude/plugins/marketplaces/dark-factory/docs/rules/spec-writing.md
 
 # dark-factory's generation step (`/dark-factory:generate-prompts-for-spec`)
 # invokes the prompt-creator agent, which relies on the `coding` plugin's Go

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: link the pinned dark-factory clone to `~/.claude/plugins/marketplaces/dark-factory` so the authoring-rule paths the agents hardcode resolve — a local-path `marketplace add` never creates that directory, so prompt generation ran with no guides
+
 ## v0.6.1
 
 - chore: restate the `do-not-merge` gate message to name its bypass actors — the Admin repository role and Integration `3907226`, both `bypass_mode: always` in the `master-protection` ruleset — instead of asserting an unqualified block
