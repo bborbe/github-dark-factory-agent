@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"os"
+	"strings"
 	"time"
 
 	agentlib "github.com/bborbe/agent"
@@ -33,6 +34,7 @@ import (
 	"github.com/bborbe/service"
 	libtime "github.com/bborbe/time"
 	"github.com/bborbe/vault-cli/pkg/domain"
+	sentrygo "github.com/getsentry/sentry-go"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
@@ -45,6 +47,7 @@ import (
 const agentName = "github-dark-factory-agent"
 
 func main() {
+	sentrygo.AddGlobalEventProcessor(phaseFingerprintProcessor)
 	app := &application{}
 	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
 }
@@ -215,7 +218,7 @@ func finishRun(
 	if err := agentlib.PrintResult(ctx, result); err != nil {
 		return err
 	}
-	return exitErrorForStatus(ctx, result.Status, phase)
+	return exitErrorForStatus(ctx, result.Status, phase, result.Message)
 }
 
 // exitErrorForStatus returns a non-nil error when the agent's published status
@@ -232,20 +235,61 @@ func finishRun(
 //
 // needs_input is deliberately NOT a failure: parking for a human answer is that
 // status's intent, and it reaches the same park path on purpose.
+//
+// The phase's Result.Message is included so the Sentry issue says why the phase
+// failed instead of only that it did, and phase/status are attached as error
+// data so libsentry's enrichEventTags turns them into Sentry tags. A failed
+// status with an empty message still reports the phase and status.
 func exitErrorForStatus(
 	ctx context.Context,
 	status agentlib.AgentStatus,
 	phase domain.TaskPhase,
+	message string,
 ) error {
-	if status == agentlib.AgentStatusFailed {
-		return errors.Errorf(
+	if status != agentlib.AgentStatusFailed {
+		return nil
+	}
+	msg := strings.TrimSpace(message)
+	var err error
+	if msg == "" {
+		err = errors.Errorf(ctx, "agent reported status %q for phase %q", status, phase)
+	} else {
+		err = errors.Errorf(
 			ctx,
-			"agent reported status %q for phase %q",
+			"agent reported status %q for phase %q: %s",
 			status,
 			phase,
+			msg,
 		)
 	}
-	return nil
+	return errors.AddDataToError(err, map[string]any{
+		"phase":  string(phase),
+		"status": string(status),
+	})
+}
+
+// phaseFingerprintProcessor is a global Sentry event processor that assigns
+// a per-phase fingerprint to the event captured from a failed phase.
+//
+// service.Main captures the error Run returns with a fresh
+// sentry.NewScope(), so the application cannot attach a fingerprint to that
+// capture through the scope. A global event processor is the only hook that
+// runs after that scope is applied and before the event is sent. It leaves
+// every event without phase data untouched, so it cannot re-group unrelated
+// captures.
+func phaseFingerprintProcessor(
+	event *sentrygo.Event,
+	hint *sentrygo.EventHint,
+) *sentrygo.Event {
+	if event == nil || hint == nil || hint.OriginalException == nil {
+		return event
+	}
+	phase, ok := errors.DataFromError(hint.OriginalException)["phase"].(string)
+	if !ok || phase == "" {
+		return event
+	}
+	event.Fingerprint = []string{"github-dark-factory-agent", "phase", phase}
+	return event
 }
 
 // buildClaudeEnv assembles the Claude CLI subprocess env from the raw env
