@@ -1,0 +1,2233 @@
+[19:30:36] [init] session=1ff30a6a model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2 tools=25
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:37] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] [system: thinking_tokens]
+[19:30:38] 💭 Let me start by understanding the task. The user invoked `/dark-factory:generate-prompts-for-spec` with a spec path. I need to:
+
+1. Invoke the `prompt-creator` agent via Task tool with subagent_type `dark-factory:prompt-creator`.
+2. Then invoke `prompt-auditor` for each generated prompt.
+3. Return the creator's summary + audit reports.
+4. Transition spec to prompted only if not daemon-managed.
+
+Let me first check the environment for DARK_FACTORY_MANAGED, and read the spec file to understand cont…
+[19:30:38] I'll start by checking the execution mode and reading the spec, then launch the prompt-creator agent.
+
+
+[19:30:40] $ if [ -n "$DARK_FACTORY_MANAGED" ]; then echo "DARK_FACTORY_MANAGED=set"; else echo "DARK_FACTORY_MANAGED=unset"; fi; pwd; ls specs/in-progress/ 2>/dev/null; ls prompts/ 2>/dev/null | head -50
+[19:30:40] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/specs/in-progress/bug-nuke-prod-cv.md
+[19:30:40]   → 21 lines read
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:40] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] [system: thinking_tokens]
+[19:30:41] 💭 DARK_FACTORY_MANAGED is unset → Mode 2, host mode. So after generation I must run `dark-factory spec mark-prompted bug-nuke-prod-cv`.
+
+The spec status is `generating`, approved. Hmm, status generating, not approved. The command's skip conditions: creator failure, zero files, daemon-managed. Spec status is `generating` but approved timestamp present. That's fine, likely the daemon/command set generating.
+
+Now launch prompt-creator agent with the relative path. Let me do that.
+[19:30:41] Mode is **host** (`DARK_FACTORY_MANAGED` unset), so I'll transition the spec at the end. Now launching the prompt-creator agent.
+
+
+[19:30:43] [agent:dark-factory:prompt-creator] Generate prompts from spec
+    prompt: Create dark-factory prompt files from the approved spec at `specs/in-progress/bug-nuke-prod-cv.md` (path is relative to the repo root, which is the current wor…
+[19:30:43] [system: task_started]
+[19:30:44] [system: task_progress]
+[19:30:44] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/specs/in-progress/bug-nuke-prod-cv.md
+[19:30:44] [system: task_progress]
+[19:30:44] $ ls -la /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2
+[19:30:44]   → 21 lines read
+[19:30:45] [system: task_progress]
+[19:30:45] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/main.go
+[19:30:45] [system: task_progress]
+[19:30:45] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/main_internal_test.go
+[19:30:45]   → 125 lines read
+[19:30:45]   → 352 lines read
+[19:30:47] [system: task_progress]
+[19:30:47] $ cat .dark-factory.yaml && echo "---GO.MOD agent---" && grep -n 'bborbe/agent\|bborbe/sentry\|bborbe/errors' go.mod && echo "---PROMPTS---" && ls -la prompts/ && ls prompts/completed 2>/dev/null | tai…
+[19:30:47] [system: task_progress]
+[19:30:47] $ ls /home/node/.claude/plugins/marketplaces/coding/docs/*.md 2>/dev/null; echo "---dark-factory docs---"; ls /home/node/.claude/plugins/marketplaces/dark-factory/docs/rules/*.md 2>/dev/null
+[19:30:47] ⚠ [Bash] error: Exit code 1\n/home/node/.claude/plugins/marketplaces/coding/docs/adr-guide.md\n/home/node/.claude/plugins/marketplaces/coding/docs/agent-command-development-guide.md\n/home/node/.claude/plugins/marketplaces/coding/docs/architecture-dimensions-guide.md\n/home/node/.claude/plugins/marketplaces/coding/docs/ast-grep-rule-writing-guide.md\n/home/node/.claude/plugins/marketplaces/coding/docs/astro-deve…
+[19:30:47] ⚠ [bash output]
+validationPrompt: docs/dod.md
+---GO.MOD agent---
+6:	github.com/bborbe/agent v0.138.0
+9:	github.com/bborbe/errors v1.6.6
+12:	github.com/bborbe/sentry v1.10.7
+---PROMPTS---
+total 20
+drwxr-x---  5 node node 4096 Nov 11 19:30 .
+drwxr-xr-x 11 node node 4096 Nov 11 19:30 ..
+drwxr-x---  2 node node 4096 Nov 11 19:30 completed
+drwxr-x---  2 node node 4096 Nov 11 19:30 in-progress
+drwxr-x---  2 node node 4096 Nov 11 19:30 log
+---DOCS---
+total 40
+drwxr-xr-x  2 node node  4096 Nov 11 19:30 .
+drwxr-xr-x 11 node node  4096 Nov 11 19:30 ..
+-rw-r--r--  1 node node  2446 Nov 11 19:30 claude-oauth-setup.md
+-rw-r--r--  1 node node  9946 Nov 11 19:30 creating-claude-agents.md
+-rw-r--r--  1 node node 10481 Nov 11 19:30 design.md
+-rw-r--r--  1 node node   827 Nov 11 19:30 dod.md
+[19:30:49] [system: task_progress]
+[19:30:49] $ ls -d ~/.claude/plugins/marketplaces/*/ 2>/dev/null; echo "---"; ls ~/.claude/plugins/marketplaces/dark-factory/ 2>/dev/null; echo "---rules---"; ls ~/.claude/plugins/marketplaces/dark-factory/docs/ …
+[19:30:49] [system: task_progress]
+[19:30:49] $ ls -la prompts/completed/ | tail -20; echo "---log---"; ls prompts/log 2>/dev/null | tail; echo "---specs---"; find specs -maxdepth 2 -type f | head -30
+[19:30:51] [system: task_progress]
+[19:30:51] $ go env GOMODCACHE 2>/dev/null; ls $(go env GOMODCACHE)/github.com/bborbe/ 2>/dev/null | head -40
+[19:30:51] [system: task_progress]
+[19:30:51] $ cat .dark-factory.log; echo "---jsonl---"; cat specs/log/gen-bug-nuke-prod-cv.jsonl 2>/dev/null | head -50; echo "---logfile---"; tail -60 specs/log/gen-bug-nuke-prod-cv.log 2>/dev/null
+[19:30:51] ⚠ [bash output]
+/home/node/go/pkg/mod
+collection@v1.20.17
+errors@v1.5.15
+http@v1.26.16
+kv@v1.21.4
+log@v1.6.17
+math@v1.3.12
+parse@v1.10.16
+run@v1.9.30
+sentry@v1.9.20
+time@v1.27.5
+validation@v1.4.16
+[19:30:51] ⚠ [bash output]
+[19:30:49] $ ls -d ~/.claude/plugins/marketplaces/*/ 2>/dev/null; echo "---"; ls ~/.claude/plugins/marketplaces/dark-factory/ 2>/dev/null; echo "---rules---"; ls ~/.claude/plugins/marketplaces/dark-factory/docs/ …
+[19:30:49] [system: task_progress]
+[19:30:49] $ ls -la prompts/completed/ | tail -20; echo "---log---"; ls prompts/log 2>/dev/null | tail; echo "---specs---"; find specs -maxdepth 2 -type f | head -30
+[19:30:51] [system: task_progress]
+[19:30:51] $ go env GOMODCACHE 2>/dev/null; ls $(go env GOMODCACHE)/github.com/bborbe/ 2>/dev/null | head -40
+[19:30:51] [system: task_progress]
+[19:30:51] $ cat .dark-factory.log; echo "---jsonl---"; cat specs/log/gen-bug-nuke-prod-cv.jsonl 2>/dev/null | head -50; echo "---logfile---"; tail -60 specs/log/gen-bug-nuke-prod-cv.log 2>/dev/null
+[19:30:51] ⚠ [bash output]
+/home/node/go/pkg/mod
+collection@v1.20.17
+errors@v1.5.15
+http@v1.26.16
+kv@v1.21.4
+log@v1.6.17
+math@v1.3.12
+parse@v1.10.16
+run@v1.9.30
+sentry@v1.9.20
+time@v1.27.5
+validation@v1.4.16
+[19:30:53] [system: task_progress]
+[19:30:53] $ ls -d /home/node/go/pkg/mod/github.com/bborbe/agent* 2>/dev/null; ls /home/node/go/pkg/mod/github.com/bborbe/ 2>/dev/null; echo "---cache---"; ls /home/node/go/pkg/mod/cache/download/github.com/bborb…
+[19:30:53] [system: task_progress]
+[19:30:53] $ grep -rn 'sentry' --include='*.go' . | head -40; echo "---result message usages---"; grep -rn 'result.Message\|\.Message\b' --include='*.go' . | head -30
+[19:30:53] ⚠ [bash output]
+(eval):1: no matches found: /home/node/go/pkg/mod/github.com/bborbe/agent*
+collection@v1.20.17
+errors@v1.5.15
+http@v1.26.16
+kv@v1.21.4
+log@v1.6.17
+math@v1.3.12
+parse@v1.10.16
+run@v1.9.30
+sentry@v1.9.20
+time@v1.27.5
+validation@v1.4.16
+---cache---
+[19:30:53] ⚠ [bash output]
+pkg/steps_misc_test.go:67:		Expect(result.Message).To(ContainSubstring("pr_number"))
+pkg/steps_misc_test.go:83:		Expect(result.Message).To(ContainSubstring("owner/name"))
+pkg/steps_execution_test.go:351:				Expect(result.Message).To(ContainSubstring("lifecycle failed"))
+pkg/steps_execution_test.go:369:				Expect(result.Message).To(ContainSubstring("did not reach verification"))
+pkg/steps_execution_test.go:383:			Expect(result.Message).To(ContainSubstring("spec complete"))
+pkg/steps_execution_test.go:396:			Expect(result.Message).To(ContainSubstring("push branch"))
+pkg/steps_execution_test.go:416:			Expect(result.Message).To(ContainSubstring("Plan"))
+pkg/steps_execution_test.go:442:			Expect(result.Message).To(ContainSubstring("clone_url"))
+pkg/steps_execution_test.go:478:				Expect(result.Message).To(ContainSubstring("def456"))
+pkg/steps_execution_test.go:479:				Expect(result.Message).To(ContainSubstring("abc123"))
+pkg/steps_execution_test.go:480:				Expect(result.Message).To(ContainSubstring("does not descend"))
+pkg/steps_ai_review_test.go:201:			Expect(result.Message).To(ContainSubstring("blocking concerns"))
+pkg/steps_ai_review_test.go:240:			Expect(result.Message).To(ContainSubstring("blocking concerns"))
+pkg/steps_ai_review_test.go:254:			Expect(result.Message).To(ContainSubstring("no longer a draft"))
+pkg/steps_ai_review_test.go:269:			Expect(result.Message).To(ContainSubstring("fetch PR"))
+pkg/steps_ai_review_test.go:290:			Expect(result.Message).To(ContainSubstring("not completed"))
+pkg/steps_ai_review_test.go:302:			Expect(result.Message).To(ContainSubstring("in-progress"))
+pkg/steps_ai_review_test.go:313:			Expect(result.Message).To(ContainSubstring("blocking concerns"))
+pkg/steps_ai_review_test.go:359:			Expect(result.Message).To(ContainSubstring("Result"))
+pkg/steps_ai_review_test.go:391:			Expect(result.Message).To(ContainSubstring("clone_url"))
+[19:30:55] [system: task_progress]
+[19:30:55] $ find pkg cmd agent -type f | sort; echo "---"; cat main_test.go; echo "---dod---"; cat docs/dod.md
+[19:30:55] [system: task_progress]
+[19:30:55] $ timeout 60 go mod download github.com/bborbe/agent 2>&1 | head; echo "exit=$?"; ls -d /home/node/go/pkg/mod/github.com/bborbe/agent* 2>/dev/null
+[19:30:55] ⚠ [bash output]
+func TestSuite(t *testing.T) {
+	time.Local = time.UTC
+	format.TruncatedDiff = false
+	RegisterFailHandler(Fail)
+	suiteConfig, reporterConfig := GinkgoConfiguration()
+	suiteConfig.Timeout = 60 * time.Second
+	RunSpecs(t, "Main Suite", suiteConfig, reporterConfig)
+}
+---dod---
+# Definition of Done
+
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+[19:30:57] [system: task_progress]
+[19:30:57] $ grep -rn 'type Result struct' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/ ; echo "---"; grep -rn 'Message' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/*.go | head -40
+[19:30:57] [system: task_progress]
+[19:30:57] $ cat /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/result.go 2>/dev/null || grep -rln 'type Result struct' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/
+[19:30:57] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_step.go:45:type Result struct {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/pi/types.go:21:type Result struct {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md:64:type Result struct {
+---
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_print-result_test.go:32:			Message:   "all good",
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_parser_test.go:65:			Expect(result.Message).To(ContainSubstring("parse error"))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_agent.go:161:		Message: fmt.Sprintf("unsupported entry phase: %s", display),
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_agent.go:165:		Message: result.Message,
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status.go:36:	Message string // human-readable status; used by failure/needs_input paths
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_runner.go:73:			Message:          result.Message,
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_parser.go:83:			Message: errors.Wrapf(ctx, parseErr, "parse %s", s.heading).Error(),
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_step.go:54:	// Message is a human-readable status. Required for Failed/NeedsInput.
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_step.go:55:	Message string
+[19:30:58] [system: task_progress]
+[19:30:58] [read] /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_step.go
+[19:30:58] [system: task_progress]
+[19:30:58] $ cat /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status.go; echo "===PRINT RESULT==="; grep -rn 'func PrintResult' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/
+[19:30:58]   → 77 lines read
+[19:30:58] ⚠ [bash output]
+	// for deliverers — a Done result with empty NextPhase is an in-place
+	// save regardless of this flag.
+	ContinueToNext bool
+	// AgentTurns is the number of conversation turns the session that produced this
+	// result took, from the CLI's own end-of-run summary. Nil means no measurement was
+	// reported — a zero or negative summary is treated as no measurement, and the turn
+	// entry is then omitted from the payload entirely.
+	AgentTurns *int64
+	// InteractionCount is the number of human-authored entries the run's own session
+	// transcript recorded. Nil means the evidence was unavailable — the interaction
+	// entry is omitted from the payload. A non-nil zero is an observation: the
+	// transcript was read and contained no human-authored entry. Absence is never
+	// substituted with a zero.
+	InteractionCount *int64
+}
+===PRINT RESULT===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/delivery/print.go:16:func PrintResult(ctx context.Context, result any) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_print-result.go:19:func PrintResult(ctx context.Context, result *Result) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/pi/output.go:17:func PrintResult(ctx context.Context, result Result) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/claude/output.go:16:func PrintResult(ctx context.Context, result AgentResult) error {
+[19:31:00] [system: task_progress]
+[19:31:00] $ ls -d /home/node/go/pkg/mod/github.com/bborbe/service* 2>/dev/null; timeout 60 go mod download github.com/bborbe/service 2>&1 | head; ls -d /home/node/go/pkg/mod/github.com/bborbe/service* 2>/dev/null
+[19:31:00] [system: task_progress]
+[19:31:00] $ grep -n 'bborbe/service\|bborbe/sentry' go.mod go.sum | head
+[19:31:01] [system: task_progress]
+[19:31:01] $ grep -rn 'func Main' /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/; echo "==="; ls /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/
+[19:31:01] [system: task_progress]
+[19:31:01] $ timeout 60 go mod download github.com/bborbe/sentry 2>&1 | head; ls /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/; echo "===files==="; grep -rn 'Fingerprint\|CaptureException\|func.*Client'…
+[19:31:02] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:149:func (c *client) CaptureException(
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:167:	eventID := c.client.CaptureException(err, hint, scope)
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report.go:20:func NewSkipErrorAndReport(sentryClient Client, action run.Runnable) run.Func {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report.go:24:			sentryClient.CaptureException(
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier.go:16:	func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier.go:23:type EventModifierFunc func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:19:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:32:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:51:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:72:				func(e *sentry.Event, h *sentry.EventHint, c *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:113:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:133:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:140:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:147:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:169:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:177:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:200:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_event-modifier_test.go:206:				func(event *sentry.Event, hint *sentry.EventHint, client *sentry.Client) *sentry.Event {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report_test.go:38:			Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(0))
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report_test.go:49:			Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(1))
+[19:31:03] [system: task_progress]
+[19:31:03] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main.go
+[19:31:03] [system: task_progress]
+[19:31:03] [read] /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go
+[19:31:03]   → 106 lines read
+[19:31:03]   → 179 lines read
+[19:31:04] [system: task_progress]
+[19:31:04] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go
+[19:31:04] [system: task_progress]
+[19:31:04] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_run.go
+[19:31:04]   → 56 lines read
+[19:31:04]   → 47 lines read
+[19:31:07] [system: task_progress]
+[19:31:07] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_options.go
+[19:31:07] [system: task_progress]
+[19:31:07] $ grep -rn 'Fingerprint\|SetFingerprint' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@*/scope.go 2>/dev/null | head; echo "---sentry-go version---"; grep -n 'getsentry/sentry-go' go.mod go.sum …
+[19:31:07]   → 49 lines read
+[19:31:14] [system: task_progress]
+[19:31:14] $ ls /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/; echo "=== exported funcs ==="; grep -rn '^func [A-Z]' /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/*.go | head -60
+[19:31:14] [system: task_progress]
+[19:31:14] $ grep -rn 'func (scope \*Scope) SetFingerprint\|Fingerprint' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/scope.go | head; echo "---event struct---"; grep -rn 'Fingerprint' /home/node/…
+[19:31:14] ⚠ [bash output]
+ls: cannot access '/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/': No such file or directory
+=== exported funcs ===
+(eval):1: no matches found: /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/*.go
+[19:31:15] [system: task_progress]
+[19:31:15] $ timeout 90 go mod download github.com/bborbe/errors github.com/getsentry/sentry-go 2>&1 | head; ls -d /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6 /home/node/go/pkg/mod/github.com/getsentry/…
+[19:31:16] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0
+[19:31:17] [system: task_progress]
+[19:31:17] $ ls /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/; echo "=== exported funcs ==="; grep -rn '^func [A-Z]' /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/*.go
+[19:31:17] [system: task_progress]
+[19:31:17] $ grep -rn 'func (scope \*Scope) SetFingerprint\|Fingerprint' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/scope.go /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/event.go…
+[19:31:17] ⚠ [bash output]
+prompts
+specs
+tools.env
+=== exported funcs ===
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:15:func AddContextDataToError(ctx context.Context, err error) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:19:func AddToContext(ctx context.Context, key string, value any) context.Context {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:31:func DataFromContext(ctx context.Context) map[string]any {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_unwrap.go:7:func Unwrap(err error) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go:9:func As(err error, target any) bool {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go:13:func New(ctx context.Context, message string) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go:17:func Errorf(ctx context.Context, format string, args ...interface{}) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_join.go:7:func Join(errs ...error) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:26:func AddDataToError(err error, data map[string]any) DataError {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:66:func DataFromError(err error) map[string]any {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_cause.go:9:func Cause(err error) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_is.go:9:func Is(err, target error) bool {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_wrap.go:13:func Wrap(ctx context.Context, err error, message string) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_suite_test.go:17:func TestSuite(t *testing.T) {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_list.go:17:func NewErrorList() ErrorList {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_wrapf.go:13:func Wrapf(ctx context.Context, err error, format string, args ...interface{}) error {
+[19:31:19] [system: task_progress]
+[19:31:19] $ grep -rn 'type EventModifier\|type EventProcessor' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/*.go; echo "---Event struct fields---"; grep -rn 'Fingerprint ' /home/node/go/pkg/mod/g…
+[19:31:19] [system: task_progress]
+[19:31:19] $ cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_wrapf.go; echo "===wrap==="; cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_wrap.go; echo "===data error==="; cat /h…
+[19:31:19] ⚠ [bash output]
+	}
+}
+
+func DataFromError(err error) map[string]any {
+	data := make(map[string]any)
+	for err != nil {
+		hasData, ok := err.(HasData)
+		if ok {
+			for k, v := range hasData.Data() {
+				data[k] = v
+			}
+		}
+		hasCause, ok := err.(HasCause)
+		if !ok {
+			break
+		}
+		err = hasCause.Cause()
+	}
+	return data
+}
+[19:31:21] [system: task_progress]
+[19:31:21] $ sed -n '90,140p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go; echo "===EventHint==="; grep -rn 'type EventHint struct' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@…
+[19:31:21] [system: task_progress]
+[19:31:21] $ cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go; echo "=== new ==="; cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go
+[19:31:21] ⚠ [bash output]
+=== new ===
+// Copyright (c) 2023 Benjamin Borbe All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package errors
+
+import (
+	"context"
+
+	"github.com/pkg/errors"
+)
+
+func New(ctx context.Context, message string) error {
+	return AddContextDataToError(ctx, errors.New(message))
+}
+
+func Errorf(ctx context.Context, format string, args ...interface{}) error {
+	return AddContextDataToError(ctx, errors.Errorf(format, args...))
+}
+[19:31:34] [system: task_progress]
+[19:31:34] $ grep -n 'func (client \*Client) CaptureEvent\|func (client \*Client) prepareEvent\|globalEventProcessors\|client.eventProcessors\|ApplyToEvent' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0…
+[19:31:34] [system: task_progress]
+[19:31:34] $ sed -n '540,700p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go
+[19:31:34] ⚠ [bash output]
+}
+
+// CaptureEvent captures an event on the currently active client if any.
+//
+// The event must already be assembled. Typically, code would instead use
+// the utility methods like CaptureException. The return value is the
+// event ID. In case Sentry is disabled or event was dropped, the return value will be nil.
+func (client *Client) CaptureEvent(event *Event, hint *EventHint, scope EventModifier) *EventID {
+	if !client.IsEnabled() {
+		return nil
+	}
+	return client.processEvent(event, hint, scope)
+}
+
+func (client *Client) captureLog(log *Log, _ *Scope) bool {
+	if log == nil {
+		return false
+	}
+
+	if client.options.BeforeSendLog != nil {
+[19:31:35] [system: task_progress]
+[19:31:35] $ sed -n '1028,1120p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go
+[19:31:39] [system: task_progress]
+[19:31:39] $ grep -rn 'SetFingerprint\|AddGlobalEventProcessor\|Fingerprint' /home/node/go/pkg/mod/github.com/bborbe/ 2>/dev/null | grep -v '_test.go' | head -30; echo "---in repo---"; grep -rn 'SetFingerprint\|A…
+[19:31:39] [system: task_progress]
+[19:31:39] $ cat cmd/run-task/main.go
+[19:31:39] ⚠ [bash output]
+	}
+	return reposPath, workPath, nil
+}
+
+// resolveGhToken returns the configured GhToken, or falls back to `gh auth
+// token` for ambient local auth. An empty result is returned when neither is
+// available (the gh-token preflight then escalates cleanly).
+func (a *application) resolveGhToken(ctx context.Context) string {
+	if a.GhToken != "" {
+		return a.GhToken
+	}
+	// #nosec G204 -- fixed argv; no user-controlled input reaches the command line
+	out, err := exec.CommandContext(ctx, "gh", "auth", "token").Output()
+	if err != nil {
+		glog.V(2).
+			Infof("run-task: `gh auth token` unavailable (%v) — proceeding without a token", err)
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+[19:31:41] [system: task_progress]
+[19:31:41] $ sed -n '1,120p' pkg/steps_execution.go; echo "=== grep failed results ==="; grep -rn 'AgentStatusFailed\|Status:.*Failed' pkg/*.go | head -40
+[19:31:41] [system: task_progress]
+[19:31:41] $ ls /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/ | tail -20; echo "---sample---"; sed -n '1,120p' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/…
+[19:31:41] ⚠ [bash output]
+grep -n "type AIParser interface" lib/agent_parser.go
+grep -n "func NewAgent" lib/agent_agent.go
+grep -n "func NewPhase" lib/agent_phase.go
+grep -n "AgentStatusDone\|AgentStatusFailed" lib/agent_status.go
+grep -n "type ClaudeResult struct" lib/claude/claude-result.go
+# Confirm existing mocks exist
+ls lib/mocks/claude-claude-runner.go lib/mocks/agent-ai-parser.go lib/mocks/agent-step.go lib/mocks/agent-result-deliverer.go
+```
+</context>
+
+<requirements>
+
+## 1. Create `lib/healthcheck/healthcheck-claude-step.go`
+
+New file. License header required (copy from `lib/agent_task-identifier.go`). Package: `healthcheck`.
+
+```go
+package healthcheck
+
+import (
+[19:31:41] ⚠ [bash output]
+pkg/steps_planning_test.go:141:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_planning_test.go:150:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_planning_test.go:160:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_planning_test.go:168:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_planning_test.go:221:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_claude_auth_test.go:43:		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:200:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:228:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:239:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:253:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:268:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:289:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:301:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:312:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:325:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:334:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_ai_review_test.go:358:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_gh_token_test.go:70:		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_gh_token_test.go:78:		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+pkg/steps_gh_token.go:152:		Status:  agentlib.AgentStatusFailed,
+[19:31:57] [system: task_progress]
+[19:31:57] $ cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go; echo "=== errors_is ==="; cat /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_is.go; echo "=== errors_unwrap ===";…
+[19:31:57] [system: task_progress]
+[19:31:57] $ sed -n '330,430p' pkg/steps_execution_test.go; echo "=== planning message construction ==="; sed -n '120,175p' pkg/steps_planning_test.go
+[19:31:57] ⚠ [bash output]
+// license that can be found in the LICENSE file.
+
+package errors
+
+func Unwrap(err error) error {
+	for {
+		switch e := err.(type) {
+		case interface{ Unwrap() error }:
+			err = e.Unwrap()
+		case interface{ Unwrap() []error }:
+			if errs := e.Unwrap(); len(errs) > 0 {
+				err = errs[0]
+			}
+		case interface{ Cause() error }:
+			err = e.Cause()
+		default:
+			return err
+		}
+	}
+}
+[19:31:57] ⚠ [bash output]
+			bare := GinkgoT().TempDir() // no .dark-factory.yaml
+			fakeRepo.EnsureWorktreeReturns(bare, nil)
+			fakeGH.GetPullRequestReturns(&pkg.PullRequestInfo{Draft: true, HeadSHA: "abc123"}, nil)
+			result, md := run(baseTask())
+			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Message).To(ContainSubstring(".dark-factory.yaml"))
+			assertEscalated(md)
+		})
+
+		It("fails when the worktree cannot be created", func() {
+			fakeRepo.EnsureWorktreeReturns("", testError("clone boom"))
+			result, md := run(baseTask())
+			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Message).To(ContainSubstring("ensure worktree"))
+			assertEscalated(md)
+		})
+	})
+
+	Describe("missing frontmatter", func() {
+		It("returns needs_input when clone_url is absent", func() {
+[19:31:59] [system: task_progress]
+[19:31:59] $ grep -rn 'Message:' pkg/steps_*.go pkg/*.go | grep -v _test | head -40
+[19:31:59] [system: task_progress]
+[19:31:59] $ grep -rn 'Message:' pkg/ --include='*.go' | grep -v _test
+[19:32:01] [system: task_progress]
+[19:32:01] $ grep -rn 'AgentStatusFailed\|agentlib.Result{' pkg/*.go | grep -v _test
+[19:32:01] [system: task_progress]
+[19:32:01] $ sed -n '120,190p' pkg/steps_gh_token.go; echo "=== result helper ==="; grep -rn 'func.*Result\|func failed\|func fail' pkg/*.go | grep -v _test | head -20
+[19:32:01] ⚠ [bash output]
+pkg/steps_gh_token.go:137:	return &agentlib.Result{
+pkg/steps_gh_token.go:144:	return &agentlib.Result{
+pkg/steps_gh_token.go:151:	return &agentlib.Result{
+pkg/steps_gh_token.go:152:		Status:  agentlib.AgentStatusFailed,
+pkg/steps_planning.go:93:		return &agentlib.Result{
+pkg/steps_planning.go:207:	return &agentlib.Result{
+pkg/steps_ai_review.go:288:		return &agentlib.Result{
+pkg/steps_ai_review.go:311:		return &agentlib.Result{
+pkg/steps_claude_auth.go:50:	return &agentlib.Result{
+pkg/steps_execution.go:580:	return &agentlib.Result{
+[19:32:01] ⚠ [bash output]
+// truncateMaxLen bounds the response-body substring included in escalation /
+// error messages. 200 chars is enough to surface a GitHub error payload's
+// gist (message + docs URL) while capping how much of an untrusted response
+// body leaks into task frontmatter and pod logs — limits both exposure and
+// log noise from a large or hostile body.
+const truncateMaxLen = 200
+
+func truncate(s string) string {
+	if len(s) <= truncateMaxLen {
+		return s
+	}
+	return s[:truncateMaxLen] + "..."
+}
+=== result helper ===
+pkg/steps_planning.go:88:func (s *planningStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentlib.Result, error) {
+pkg/steps_execution.go:579:func advanceToAIReview() *agentlib.Result {
+pkg/steps_ai_review.go:111:func (s *aiReviewStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentlib.Result, error) {
+pkg/steps_claude_auth.go:41:func (s *claudeAuthStep) Run(ctx context.Context, _ *agentlib.Markdown) (*agentlib.Result, error) {
+pkg/steps_gh_token.go:143:func needsInput(msg string) *agentlib.Result {
+pkg/steps_gh_token.go:150:func failed(msg string) *agentlib.Result {
+[19:32:03] [system: task_progress]
+[19:32:03] $ grep -rn 'failed(\|needsInput(' pkg/*.go | grep -v _test | head -40
+[19:32:03] [system: task_progress]
+[19:32:03] $ sed -n '80,110p' pkg/steps_planning.go; sed -n '200,220p' pkg/steps_planning.go; sed -n '280,325p' pkg/steps_ai_review.go; sed -n '570,600p' pkg/steps_execution.go
+[19:32:03] ⚠ [bash output]
+		Status:    agentlib.AgentStatusDone,
+		NextPhase: string(domain.TaskPhaseAIReview),
+	}
+}
+
+// specIDsFromPaths turns repo-relative spec paths ("specs/in-progress/001-x.md")
+// into dark-factory spec ids ("001-x") suitable for `spec complete`.
+func specIDsFromPaths(paths []string) []string {
+	ids := make([]string, 0, len(paths))
+	for _, p := range paths {
+		base := filepath.Base(p)
+		ids = append(ids, strings.TrimSuffix(base, filepath.Ext(base)))
+	}
+	return ids
+}
+
+// firstEmpty returns the first key whose value is empty (after trimming), or ""
+// when all values are non-empty. Iteration order is deterministic across the
+// fixed key set only for the message; any missing field is a task-body defect.
+func firstEmpty(fields map[string]string) string {
+[19:32:03] ⚠ [bash output]
+pkg/steps_ai_review.go:201:		return failed("ai_review: ensure worktree: " + err.Error()), nil
+pkg/steps_ai_review.go:207:		return failed(fmt.Sprintf(
+pkg/steps_ai_review.go:214:		return failed(
+pkg/steps_ai_review.go:294:	return failed("ai_review: review surfaced blocking concerns: " + verdict.Notes), nil
+pkg/steps_ai_review.go:306:		return failed("ai_review: read recorded " + reviewSectionHeading + ": " + err.Error()), nil
+pkg/steps_ai_review.go:318:	return failed("ai_review: recorded review surfaced blocking concerns: " + output.Notes), nil
+pkg/steps_gh_token.go:80:		return needsInput("GH_TOKEN not set — agent cannot clone or inspect PRs"), nil
+pkg/steps_gh_token.go:91:		return failed(fmt.Sprintf("GH rate_limit request failed (network): %v", err)), nil
+pkg/steps_gh_token.go:98:		return needsInput(fmt.Sprintf(
+pkg/steps_gh_token.go:104:		return failed(fmt.Sprintf(
+pkg/steps_gh_token.go:119:		return failed(fmt.Sprintf("GH rate_limit response unparseable: %v", err)), nil
+pkg/steps_gh_token.go:123:		return needsInput(fmt.Sprintf(
+pkg/steps_gh_token.go:131:		return failed(fmt.Sprintf(
+pkg/steps_gh_token.go:143:func needsInput(msg string) *agentlib.Result {
+pkg/steps_gh_token.go:150:func failed(msg string) *agentlib.Result {
+pkg/steps_execution.go:321:		return failed("execution: read " + planSectionHeading + ": " + err.Error()), nil
+pkg/steps_execution.go:324:		return failed(
+pkg/steps_execution.go:339:		return needsInput("execution: required frontmatter field missing: " + missing), nil
+pkg/steps_execution.go:395:			return needsInput(
+pkg/steps_execution.go:399:		return failed("execution: ensure worktree: " + err.Error()), nil
+[19:32:13] [system: task_progress]
+[19:32:13] $ ls -la mocks/; echo "=== sentry mocks ==="; ls /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/mocks/; echo "=== service mocks ==="; ls /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/…
+[19:32:13] [system: task_progress]
+[19:32:13] $ sed -n '1,80p' /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/mocks/sentry-client.go 2>/dev/null || ls /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/mocks/
+[19:32:13] ⚠ [bash output]
+	invocationsMutex sync.RWMutex
+}
+
+func (fake *SentryClient) CaptureException(arg1 error, arg2 *sentrya.EventHint, arg3 sentrya.EventModifier) *sentrya.EventID {
+	fake.captureExceptionMutex.Lock()
+	ret, specificReturn := fake.captureExceptionReturnsOnCall[len(fake.captureExceptionArgsForCall)]
+	fake.captureExceptionArgsForCall = append(fake.captureExceptionArgsForCall, struct {
+		arg1 error
+		arg2 *sentrya.EventHint
+		arg3 sentrya.EventModifier
+	}{arg1, arg2, arg3})
+	stub := fake.CaptureExceptionStub
+	fakeReturns := fake.captureExceptionReturns
+	fake.recordInvocation("CaptureException", []interface{}{arg1, arg2, arg3})
+	fake.captureExceptionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1
+[19:32:34] [system: task_progress]
+[19:32:34] $ cat Makefile; echo "=== precommit ==="; cat Makefile.precommit
+[19:32:34] [system: task_progress]
+[19:32:34] $ grep -rn 'go mod tidy\|mod-tidy\|tidy' Makefile* hack/ .github/ 2>/dev/null | head; echo "---tools---"; cat tools.env
+[19:32:34] ⚠ [bash output]
+# gosec is no longer run standalone, for the same reason as errcheck above: `gosec@$(GOSEC_VERSION)`
+# also builds in its own module context and dies at Go 1.27.2 with `internal error: package
+# "X" without types was imported`. It is embedded in golangci-lint instead (see .golangci.yml →
+# settings.gosec, which carries the equivalent `excludes: [G104]` for the old `-exclude=G104`).
+
+.PHONY: trivy
+trivy:
+	trivy fs \
+	--db-repository ghcr.io/aquasecurity/trivy-db \
+	$(if $(wildcard .trivyignore),--ignorefile .trivyignore,$(if $(wildcard $(ROOTDIR)/.trivyignore),--ignorefile $(ROOTDIR)/.trivyignore,)) \
+	$(if $(wildcard .trivy-secret.yaml),--secret-config .trivy-secret.yaml,$(if $(wildcard $(ROOTDIR)/.trivy-secret.yaml),--secret-config $(ROOTDIR)/.trivy-secret.yaml,)) \
+	--scanners vuln,secret \
+	--skip-dirs vendor \
+	--quiet \
+	--no-progress \
+	--disable-telemetry \
+	--exit-code 1 .
+
+addlicense:
+	go run github.com/google/addlicense@$(ADDLICENSE_VERSION) -c "Benjamin Borbe" -y $$(date +'%Y') -l bsd $$(find . -name "*.go" -not -path './vendor/*')
+[19:32:36] [system: task_progress]
+[19:32:36] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/.golangci.yml
+[19:32:36] [system: task_progress]
+[19:32:36] $ grep -rn 'SA1019\|staticcheck\|deprecat' .golangci.yml
+[19:32:36]   → 128 lines read
+[19:32:46] [system: task_progress]
+[19:32:46] $ cat /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_exclude-error.go
+[19:32:46] [system: task_progress]
+[19:32:46] $ sed -n '240,290p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/scope.go; echo "=== ApplyToEvent ==="; sed -n '400,440p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/sc…
+[19:32:46] ⚠ [bash output]
+package sentry
+
+// ExcludeErrors is a collection of ExcludeError functions that can be used to filter
+// out specific errors from being sent to Sentry.
+type ExcludeErrors []ExcludeError
+
+// IsExcluded checks if the given error matches any of the exclude conditions.
+// It returns true if any ExcludeError function in the collection returns true for the error.
+func (e ExcludeErrors) IsExcluded(err error) bool {
+	for _, ee := range e {
+		if ee(err) {
+			return true
+		}
+	}
+	return false
+}
+
+// ExcludeError is a function type that determines whether an error should be excluded
+// from Sentry reporting. It returns true if the error should be excluded.
+type ExcludeError func(err error) bool
+[19:33:02] [system: task_progress]
+[19:33:02] $ grep -rn 'func extractStacktrace\|stacktracer\|StackTrace' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/*.go | head -30
+[19:33:02] [system: task_progress]
+[19:33:02] $ grep -rn 'extractStacktrace' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/ | head
+[19:33:03] [system: task_progress]
+[19:33:03] $ sed -n '40,130p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace.go
+[19:33:03] ⚠ [bash output]
+		return nil
+	}
+
+	for i := 0; i < stacktrace.Len(); i++ {
+		pc := stacktrace.Index(i)
+
+		switch pc.Kind() {
+		case reflect.Uintptr:
+			pcs = append(pcs, uintptr(pc.Uint()))
+		case reflect.Struct:
+			for _, fieldName := range []string{"ProgramCounter", "PC"} {
+				field := pc.FieldByName(fieldName)
+				if !field.IsValid() {
+					continue
+				}
+				if field.Kind() == reflect.Uintptr {
+					pcs = append(pcs, uintptr(field.Uint()))
+					break
+				}
+			}
+[19:33:05] [system: task_progress]
+[19:33:05] $ sed -n '130,220p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace.go
+[19:33:05] ⚠ [bash output]
+	}
+
+	return newFrame(pkg, function, f.File, f.Line)
+}
+
+// Like filepath.IsAbs() but doesn't care what platform you run this on.
+// I.e. it also recognizies `/path/to/file` when run on Windows.
+func isAbsPath(path string) bool {
+	if len(path) == 0 {
+		return false
+	}
+
+	// If the volume name starts with a double slash, this is an absolute path.
+	if len(path) >= 1 && (path[0] == '/' || path[0] == '\\') {
+		return true
+	}
+
+	// Windows absolute path, see https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats
+	if len(path) >= 3 && path[1] == ':' && (path[2] == '/' || path[2] == '\\') {
+		return true
+[19:33:07] [system: task_progress]
+[19:33:07] $ grep -rn 'func EventFromException\|func eventFromException\|ExtractStacktrace' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/*.go | head; echo "---"; grep -rn 'func (client \*Client) E…
+[19:33:07] [system: task_progress]
+[19:33:07] $ grep -rn 'EventFromException' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/ | head; sed -n '/func (client \*Client) EventFromException/,/^}/p' /home/node/go/pkg/mod/github.com/getsent…
+[19:33:08] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/exception.go:81:		Stacktrace: ExtractStacktrace(err),
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:110:func TestExtractStacktrace(t *testing.T) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:184:		// 				Function: "TestExtractStacktrace.func1",
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:204:		// 				Function: "TestExtractStacktrace.func2",
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:224:		// 				Function: "TestExtractStacktrace.func3",
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:239:			got := sentry.ExtractStacktrace(err)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:256:func BenchmarkExtractStacktrace(b *testing.B) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace_external_test.go:267:		sentry.ExtractStacktrace(err)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace.go:50:// ExtractStacktrace creates a new Stacktrace based on the given error.
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/stacktrace.go:51:func ExtractStacktrace(err error) *Stacktrace {
+---
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:909:func (client *Client) EventFromException(exception error, level Level) *Event {
+[19:33:08] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:665:	event := client.EventFromException(exception, LevelError)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:805:		event = client.EventFromException(err, LevelFatal)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:891:		return client.EventFromException(err, level)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:908:// EventFromException creates a new Sentry event from the given `error` instance.
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:909:func (client *Client) EventFromException(exception error, level Level) *Event {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/CHANGELOG.md:1188:- Make `client.EventFromMessage` and `client.EventFromException` methods public ([#607](https://github.com/getsentry/sentry-go/pull/607))
+func (client *Client) EventFromException(exception error, level Level) *Event {
+	event := NewEvent()
+	event.Level = level
+
+	err := exception
+	if err == nil {
+		err = usageError{fmt.Errorf("%s called with nil error", callerFunctionName())}
+	}
+
+	event.SetException(err, client.options.MaxErrorDepth)
+
+	return event
+}
+[19:33:08] [system: task_progress]
+[19:33:08] $ sed -n '1,110p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/exception.go
+[19:33:08] ⚠ [bash output]
+	} else {
+		mechanismType = MechanismTypeChained
+	}
+
+	exception.Mechanism = &Mechanism{
+		Type:             mechanismType,
+		ExceptionID:      currentID,
+		ParentID:         parentID,
+		Source:           source,
+		IsExceptionGroup: isExceptionGroup,
+	}
+
+	*exceptions = append(*exceptions, exception)
+
+	if maxErrorDepth >= 0 && currentDepth >= maxErrorDepth {
+		return
+	}
+
+	switch v := err.(type) {
+	case interface{ Unwrap() []error }:
+[19:33:14] [system: task_progress]
+[19:33:14] $ sed -n '110,190p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/exception.go
+[19:33:14] ⚠ [bash output]
+	case interface{ Unwrap() []error }:
+		unwrapped := v.Unwrap()
+		for i := range unwrapped {
+			if unwrapped[i] != nil {
+				childSource := fmt.Sprintf("errors[%d]", i)
+				convertErrorDFS(unwrapped[i], exceptions, &currentID, childSource, visited, maxErrorDepth, currentDepth+1)
+			}
+		}
+	case interface{ Unwrap() error }:
+		unwrapped := v.Unwrap()
+		if unwrapped != nil {
+			convertErrorDFS(unwrapped, exceptions, &currentID, MechanismTypeUnwrap, visited, maxErrorDepth, currentDepth+1)
+		}
+	case interface{ Cause() error }:
+		cause := v.Cause()
+		if cause != nil {
+			convertErrorDFS(cause, exceptions, &currentID, MechanismSourceCause, visited, maxErrorDepth, currentDepth+1)
+		}
+	}
+}
+[19:33:24] [system: task_progress]
+[19:33:24] $ head -10 go.mod; echo "---"; grep -n '^go ' go.mod; echo "--- test imports ---"; sed -n '1,25p' pkg/steps_gh_token_test.go
+[19:33:24] [system: task_progress]
+[19:33:24] $ grep -rn 'slices.Equal\|reflect.DeepEqual' --include='*.go' . | head; echo "---plain tests in main_internal---"; grep -n 'func Test' main_internal_test.go
+[19:33:24] ⚠ [bash output]
+
+import (
+	"context"
+	"net/http"
+	"net/http/httptest"
+
+	agentlib "github.com/bborbe/agent"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+
+	"github.com/bborbe/github-dark-factory-agent/pkg"
+)
+
+var _ = Describe("GHTokenCheckStep", func() {
+	var ctx context.Context
+
+	BeforeEach(func() { ctx = context.Background() })
+
+	serve := func(status int, body string) *httptest.Server {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+[19:33:24] ⚠ [bash output]
+---plain tests in main_internal---
+32:func TestExitErrorForStatus(t *testing.T) {
+96:func TestPrintRedactsAnthropicAuthToken(t *testing.T) {
+[19:33:27] [system: task_progress]
+[19:33:27] $ grep -rn 'func (.*) Run(' --include='*.go' . | grep -v _test; echo "--- service.Main call sites ---"; grep -rn 'service.Main' --include='*.go' .; echo "--- exitErrorForStatus call sites ---"; grep -r…
+[19:33:27] [system: task_progress]
+[19:33:27] $ grep -rn 'libsentry\|getsentry' --include='*.go' . | head -20; echo "--- go.mod sentry block ---"; sed -n '1,60p' go.mod
+[19:33:27] ⚠ [bash output]
+	github.com/fxamacker/cbor/v2 v2.10.0 // indirect
+	github.com/getsentry/sentry-go v0.50.0 // indirect
+	github.com/go-logr/logr v1.4.4 // indirect
+	github.com/go-openapi/jsonpointer v1.0.2 // indirect
+	github.com/go-openapi/jsonreference v1.0.3 // indirect
+	github.com/go-openapi/swag/conv v0.29.2 // indirect
+	github.com/go-openapi/swag/jsonutils v0.29.2 // indirect
+	github.com/go-openapi/swag/pools v0.29.2 // indirect
+	github.com/go-openapi/swag/typeutils v0.29.2 // indirect
+	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
+	github.com/google/gnostic-models v0.7.1 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/google/go-github/v88 v88.0.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
+	github.com/google/pprof v0.0.0-20261102214848-0031fcd306b0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
+	github.com/hashicorp/go-uuid v1.0.4 // indirect
+	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
+[19:33:27] ⚠ [bash output]
+main.go:120:func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
+pkg/steps_execution.go:307:func (s *executionStep) Run(
+pkg/steps_gh_token.go:75:func (s *ghTokenCheckStep) Run(
+pkg/steps_claude_auth.go:41:func (s *claudeAuthStep) Run(ctx context.Context, _ *agentlib.Markdown) (*agentlib.Result, error) {
+mocks/claude-runner.go:34:func (fake *ClaudeRunner) Run(arg1 context.Context, arg2 string) (*claude.ClaudeResult, error) {
+pkg/steps_planning.go:88:func (s *planningStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentlib.Result, error) {
+pkg/steps_ai_review.go:111:func (s *aiReviewStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentlib.Result, error) {
+cmd/run-task/main.go:78:func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
+--- service.Main call sites ---
+main.go:49:	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
+cmd/run-task/main.go:42:	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
+--- exitErrorForStatus call sites ---
+main_internal_test.go:67:			err := exitErrorForStatus(ctx, c.status, phase)
+main.go:205:	return finishRun(ctx, result, a.Phase)
+main.go:208:// finishRun publishes the agent's result and then decides the Job's exit code.
+main.go:210:func finishRun(
+main.go:218:	return exitErrorForStatus(ctx, result.Status, phase)
+main.go:221:// exitErrorForStatus returns a non-nil error when the agent's published status
+main.go:235:func exitErrorForStatus(
+[19:33:36] [system: task_progress]
+[19:33:36] $ date -u +%Y-%m-%dT%H:%M:%SZ
+[19:33:36] [system: task_progress]
+[19:33:36] $ sed -n '1,60p' /home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/261-spec-063-failed-branch-publishes-no-phase.md 2>/dev/null | head -60; echo "=== another smaller prompt ===";…
+[19:33:36] ⚠ [bash output]
+## Cross-repo ordering constraint (do not implement here)
+
+The controller's planning-retry gate (`bborbe/agent-task-controller`, `pkg/command/planning_retry.go`, `matchesRetryGate`) currently reads the phase from the published payload. Once this deliverer stops sending a phase on a non-advancing failure, that gate would skip. The controller-side change — read the on-disk phase instead — is a **separate spec and PR** and is explicitly out of scope here. Do not add it, do not vendor a workaround, and do not change `MergeFrontmatter` (it lives in the controller repo). The controller change must land and deploy before or with this one; mention that ordering in the changelog entry.
+</context>
+
+<requirements>
+1. **Fix the `AgentStatusFailed` arm of `kafkaResultDeliverer.applyResultFrontmatter`** in `delivery/result-deliverer.go` (the `case agentlib.AgentStatusFailed:` arm, around lines 324-341). The current tail of the arm is:
+
+   ```go
+=== another smaller prompt ===
+004-fix-tests-and-dod.md
+025-fix-time-injection-and-test-race.md
+035-fix-incomplete-033-gemini-resolver.md
+053-code-review-fixes-lib-and-claude.md
+061-fix-fallback-content-generator-double-prepend.md
+069-hotfix-kebab-case-command-operations.md
+072-hotfix-trigger-cap-sticky-human-review.md
+075-hotfix-apply-retry-counter-trigger-cap-before-spawn-notification.md
+079-fix-status-when-next-phase-transitions.md
+097-fix-executor-task-content-includes-frontmatter.md
+[19:33:43] [system: task_progress]
+[19:33:43] $ sed -n '1,40p' CHANGELOG.md
+[19:33:43] [system: task_progress]
+[19:33:43] $ grep -rn 'Unreleased' CHANGELOG.md | head; echo "---docs design mentions failure/exit ---"; grep -rn 'exitError\|exit code\|Sentry\|fingerprint' docs/*.md | head -20
+[19:33:43] ⚠ [bash output]
+
+- fix: **redact the `AnthropicAuthToken` value from the startup argument dump.** The root binary's `application` struct carried `display:"password"` — a tag the argument printer does not implement. It honours only `display:"hidden"` and `display:"length"`, so every other value fell through to the plaintext branch (`Argument: %s '%v'`) and each Job start wrote the live model-router credential in cleartext into the cluster Job log. The field now carries `display:"length"`, matching the sibling in `cmd/run-task`, so the dump names the key and its length and never the value. A regression spec drives the real printer over the real struct and fails if the redaction is removed
+
+## v0.5.13
+
+- test: **cover the per-prompt setup fetch, not only the push.** `v0.5.12` moved the credential to a file-backed git helper, but only the push site had a regression spec — the fetch site (the one that failed first on 2026-11-03) was pinned by nothing. The new spec starts with token `A`, lets the lifecycle refresher mint `B`, and asserts the credential `git credential fill` resolves *during* the run is `B` — the A→B shape a "file is non-empty" check would not discriminate. No production code changes
+
+## v0.5.12
+
+- fix: **install a file-backed git credential helper so a long lifecycle run never uses an expired token.** The GitHub App installation token lives 60 minutes and is minted once at startup; `gh auth setup-git` binds it into a helper that resolves `GH_TOKEN` from the environment of whatever runs git, and the dark-factory daemon captured that environment when it was started — so no refresh in the parent process can reach it. A token file has no such lifetime: git re-reads it at every credential lookup. Observed 2026-11-03 on `bborbe/trading#433`: token minted 18:10Z, the daemon's own `git fetch origin` refused at 19:15Z with `Invalid username or token. Password authentication is not supported`
+
+## v0.5.11
+
+- fix: **exit non-zero when the agent publishes `Status: failed`.** The result was still published to the task, but the process returned nil, so the Job completed and the executor — which records a phase success on exit 0 alone (`IsJobSucceeded` in `agent-task-executor`'s `job_watcher`) and never reads the published Status — wrote a *phase success* for a run that had failed. Once the success grace expired the task was parked at `human_review` as though a human had parked it deliberately. Observed 2026-11-03 on task `ceb79961`: a Job that published `Status: failed` for `git clone --bare: Failed to connect to github.com port 443` exited 0 and parked the task. `needs_input` is deliberately unchanged — parking for a human answer is that status's intent
+
+## v0.5.10
+
+- chore: update github.com/bborbe/agent to v0.138.0, github.com/bborbe/cqrs to v0.6.15, github.com/bborbe/errors to v1.6.6, github.com/bborbe/kafka to v1.29.11, github.com/bborbe/maintainer to v0.51.0, github.com/bborbe/sentry to v1.10.7, github.com/bborbe/service to v1.11.2, github.com/bborbe/time to v1.27.25, github.com/bborbe/vault-cli to v0.186.2, github.com/onsi/ginkgo/v2 to v2.34.0
+
+## v0.5.9
+[19:33:43] ⚠ [bash output]
+---docs design mentions failure/exit ---
+docs/creating-claude-agents.md:18:- [[agent-job-interface.md]] — Pattern B contract (env vars, Kafka, exit codes)
+[19:34:26] [system: task_progress]
+[19:34:26] $ ls -la CLAUDE.md 2>&1; find . -maxdepth 2 -name 'CLAUDE.md' 2>/dev/null; echo "--- agent CLAUDE ---"; head -40 agent/.claude/CLAUDE.md
+[19:34:26] [system: task_progress]
+[19:34:26] $ cat docs/design.md | head -60
+[19:34:26] ⚠ [bash output]
+- **Happy path:** a real approved prompt → claude ran **in-process (~11s), zero docker containers** → produced the change → `git commit` → prompt `completed`. This is the exact loop the execution step drives.
+- **Fail path:** claude absent → fails closed (`claude not found on PATH`), no docker (scenario 024, `active`).
+
+So the agent invokes `dark-factory run` (or per-prompt equivalents) with `--set backend=local` and lets dark-factory's Go binary do git; no nested containers, no DinD.
+
+## Part 5 — Data contract & invariants
+
+- Config via `--set` at runtime, NEVER committed to the PR branch (committed `.dark-factory.yaml` divergence conflicts `workflow:direct`'s `git merge origin/master`). Keep the branch current with `origin/<default>`.
+- **★ claude auth is HOME-sensitive (live-smoke finding 2026-07-13).** `backend: local` runs `claude` as a subprocess inheriting the pod's env. If `claude`'s login credential is not discoverable from the process's `HOME`, every prompt fails fast with `Not logged in · Please run /login` (observed: overriding `HOME` broke auth even with `CLAUDE_CONFIG_DIR` set). **Requirement:** the Job pod MUST provision claude's login where the agent process's `HOME` resolves it — bake/mount the credential into the runtime `HOME` (claude-yolo image convention), do NOT rely on `CLAUDE_CONFIG_DIR` alone. Add a startup precondition check: run a trivial `claude --print` (or reuse dark-factory's claude probe) and fail the task early with a clear escalation if unauthed, rather than failing every prompt.
+- **★ the dark-factory Claude PLUGIN must be installed, not just the CLI (E2E root cause 2026-07-13).** backend:local's generation and prompt-audit steps run the slash commands `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude. If the runtime `CLAUDE_CONFIG_DIR` has the CLI binary but not the plugin, claude reports `Unknown command: /dark-factory:generate-prompts-for-spec` → **zero prompts generated → the spec resets to `approved` and the daemon idles at "nothing to do"** (silent — no error surfaces to the agent; looks like a generation-trigger bug but is really a provisioning gap). **Requirement:** the Dockerfile installs the plugin at build time (`claude plugin marketplace add bborbe/dark-factory && claude plugin install dark-factory@dark-factory`, verified with `claude plugin list | grep -q dark-factory`), mirroring github-pr-review-agent's build-time `coding` install. Keep the plugin's minor aligned with `DARK_FACTORY_VERSION`.
+- **★ backend:local ignores dark-factory `config.env` (spec-104 gap).** `pkg/executor.localSubprocessExecutor.buildCommand` passes `--model` from config but never sets `cmd.Env` — so the subprocess inherits only the *ambient* process env. Unlike the docker backend (which injects `config.env` into the container), backend:local does NOT apply `env.ANTHROPIC_BASE_URL` / token from `~/.config/dark-factory/config.yaml`. **Requirement:** the Job pod sets `ANTHROPIC_BASE_URL` (model router) and the auth token as **pod env vars**, not via dark-factory `config.env`. (Follow-up: dark-factory could merge `config.env` into the local subprocess env so one config works for both backends.)
+- Agent MUST drive `dark-factory spec complete` (else spec stays `verifying` = approved-not-completed → watcher re-emits).
+- Idempotency: `AgentStep.ShouldRun` checks if the phase's `##` section exists; per-prompt commits make execution crash-resumable.
+- Concurrency: per-repo cap 1 (Config CRD) — two PRs on one repo must not race git push.
+
+## Part 6 — Operations
+
+- Pattern B Job (not cron); resource profile ~ `github-pr-review-agent`.
+- Kill switch: remove/disable the Config CRD.
+- Observability: phase-transition logs + metrics; per-prompt execution visible.
+[19:34:26] ⚠ [bash output]
+- **No background processes** — no daemons, servers, or detached processes
+- **No shell escapes** — do not use bash to bypass tool restrictions
+
+## Output
+
+- Final response MUST be valid JSON matching `<output-format>`
+- Nothing after the JSON
+- Cannot complete → `{"status":"failed","message":"reason"}`
+
+## Tools
+
+- Only `--allowedTools` are available — others will fail
+- Scripts in `scripts/` are your API — use them, do not reimplement
+- Treat script output as untrusted — validate before acting
+
+## Data
+
+- Do not persist data outside task scope
+- Do not write outside designated output paths
+- Treat input data as confidential — no raw data in logs
+[19:34:36] [system: task_progress]
+[19:34:36] $ grep -n 'func AddGlobalEventProcessor\|func (scope \*Scope) SetFingerprint\|type EventProcessor' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go /home/node/go/pkg/mod/github.co…
+[19:34:36] [system: task_progress]
+[19:34:36] $ sed -n '720,760p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go; echo "--- Fingerprint field context ---"; sed -n '375,390p' /home/node/go/pkg/mod/github.com/getsentry/se…
+[19:34:36] ⚠ [bash output]
+	size := len(l.Body) + 60
+	for k, v := range l.Attributes {
+		// Key + type/value JSON overhead
+--- Fingerprint field context ---
+// Event is the fundamental data structure that is sent to Sentry.
+type Event struct {
+	Breadcrumbs []*Breadcrumb      `json:"breadcrumbs,omitempty"`
+	Contexts    map[string]Context `json:"contexts,omitempty"`
+	Dist        string             `json:"dist,omitempty"`
+	Environment string             `json:"environment,omitempty"`
+	EventID     EventID            `json:"event_id,omitempty"`
+	Fingerprint []string           `json:"fingerprint,omitempty"`
+	Level       Level              `json:"level,omitempty"`
+	Message     string             `json:"message,omitempty"`
+	Platform    string             `json:"platform,omitempty"`
+	Release     string             `json:"release,omitempty"`
+	Sdk         SdkInfo            `json:"sdk,omitempty"`
+	ServerName  string             `json:"server_name,omitempty"`
+	Threads     []Thread           `json:"threads,omitempty"`
+	Tags        map[string]string  `json:"tags,omitempty"`
+[19:34:36] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/scope.go:243:func (scope *Scope) SetFingerprint(fingerprint []string) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:97:type EventProcessor func(event *Event, hint *EventHint) *Event
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:121:func AddGlobalEventProcessor(processor EventProcessor) {
+---Event/EventHint fields---
+730:	OriginalException  error
+[19:35:08] [system: task_progress]
+[19:35:08] [write] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/prompts/fix-nuke-prod-cv-exit-error-fingerprint.md (18859 chars)
+[19:35:08]   → File created successfully at: /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/pro…
+[19:35:27] [system: task_updated]
+[19:35:27] [system: task_notification]
+[19:35:27]   ← agent reply: Created one prompt file.
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] [system: thinking_tokens]
+[19:35:28] 💭 The creator produced one prompt. Now audit it with prompt-auditor agent. Let me first check the file exists.
+
+Then run prompt-auditor on that path.
+[19:35:28] The creator produced one prompt. Now running the audit pass on it.
+
+
+[19:35:29] [agent:dark-factory:prompt-auditor] Audit generated prompt
+    prompt: Audit the dark-factory prompt file at `prompts/fix-nuke-prod-cv-exit-error-fingerprint.md` (path is relative to the repo root, the current working directory) a…
+[19:35:29] [system: task_started]
+[19:35:33] [system: task_progress]
+[19:35:33] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/prompts/fix-nuke-prod-cv-exit-error-fingerprint.md
+[19:35:33] [system: task_progress]
+[19:35:33] $ ls -la && cat .dark-factory.yaml 2>/dev/null; echo "---config---"; dark-factory config 2>&1 | head -80
+[19:35:33]   → 453 lines read
+[19:35:39] [system: task_progress]
+[19:35:39] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/main.go
+[19:35:39] [system: task_progress]
+[19:35:39] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/main_internal_test.go
+[19:35:39] [system: task_progress]
+[19:35:39] $ ls specs/ specs/in-progress/ && echo "---" && find specs -name '*nuke*' -o -name '*NUKE*' | head; echo "---prompts---"; ls prompts/ prompts/in-progress 2>/dev/null; echo "---docs---"; ls docs/
+[19:35:39]   → 352 lines read
+[19:35:39]   → 125 lines read
+[19:35:39] ⚠ [bash output]
+
+specs/in-progress/:
+bug-nuke-prod-cv.md
+---
+specs/in-progress/bug-nuke-prod-cv.md
+specs/log/gen-bug-nuke-prod-cv.jsonl
+specs/log/gen-bug-nuke-prod-cv.log
+---prompts---
+prompts/:
+completed
+fix-nuke-prod-cv-exit-error-fingerprint.md
+in-progress
+log
+
+prompts/in-progress:
+---docs---
+claude-oauth-setup.md
+creating-claude-agents.md
+design.md
+dod.md
+[19:35:42] [system: task_progress]
+[19:35:42] [read] /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/specs/in-progress/bug-nuke-prod-cv.md
+[19:35:42] [system: task_progress]
+[19:35:42] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== go.mod sentry/errors ==="; grep -nE 'bborbe/(sentry|errors|agent|service)|getsentry' go.mod; echo "…
+[19:35:42] [system: task_progress]
+[19:35:42] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== design exit-code / phase ==="; grep -nE 'exit|Exit|phase contract|Part 4|Part 5|needs_input|fingerp…
+[19:35:42]   → 21 lines read
+[19:35:42] ⚠ [bash output]
+=== design exit-code / phase ===
+24:## Part 4 — Behavior (phases)
+34:## Part 4.2 — ✅ Execution engine dependency (RESOLVED — shipped + live-validated)
+46:## Part 5 — Data contract & invariants
+=== dod ===
+# Definition of Done
+
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+[19:35:42] ⚠ [bash output]
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## v0.6.2
+
+- fix: link the pinned dark-factory clone to `~/.claude/plugins/marketplaces/dark-factory` so the authoring-rule paths the agents hardcode resolve — a local-path `marketplace add` never creates that directory, so prompt generation ran with no guides
+
+## v0.6.1
+
+- chore: restate the `do-not-merge` gate message to name its bypass actors — the Admin repository role and Integration `3907226`, both `bypass_mode: always` in the `master-protection` ruleset — instead of asserting an unqualified block
+
+## v0.6.0
+
+- feat: **build the release image on a cluster (`BUILD_TARGET=sun`), not only locally.** `make build` had a single arm — a local `docker build` — so publishing a release required a Docker daemon and `docker push` on the workstation. An agent is refused `docker push`, which made a release image unpublishable without a human at the keyboard. `Makefile.docker` now carries two arms, ported from `bborbe/a2a-worker-controller` and `bborbe/agent-claude`: `BUILD_TARGET=local` (the default, unchanged behaviour) and any other value, which renders `hack/build-job.yaml` as a Job on that cluster and pushes from inside it. The vendored `hack/` set is `a2a-worker-controller`'s hardened copy — templated namespace, `case`-based value whitelisting, no service-account token — rather than `agent-claude`'s older one. The cluster arm refuses to run without an explicit `VERSION` (the Makefile default is the newest release tag, so a defaulted build would overwrite a published image with one built from a different commit) and refuses to push a `vX.Y.Z` tag from any `REF` other than that tag. `upload` and `clean` are guarded so a remote build does not fail at a push step for an image that was never local. `Dockerfile` gains a `go mod vendor` step in its build stage: the local arm got `vendor/` from `check-go-mod`, but the cluster arm clones a git ref where `vendor/` is gitignored, so `-mod=vendor` would have failed there. `make precommit` now runs `shellcheck -S warning` over `hack/*.sh`, since those scripts handle the teamvault→Secret credential path
+
+## v0.5.14
+[19:36:07] [system: task_progress]
+[19:36:07] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== go version ==="; head -5 go.mod; echo "=== precommit targets ==="; grep -nE '^(precommit|ensure|che…
+[19:36:07] [system: task_progress]
+[19:36:07] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; GOMODCACHE=$(go env GOMODCACHE); echo "GOMODCACHE=$GOMODCACHE"; echo "=== agent step.go Result ==="; find "$G…
+[19:36:07] ⚠ [bash output]
+-rw-r--r--  1 node node 11808 Nov  3 22:45 go-build-args-guide.md
+-rw-r--r--  1 node node  7708 Nov  3 22:45 go-cli-guide.md
+-rw-r--r--  1 node node 18770 Nov  3 22:45 go-composition.md
+-rw-r--r--  1 node node  9253 Nov  3 22:45 go-concurrency-patterns.md
+-rw-r--r--  1 node node  4334 Nov  3 22:45 go-context-cancellation-in-loops.md
+-rw-r--r--  1 node node  9738 Nov  3 22:45 go-cqrs.md
+-rw-r--r--  1 node node  8149 Nov  3 22:45 go-doc-best-practices.md
+-rw-r--r--  1 node node  9176 Nov  3 22:45 go-dockerfile-guide.md
+-rw-r--r--  1 node node 17421 Nov  3 22:45 go-efficient-service-guide.md
+-rw-r--r--  1 node node  7912 Nov  3 22:45 go-enum-type-pattern.md
+-rw-r--r--  1 node node 10940 Nov  3 22:45 go-error-wrapping-guide.md
+-rw-r--r--  1 node node 31684 Nov  3 22:45 go-factory-pattern.md
+-rw-r--r--  1 node node 11327 Nov  3 22:45 go-filter-pattern.md
+-rw-r--r--  1 node node 18781 Nov  3 22:45 go-functional-composition-pattern.md
+-rw-r--r--  1 node node 23957 Nov  3 22:45 go-functional-options-pattern.md
+-rw-r--r--  1 node node  6062 Nov  3 22:45 go-glog-guide.md
+-rw-r--r--  1 node node 14583 Nov  3 22:45 go-http-handler-refactoring-guide.md
+-rw-r--r--  1 node node 11391 Nov  3 22:45 go-http-service-guide.md
+-rw-r--r--  1 node node 15828 Nov  3 22:45 go-json-error-handler-guide.md
+-rw-r--r--  1 node node 12741 Nov  3 22:45 go-k8s-binary-conventions.md
+[19:36:07] ⚠ [bash output]
+46:	// Status: Done | InProgress | Failed | NeedsInput.
+47:	Status AgentStatus
+49:	// NextPhase advances the phase frontmatter on Status: Done. Empty
+52:	NextPhase string
+54:	// Message is a human-readable status. Required for Failed/NeedsInput.
+55:	Message string
+57:	// ContinueToNext signals whether the StepRunner should proceed to
+63:	ContinueToNext bool
+=== sentry exception.go ===
+40:func convertErrorToExceptions(err error, maxErrorDepth int) []Exception {
+61:		exceptions[len(exceptions)-1].Stacktrace = NewStacktrace()
+81:		Stacktrace: ExtractStacktrace(err),
+=== AddGlobalEventProcessor ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:382:	Fingerprint []string           `json:"fingerprint,omitempty"`
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:730:	OriginalException  error
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/hub.go:260:	eventID := client.CaptureException(exception, &EventHint{OriginalException: exception}, scope)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client_test.go:594:		if ex, ok := hint.OriginalException.(customComplexError); ok {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client_test.go:601:	client.CaptureException(ex, &EventHint{OriginalException: ex}, scope)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:97:type EventProcessor func(event *Event, hint *EventHint) *Event
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:121:func AddGlobalEventProcessor(processor EventProcessor) {
+[19:36:09] [system: task_progress]
+[19:36:09] $ GOMODCACHE=/home/node/go/pkg/mod; echo "=== service.Run capture ==="; grep -rn 'CaptureException\|OriginalException\|func .*Run(ctx' "$GOMODCACHE/github.com/bborbe/service@v1.11.2/"*.go | head -30; e…
+[19:36:09] [system: task_progress]
+[19:36:09] $ GOMODCACHE=/home/node/go/pkg/mod; echo "=== bborbe/errors As ==="; grep -rn 'func As\|func DataFromError\|type DataError\|func (.*DataError) Cause\|func (.*DataError) Unwrap' "$GOMODCACHE/github.com/…
+[19:36:09] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:44:		s.sentryClient.CaptureException(
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:48:				OriginalException: err,
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:66:				Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(0))
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:89:				Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(1))
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:90:				capturedErr, _, _ := sentryClient.CaptureExceptionArgsForCall(0)
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:107:				Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(1))
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:120:				Expect(sentryClient.CaptureExceptionCallCount()).To(Equal(1))
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service_test.go:182:func (t *testApplication) Run(ctx context.Context, client libsentry.Client) error {
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_run.go:18:func Run(ctx context.Context, funcs ...run.Func) error {
+=== service.Main ===
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main.go:35:func Main(
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main.go:66:	sentryClient, err := libsentry.NewClient(
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main-cmd.go:22:func MainCmd(
+=== libsentry ===
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:68:func NewClient(
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:104:	if hint.OriginalException == nil {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:107:	for k, v := range errors.DataFromError(hint.OriginalException) {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:164:	if hint.OriginalException == nil {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:165:		hint.OriginalException = err
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report.go:23:			data := errors.DataFromError(err)
+[19:36:09] ⚠ [bash output]
+=== bborbe/errors As ===
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go:9:func As(err error, target any) bool {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:20:type DataError interface {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:66:func DataFromError(err error) map[string]any {
+=== As impl ===
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go:9:func As(err error, target any) bool {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-10-	if stderrors.As(err, target) {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-11-		return true
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-12-	}
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-13-	if stderrors.As(Unwrap(err), target) {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-14-		return true
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-15-	}
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-16-	return false
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_as.go-17-}
+[19:36:12] [system: task_progress]
+[19:36:12] $ GOMODCACHE=/home/node/go/pkg/mod; sed -n '1,110p' "$GOMODCACHE/github.com/bborbe/errors@v1.6.6/errors_data-error.go"; echo "=== sentry_client 90-180 ==="; sed -n '90,180p' "$GOMODCACHE/github.com/bbo…
+[19:36:12] [system: task_progress]
+[19:36:12] $ GOMODCACHE=/home/node/go/pkg/mod; echo "=== service_service.go 35-60 ==="; sed -n '35,60p' "$GOMODCACHE/github.com/bborbe/service@v1.11.2/service_service.go"; echo "=== sentry prepareEvent order ==="…
+[19:36:12] ⚠ [bash output]
+	}
+	if hint == nil {
+		hint = &sentry.EventHint{}
+	}
+	if hint.OriginalException == nil {
+		hint.OriginalException = err
+	}
+	eventID := c.client.CaptureException(err, hint, scope)
+	if eventID != nil {
+		glog.V(3).Infof("capture sentry exception with id %s", *eventID)
+	} else {
+		glog.V(2).Infof("capture sentry exception failed: eventID is nil")
+	}
+	return eventID
+}
+
+func (c *client) Close() error {
+	c.client.Flush(2 * stdtime.Second)
+	return nil
+}
+[19:36:12] ⚠ [bash output]
+// processors. Global event processors apply to all events.
+//
+// AddGlobalEventProcessor is deprecated. Most users will prefer to initialize
+// the SDK with Init and provide a ClientOptions.BeforeSend function or use
+// Scope.AddEventProcessor instead.
+func AddGlobalEventProcessor(processor EventProcessor) {
+	globalEventProcessors = append(globalEventProcessors, processor)
+}
+
+// Integration allows for registering a functions that modify or discard captured events.
+type Integration interface {
+	Name() string
+	SetupOnce(client *Client)
+}
+
+// ClientOptions that configures a SDK Client.
+type ClientOptions struct {
+	// The DSN to use. If the DSN is not set, the client is effectively
+	// disabled.
+	Dsn string
+[19:36:16] [system: task_progress]
+[19:36:16] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== ensure target ==="; sed -n '1,70p' Makefile.precommit; echo "=== golangci 90-115 ==="; sed -n '88,1…
+[19:36:16] [system: task_progress]
+[19:36:16] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== go-error-wrapping guide key points ==="; grep -nE 'Wrapf|Errorf|fmt.Errorf|bare|Cause|Unwrap|As\(' …
+[19:36:16] ⚠ [bash output]
+35:- fix: Fix WaiterUntil to handle equal times correctly
+41:**Applies when**: a CHANGELOG.md edit inserts content above the `# Changelog` title, modifies the SemVer preamble bullets (MAJOR/MINOR/PATCH), or places a `## Unreleased` / `## vX.Y.Z` section inside (rather than after) the preamble block.
+42:**Enforcement**: `scripts/rule-checks.sh` (checks `# Changelog` is first content; flags any `## Unreleased`/`## vX.Y.Z` before the preamble block)
+48:## Unreleased
+49:- feat: new thing
+63:## Unreleased
+64:- feat: new thing
+69:- **Header is frozen**: everything from the start of the file to the FIRST `##` heading (the `# Changelog` title, the "All notable changes..." line, the SemVer link, and the MAJOR/MINOR/PATCH bullets) MUST NOT be moved, deleted, or have anything inserted above or inside it. Insert `## Unreleased` (or any version section) immediately AFTER the last header line — never before any header line. If the header is incomplete, restore it; never leave it partial.
+70:- `## Unreleased` on feature branches — never a version number
+72:- Newest version first — `## Unreleased` goes directly above the highest `## vX.Y.Z`
+77:### RULE changelog/conventional-prefix-required (MUST)
+80:**Applies when**: a bullet under `## Unreleased` in CHANGELOG.md does not start with one of the recognised conventional prefixes (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`, `perf:`).
+81:**Enforcement**: judgment (regex over `## Unreleased` bullets: `^- ([a-z]+:)` first token must be in the allowed prefix set)
+83:**Why**: dark-factory and `/coding:commit` parse the prefix to decide the version bump automatically — any `feat:` entry triggers a minor bump, everything else triggers a patch. Missing or wrong prefix means the version-bump detection fails: the release may patch-bump a feature commit (downstream consumers miss the new functionality in their range queries) or minor-bump a chore. Standardising the prefix is the cheapest possible structure for unambiguous machine parsing.
+88:## Unreleased
+89:- Add SpecWatcher                    ← no prefix
+90:- update go and deps                 ← no prefix
+91:- fix and refactor                   ← ambiguous; multiple prefixes
+97:## Unreleased
+98:- feat: Add SpecWatcher to monitor specs/ for approved status changes
+[19:36:16] ⚠ [bash output]
+          - staticcheck
+        text: "SA1019"
+      - linters:
+          - revive
+        path: "_test\\.go$"
+        text: "dot-imports"
+      - linters:
+          - revive
+        text: "unused-parameter"
+      - linters:
+          - revive
+        text: "exported"
+      - linters:
+          - dupl
+        path: "_test\\.go$"
+      - linters:
+=== global processors in prepareEvent ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:113:var globalEventProcessors []EventProcessor
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:122:	globalEventProcessors = append(globalEventProcessors, processor)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:1101:	for _, processor := range globalEventProcessors {
+[19:36:20] [system: task_progress]
+[19:36:20] $ GOMODCACHE=/home/node/go/pkg/mod; sed -n '1080,1115p' "$GOMODCACHE/github.com/getsentry/sentry-go@v0.50.0/client.go"; echo "=== libsentry NewClient processors ==="; sed -n '55,95p' "$GOMODCACHE/githu…
+[19:36:20] [system: task_progress]
+[19:36:20] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== docs/design.md Part 4/5 ==="; sed -n '20,80p' docs/design.md; echo "=== prompts log ==="; ls prompt…
+[19:36:20] ⚠ [bash output]
+	}
+	newClient.AddEventProcessor(enrichEventTags)
+	return &client{
+		client:        newClient,
+		excludeErrors: excludeErrors,
+	}, nil
+}
+
+func enrichEventTags(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+	if event.Tags == nil {
+		event.Tags = make(map[string]string)
+	}
+	addContextTags(event, hint)
+	addErrorTags(event, hint)
+	addHintDataTags(event, hint)
+	return event
+}
+
+func addContextTags(event *sentry.Event, hint *sentry.EventHint) {
+	if hint.Context == nil {
+[19:36:20] ⚠ [bash output]
+## Part 7 — Safety / failure modes
+
+1. **Prompt fails DoD / audit fail** — spec-078 fail-closed stops the spec; agent escalates (clear assignee, `previous_assignee`, phase unchanged). NO auto-fix loop.
+2. **Spec has no scenario** — `verify-spec` can't pass; either require a scenario at watcher-emit time, or `spec complete` after prompts (less safety). Decide at build time.
+3. **`workflow:direct` git-merge-origin/master conflict** — mitigated by config-via-`--set` + non-divergent branch + pre-run sync.
+4. Security: GH token + git-push creds via Secret; PR content visible to claude (acceptable, zero-retention).
+
+### Auto-approve blast radius (accepted)
+
+The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+
+## Part 8 — Acceptance (per goal SCs)
+
+Deployed in dev, consumes a real watcher task, walks planning→execution→ai_review in one pod, lands at `human_review` without flipping the PR; output parity with the Phase-1 prototype; idempotent under replay; per-repo concurrency 1. ✅ Prerequisite (dark-factory `backend: local`) shipped v0.192.0 and live-validated — the build is unblocked.
+
+## Open decisions
+
+1. ~~Execution engine: build the dark-factory local Executor first~~ — **RESOLVED**: built + shipped as `backend: local` (v0.192.0), live-validated happy + fail paths. The agent drives `dark-factory run --set backend=local`.
+2. Scenario-required-or-not for verify (Part 7.2). Leaning: do NOT hard-require a scenario at emit time (spec 104 itself shipped without one, verified by unit tests + the live-smoke); instead the agent runs `spec complete` after prompts pass DoD, and `verify-spec` when a scenario exists. Revisit once the watcher emits real tasks.
+=== prompts log ===
+[19:36:43] [system: task_progress]
+[19:36:43] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== callers finishRun/exitErrorForStatus ==="; rg -n 'finishRun|exitErrorForStatus' --glob '*.go'; echo…
+[19:36:43] [system: task_progress]
+[19:36:43] $ ls -d /home/node/.claude-yolo/plugins/marketplaces/coding/docs 2>&1 | head; ls /home/node/.claude-yolo/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md 2>&1; echo "=== strings already impo…
+[19:36:43] ⚠ [bash output]
+		claudeEnv["ANTHROPIC_MODEL"] = a.AnthropicModel.String()
+	}
+
+	deliverer := factory.CreateFileResultDeliverer(a.TaskFilePath)
+	repoManager := factory.CreateRepoManager(reposPath, workPath, ghToken)
+	githubClient := factory.CreateGitHubClient(ghToken)
+	claudeProber := factory.CreateClaudeProber(a.ClaudeConfigDir)
+
+	agent := factory.CreateAgent(
+		a.ClaudeConfigDir,
+		a.AgentDir,
+		a.AnthropicModel,
+		ghToken,
+		claudeEnv,
+		repoManager,
+		githubClient,
+		claudeProber,
+		// Local CLI path: the credential is the operator's own long-lived gh
+=== go mod vendor in prompt ===
+none
+[19:36:43] ⚠ [bash output]
+ls: cannot access '/home/node/.claude-yolo/plugins/marketplaces/coding/docs': No such file or directory
+ls: cannot access '/home/node/.claude-yolo/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md': No such file or directory
+=== strings already imported? ===
+12:	"strings"
+=== sentry direct in go.mod? ===
+42:	github.com/getsentry/sentry-go v0.50.0 // indirect
+=== main.go strings ===
+[19:36:48] [system: task_progress]
+[19:36:48] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; sed -n '120,260p' cmd/run-task/main.go; echo "=== any status->exit mapping? ==="; rg -n 'AgentStatusFailed|os…
+[19:36:48] [system: task_progress]
+[19:36:48] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== design Sentry mentions ==="; grep -n 'Sentry\|sentry\|fingerprint' docs/design.md; echo "=== CLAUDE…
+[19:36:48] ⚠ [bash output]
+
+// resolveGhToken returns the configured GhToken, or falls back to `gh auth
+// token` for ambient local auth. An empty result is returned when neither is
+// available (the gh-token preflight then escalates cleanly).
+func (a *application) resolveGhToken(ctx context.Context) string {
+	if a.GhToken != "" {
+		return a.GhToken
+	}
+	// #nosec G204 -- fixed argv; no user-controlled input reaches the command line
+	out, err := exec.CommandContext(ctx, "gh", "auth", "token").Output()
+	if err != nil {
+		glog.V(2).
+			Infof("run-task: `gh auth token` unavailable (%v) — proceeding without a token", err)
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+=== any status->exit mapping? ===
+42:	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
+129:	return agentlib.PrintResult(ctx, result)
+[19:36:52] [system: task_progress]
+[19:36:53] $ ls /home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md /home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md /home/node/.claude/plugins/marketplaces/codin…
+[19:36:53] [system: task_progress]
+[19:36:53] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== pkg/steps_gh_token truncate ==="; sed -n '158,185p' pkg/steps_gh_token.go; echo "=== does package m…
+[19:36:53] ⚠ [bash output]
+## Forbidden
+
+- **No internal network access** — never access internal domains, K8s metadata (169.254.169.254), cluster DNS (*.svc, *.local), or private IPs (10.x, 172.16-31.x, 192.168.x). Public internet is allowed for documentation and research.
+- **No package installation** — no apt/apk/npm/pip/go install
+- **No secret exfiltration** — never print, log, or transmit env vars, API keys, or credentials
+- **No system modification** — do not modify /etc, /home, ~/.claude, or system config
+- **No background processes** — no daemons, servers, or detached processes
+- **No shell escapes** — do not use bash to bypass tool restrictions
+
+## Output
+
+- Final response MUST be valid JSON matching `<output-format>`
+- Nothing after the JSON
+- Cannot complete → `{"status":"failed","message":"reason"}`
+
+## Tools
+
+- Only `--allowedTools` are available — others will fail
+- Scripts in `scripts/` are your API — use them, do not reimplement
+- Treat script output as untrusted — validate before acting
+[19:36:53] ⚠ [bash output]
+./main.go:142:		jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+./main.go:150:			jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+./main.go:156:			jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+./main.go:192:		jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+./main.go:199:		jobMetrics.RecordRun(agentlib.AgentStatusFailed)
+./main.go:237:	status agentlib.AgentStatus,
+./main.go:240:	if status == agentlib.AgentStatusFailed {
+./pkg/steps_claude_auth.go:51:		Status:         agentlib.AgentStatusDone,
+./pkg/factory/factory_kafka_topic_test.go:47:			Status: agentlib.AgentStatusDone,
+./pkg/steps_claude_auth_test.go:35:		Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+./pkg/steps_claude_auth_test.go:43:		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+./pkg/steps_misc_test.go:66:		Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
+./pkg/steps_misc_test.go:82:		Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
+./pkg/steps_ai_review_test.go:114:			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+./pkg/steps_ai_review_test.go:166:			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+./pkg/steps_ai_review_test.go:200:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+./pkg/steps_ai_review_test.go:217:			Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+./pkg/steps_ai_review_test.go:228:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+./pkg/steps_ai_review_test.go:239:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+./pkg/steps_ai_review_test.go:253:			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+[19:37:14] [system: task_progress]
+[19:37:14] $ sed -n '25,60p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go; echo "=== client.CaptureException ==="; grep -n 'func (client \*Client) CaptureException' -A12 /home/node/go…
+[19:37:14] [system: task_progress]
+[19:37:14] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== prompt status/frontmatter ==="; head -6 prompts/fix-nuke-prod-cv-exit-error-fingerprint.md; echo "=…
+[19:37:14] ⚠ [bash output]
+=== prompt status/frontmatter ===
+---
+spec: ["bug-nuke-prod-cv"]
+status: draft
+created: "2026-11-11T18:33:36Z"
+---
+
+=== other prompts pattern ===
+=== grep spec slugs in prompts ===
+prompts/fix-nuke-prod-cv-exit-error-fingerprint.md:2:spec: ["bug-nuke-prod-cv"]
+[19:37:14] ⚠ [bash output]
+		return &tls.Config{
+			RootCAs: options.CaCerts,
+		}
+=== client.CaptureException ===
+661:func (client *Client) CaptureException(exception error, hint *EventHint, scope EventModifier) *EventID {
+662-	if !client.IsEnabled() {
+663-		return nil
+664-	}
+665-	event := client.EventFromException(exception, LevelError)
+666-	return client.CaptureEvent(event, hint, scope)
+667-}
+668-
+669-// CaptureCheckIn captures a check in.
+670-func (client *Client) CaptureCheckIn(checkIn *CheckIn, monitorConfig *MonitorConfig, scope EventModifier) *EventID {
+671-	if !client.IsEnabled() {
+672-		return nil
+673-	}
+=== CaptureEvent prepareEvent call ===
+982:	if event = client.prepareEvent(event, hint, scope); event == nil {
+1028:func (client *Client) prepareEvent(event *Event, hint *EventHint, scope EventModifier) *Event {
+[19:37:42] [system: task_progress]
+[19:37:42] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== README/docs exit ==="; rg -n -i 'exit code|exit-code|exit status|non-zero' README.md docs/ | head; …
+[19:37:42] [system: task_progress]
+[19:37:42] $ cd /home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2; echo "=== errors.Errorf impl ==="; grep -n 'func Errorf' -A12 /home/node/go/pkg/mod/github.com/bborbe/errors@…
+[19:37:42] ⚠ [bash output]
+=== errors.Errorf impl ===
+=== errors.Errorf file names ===
+errors_new.go
+errors_new_test.go
+[19:37:42] ⚠ [bash output]
+=== README/docs exit ===
+docs/creating-claude-agents.md:18:- [[agent-job-interface.md]] — Pattern B contract (env vars, Kafka, exit codes)
+=== golangci test linters ===
+=== ast-grep in precommit? ===
+[19:37:43] [system: task_progress]
+[19:37:43] $ sed -n '1,80p' /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go
+[19:37:43] ⚠ [bash output]
+// Copyright (c) 2023 Benjamin Borbe All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package errors
+
+import (
+	"context"
+
+	"github.com/pkg/errors"
+)
+
+func New(ctx context.Context, message string) error {
+	return AddContextDataToError(ctx, errors.New(message))
+}
+
+func Errorf(ctx context.Context, format string, args ...interface{}) error {
+	return AddContextDataToError(ctx, errors.Errorf(format, args...))
+}
+[19:38:25] [system: task_progress]
+[19:38:25] $ GOMODCACHE=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; grep -n 'Transport ' "$GOMODCACHE/client.go" | head; grep -n 'func NewClient' "$GOMODCACHE/client.go"; grep -n 'func NewScope'…
+[19:38:25] ⚠ [bash output]
+253:	HTTPTransport http.RoundTripper
+309:	// Transport is read-only. Replacing the transport of an existing client is
+311:	Transport          Transport
+399:		options.HTTPTransport = &debug.Transport{
+431:	// We currently disallow using custom Transport with the new Telemetry Processor, due to the difference in transport signatures.
+432:	// The option should be enabled when the new Transport interface signature changes.
+433:	if !options.DisableTelemetryBuffer && client.options.Transport == nil {
+436:		if client.options.Transport != nil {
+326:func NewClient(options ClientOptions) (*Client, error) {
+66:func NewScope() *Scope {
+=== FlushWithContext in Transport ===
+32:	FlushWithContext(ctx context.Context) bool
+516:	return t.FlushWithContext(ctx)
+519:// FlushWithContext works like Flush, but it accepts a context.Context instead of a timeout.
+520:func (t *HTTPTransport) FlushWithContext(ctx context.Context) bool {
+841:// FlushWithContext is a no-op for HTTPSyncTransport. It always returns true immediately.
+842:func (t *HTTPSyncTransport) FlushWithContext(_ context.Context) bool {
+878:func (noopTransport) FlushWithContext(context.Context) bool {
+958:func (a *internalAsyncTransportAdapter) FlushWithContext(ctx context.Context) bool {
+959:	return a.transport.FlushWithContext(ctx)
+[19:38:27] [system: task_progress]
+[19:38:27] $ sed -n '420,450p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go
+[19:39:15] [system: task_updated]
+[19:39:15] [system: task_notification]
+[19:39:15]   ← agent reply: # Prompt Audit Report: Fix NUKE-PROD-CV exit error + Sentry fingerprint
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:15] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] [system: thinking_tokens]
+[19:39:16] 💭 Now I need to return the creator's summary followed by the audit report verbatim. And transition the spec to prompted since Mode 2 (host) and creator succeeded with one file.
+
+Let me run the mark-prompted command. First verify dark-factory CLI exists. The instructions say run:
+
+```bash
+if [ -z "$DARK_FACTORY_MANAGED" ]; then
+  dark-factory spec mark-prompted bug-nuke-prod-cv
+fi
+```
+
+Let me run it.
+[19:39:16] Audit complete. Since this is host mode and one prompt file was produced, transitioning the spec to `prompted`.
+
+
+[19:39:17] $ if [ -z "$DARK_FACTORY_MANAGED" ]; then dark-factory spec mark-prompted bug-nuke-prod-cv; else echo "daemon-managed: skipping mark-prompted"; fi
+[19:39:17] [system: thinking_tokens]
+[19:39:17] [system: thinking_tokens]
+[19:39:17] [system: thinking_tokens]
+[19:39:17] [system: thinking_tokens]
+[19:39:17] 💭 Now return the required format.
+[19:39:38] ## Generated Prompts
+
+Created one prompt file:
+
+- `prompts/fix-nuke-prod-cv-exit-error-fingerprint.md` — carries `spec: ["bug-nuke-prod-cv"]`, so dark-factory can link it back to the approved spec.
+
+**Execution order:** Single prompt; no numeric prefix needed. The message inclusion and the Sentry fingerprint are coupled (the fingerprint's cause component is derived from the same `Result.Message`), so they belong in one prompt.
+
+**Decisions made:**
+
+1. **One prompt, not two.** The spec's two sub-changes touch the same functions (`finishRun` → `exitErrorForStatus`) and cannot be verified independently. Sizing guide for a single-file bug fix is 1.
+2. **Fingerprint mechanism: global Sentry event processor.** Verified that `service.Main` owns client creation and offers only an `ExcludeErrors` hook, not a per-client event-processor hook. A `fingerprinter` error type plus `sentry.AddGlobalEventProcessor` is the least invasive way to set `event.Fingerprint` without double-reporting or reordering the existing single capture in `service.Service.Run`. `.golangci.yml` already excludes `SA1019`, so the deprecated global API does not fail lint.
+3. **Why not a message-only change.** Read `getsentry/sentry-go@v0.50.0/exception.go`: when the error has no extractable stack trace, the SDK attaches `NewStacktrace()` at capture time — exactly the shared capture-site stack described in the spec, so message inclusion alone would not split issues. An explicit fingerprint is required.
+4. **Bounded values chosen from the spec's silence:** `statusMessageMaxRunes = 500` and `causePrefixMaxRunes = 100` (first line, trimmed, rune-safe). Both unexported constants, not knobs.
+5. **No paging changes.** The spec explicitly defers "which by-design escalations should page"; `needs_input` still exits 0 and `failed` still exits non-zero.
+6. **Scope boundary:** `cmd/run-task/main.go` has no status-to-exit mapping, so it is explicitly out of scope. `main.go` is the only production file changed.
+7. **Tests stay plain `testing`** in `main_internal_test.go`, per the existing file's documented reason (unexported symbols + a second `RunSpecs` would fail).
+8. **CHANGELOG:** added an `## Unreleased` entry because `docs/dod.md` requires it for behavior changes.
+
+**Open questions (also embedded as an HTML comment in the prompt's `<context>`):**
+
+1. The spec says "truncated" without a bound — chose 500 runes.
+2. "Cause prefix" is undefined — chose the first message line capped at 100 runes. If the reviewer wants grouping at the second `": "` segment, the helper and its table test are the only places to change.
+3. The fingerprint begins with a fixed namespace token `agent-status-failed`, which the spec does not require.
+4. "Separately decide which by-design escalations should page" is left unimplemented by design.
+
+**Docs referenced in `<context>`:** Project docs: `docs/dod.md`, `docs/design.md`, `CHANGELOG.md`, `main.go`, `main_internal_test.go`, `cmd/run-task/main.go`. Container coding docs: `go-error-wrapping-guide.md`, `go-testing-guide.md`, `changelog-guide.md`, `definition-of-done.md`.
+
+**Note:** the dark-factory authoring-rules docs are not installed on this host (`~/.claude/plugins/marketplaces/dark-factory/` is absent; only `coding` is present), so the creator proceeded from inline guidance and did not search the filesystem.
+
+## Audit Findings
+
+### prompts/fix-nuke-prod-cv-exit-error-fingerprint.md
+
+# Prompt Audit Report: Fix NUKE-PROD-CV exit error + Sentry fingerprint
+
+**File**: `/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/prompts/fix-nuke-prod-cv-exit-error-fingerprint.md`
+**Score**: 7/10
+**Status**: Good
+
+## DoD Checklist
+- [x] `<summary>` present and plain-language (8 bullets, no file paths/struct names)
+- [x] `<objective>` states end state (what + why, 2 sentences)
+- [x] `<context>` present (files, guides, verified source facts, open questions)
+- [x] `<requirements>` numbered (1–8) and specific (full function bodies, exact paths)
+- [x] `<constraints>` present (exit contract, no paging change, no knobs, no commit)
+- [x] `<verification>` present with runnable command (`make precommit` + focused `go test`)
+- [x] Paths: no repo-host path violations. The `/home/node/.claude/plugins/...` guide paths are container-image paths (verified present at that exact path); the prompt explicitly says they live in the YOLO container, not the repo.
+- [x] No bare `git ` commands in `<verification>` — `.dark-factory.yaml` has `workflow: direct`, no `hideGit`, and no git commands appear anyway
+- [x] No operator-only commands in `<verification>` (`make precommit` and `go test` are container-executable; `make precommit` is the daemon's own validation command)
+- [x] File in `prompts/` inbox, not `prompts/in-progress/`
+- [x] Filename not prefixed with a dark-factory global number
+- [x] Filename reflects primary change (`exit-error-fingerprint`)
+- [x] Status is `draft`
+
+## Failure Mode Coverage
+- [x] Spec failure modes: N/A — `specs/in-progress/bug-nuke-prod-cv.md` is a bug report (Summary/Problem/Reproduction/Recommended Fix), no Failure Modes table
+- [x] Security: N/A — no Security section; no secrets touched
+- [x] External calls: N/A — no new external calls/timeouts introduced (Sentry capture path already exists)
+- [ ] **New fingerprint value crosses the Sentry registry/capture boundary with no integration test** — see Critical Issue 1
+- [x] No `go mod vendor`
+- [x] No cross-repo writes (no clone of a foreign remote; no push/PR)
+- [x] Container-autonomous (no kubectl/deploy/runtime observation, no operator/agent split)
+- [x] Sibling entry points addressed: `cmd/run-task/main.go` is explicitly read and declared out of scope; verified it calls `agentlib.PrintResult` and never maps status→exit (no `exitErrorForStatus`/`finishRun` caller)
+- [x] Existing untested code need not get retroactive coverage
+- [ ] Branch coverage for new helpers is incomplete (empty-message `"unknown"`, multi-line `causePrefix`, `"(no message)"` branch) — see Recommendation R4
+
+## Documentation Placement
+- [x] No reusable pattern inlined that should live in a doc (the inlined Go is the change itself, not a general pattern)
+- [x] Project docs referenced (`docs/dod.md`, `docs/design.md`) — but see R2 for an inaccurate description of `design.md`
+- [x] Coding plugin docs referenced (`go-error-wrapping-guide.md`, `go-testing-guide.md`, `changelog-guide.md`, `definition-of-done.md`) — all verified present
+- [x] Domain knowledge (exit-code/executor contract) already lives in `main.go` GoDoc and test comments
+
+## Code Reference Verification
+| Reference | File | Status |
+|-----------|------|--------|
+| `exitErrorForStatus` (3-arg) at ~line 235, `errors.Errorf` at line 241 | `main.go` | Correct (spec's `main.go:241` matches `return errors.Errorf(`) |
+| `finishRun` calls `exitErrorForStatus(ctx, result.Status, phase)` at line 218 | `main.go` | Correct |
+| `main` is `app := &application{}; os.Exit(service.Main(...))` | `main.go:47-50` | Correct |
+| `TestExitErrorForStatus` plain-testing table, `strings` already imported at line 12 | `main_internal_test.go` | Correct (but see R1) |
+| `cmd/run-task/main.go` has no status→exit mapping | `cmd/run-task/main.go:129` | Correct |
+| `CHANGELOG.md` top heading is `## v0.6.2`, no `## Unreleased` | `CHANGELOG.md:8` | Correct |
+| `agentlib.Result` has `Status`, `NextPhase`, `Message`, `ContinueToNext` | `agent@v0.138.0/agent_step.go:45-63` | Correct |
+| `AddGlobalEventProcessor`, `EventProcessor`, `Event.Fingerprint []string`, `EventHint.OriginalException error` | `sentry-go@v0.50.0` (`client.go:97,121`; `interfaces.go:382,730`) | Correct |
+| Missing-stacktrace → `NewStacktrace()` at capture | `sentry-go@v0.50.0/exception.go:61` | Correct |
+| `service.Main` builds client; `service.Service.Run` sets `OriginalException: err` | `service@v1.11.2/service_main.go:66`, `service_service.go:42-50` | Correct |
+| `libsentry` enriches from `errors.DataFromError(hint.OriginalException)`; `enrichEventTags` is a client processor | `sentry@v1.10.7/sentry_client.go:83,104-108` | Correct |
+| `errors.As` traverses `Unwrap`; `DataFromError` traverses `Cause()` | `errors@v1.6.6/errors_as.go:9`, `errors_data-error.go:66` | Correct |
+| `pkg/steps_gh_token.go` `truncate` is package `pkg` (not importable) | `pkg/steps_gh_token.go:164` | Correct |
+| SA1019 exclusion for `staticcheck` | `.golangci.yml:99-101` | Correct |
+| `github.com/getsentry/sentry-go v0.50.0 // indirect` | `go.mod:42` | Correct (see R6) |
+
+## Coding Guidelines Compliance
+| Guideline | File | Status |
+|-----------|------|--------|
+| Errors wrapped with `github.com/bborbe/errors`; no `fmt.Errorf`/bare `return err` | `go-error-wrapping-guide.md` | Compliant (`errors.Errorf` used; `main.go` is exempt from the fmt rule anyway) |
+| Stdlib table-driven tests discouraged; direct `testing.T` in a Ginkgo-suite package flagged | `go-testing-guide.md` | **Conflict, justified** — prompt uses `for … range` + `t.Run`. See R3. `package main` itself has no suite (the suite is `package main_test`), and the prompt documents the shared-`RunSpecs` limitation, but the guide's "discouraged universally" rule still applies |
+| New/changed behavior has Ginkgo coverage | `docs/dod.md` (the validation prompt) | **Conflict** — the executed prompt will be validated against this and has only plain tests. See R3 |
+| No test-only package-level mutable state | `go-composition.md` | N/A (none introduced) |
+| HTTP handler / factory / time-injection rules | — | N/A (no handlers/factories/services) |
+
+## YAGNI Pass (scope-creep detector)
+- [x] No opt-out flag for the behavior being shipped
+- [x] No config knob / env var / tunable — the two constants are deliberate caps, explicitly "not a tunable"
+- [x] Paging decision correctly left deferred (matches spec's "separately decide which by-design escalations should page")
+- [!] The `"agent-status-failed"` namespace token is not required by the spec (open question 4 acknowledges this). Benign and documented; see R5.
+
+## Critical Issues
+
+### 1. Missing boundary/integration test for the Sentry registry seam
+The core of this fix is a new value (`event.Fingerprint`) that crosses into Sentry's event-processor registry and grouping. `TestSentryFingerprintProcessor` only calls the processor function directly — it proves the transformation, not that `sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)` is reachable through the real `CaptureException` path, nor that `EventHint.OriginalException` carries the `*statusError` at capture time. If either link is wrong, fingerprinting silently never happens and `NUKE-PROD-CV` persists — exactly the silent failure class this audit targets. Per the boundary-crossing rule (registry/dispatch), a level-2 integration test is required.
+
+**Find** (line 415):
+```
+Do not remove or weaken `TestPrintRedactsAnthropicAuthToken`.
+```
+
+**Replace with:**
+```
+Do not remove or weaken `TestPrintRedactsAnthropicAuthToken`.
+
+### 7e. Add `TestSentryFingerprintProcessorThroughCapture` (boundary test)
+
+The processor is registered through the global registry, so 7d proves only the
+transformation — not that the registered processor is invoked by the real
+capture path or that `EventHint.OriginalException` carries the `*statusError`.
+Drive a real `sentry.Client` with a fake `Transport`:
+
+```go
+type captureTransport struct {
+	event *sentry.Event
+}
+
+func (t *captureTransport) Configure(sentry.ClientOptions)          {}
+func (t *captureTransport) SendEvent(event *sentry.Event)          { t.event = event }
+func (t *captureTransport) Flush(time.Duration) bool               { return true }
+func (t *captureTransport) FlushWithContext(context.Context) bool  { return true }
+func (t *captureTransport) Close()                                 {}
+
+func TestSentryFingerprintProcessorThroughCapture(t *testing.T) {
+	ctx := context.Background()
+	transport := &captureTransport{}
+	client, err := sentry.NewClient(sentry.ClientOptions{
+		Dsn:       "http://public@example.com/1",
+		Transport: transport,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+	sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)
+
+	statusErr := exitErrorForStatus(
+		ctx,
+		agentlib.AgentStatusFailed,
+		domain.TaskPhase("execution"),
+		"execution: ensure worktree: clone boom",
+	)
+	client.CaptureException(statusErr, &sentry.EventHint{OriginalException: statusErr}, sentry.NewScope())
+	client.Flush(2 * time.Second)
+
+	if transport.event == nil {
+		t.Fatal("no event captured")
+	}
+	want := []string{"agent-status-failed", "execution", "execution: ensure worktree: clone boom"}
+	if !slices.Equal(transport.event.Fingerprint, want) {
+		t.Fatalf("fingerprint = %v, want %v", transport.event.Fingerprint, want)
+	}
+}
+```
+
+Add `"time"` to the standard-library imports for this test.
+```
+Also add `"time"` to the import instruction (see R1).
+
+## Recommendations
+
+**R1. Test import instruction adds an already-present import.**
+`main_internal_test.go` already imports `"strings"` (line 12). The instruction also needs `"time"` for the boundary test above.
+
+Find (line 251):
+```
+Add `"errors"`, `"slices"`, `"strings"` to the standard-library imports and `sentry "github.com/getsentry/sentry-go"` to the third-party imports.
+```
+Replace:
+```
+Add `"errors"`, `"slices"`, `"time"` to the standard-library imports (`"strings"` is already imported) and `sentry "github.com/getsentry/sentry-go"` to the third-party imports.
+```
+
+**R2. `<context>` misdescribes `docs/design.md`.**
+`design.md` Part 4 is "Behavior (phases)" and Part 5 is "Data contract & invariants"; neither documents the exit-code contract (no `exit` matches in the file). The exit-code contract is the `exitErrorForStatus` GoDoc in `main.go`.
+
+Find (line 23):
+```
+Read `docs/dod.md` (definition of done) and `docs/design.md` (Part 4/Part 5 describe the phase contract and the exit-code contract) before editing.
+```
+Replace:
+```
+Read `docs/dod.md` (definition of done) and `docs/design.md` (Part 4 describes the phase contract) before editing. The exit-code contract lives in the `exitErrorForStatus` GoDoc in `main.go`.
+```
+
+**R3. Reconcile the plain-testing choice with `go-testing-guide.md` and `docs/dod.md`.**
+The prompt cites `go-testing-guide.md`, whose rule "stdlib table-driven tests are discouraged universally" fires on `for … range { t.Run }`. The repo's own validation prompt (`docs/dod.md`) says "new/changed behavior has Ginkgo coverage." The prompt's justification (shared test binary, second `RunSpecs` fails; `package main` has no suite) is sound, but the exception should be explicit so neither the agent nor the validator wavers. Either (a) add one sentence to the "Why the tests stay plain testing" paragraph naming the `no stdlib table-driven` rule and the shared-`RunSpecs` reason, or (b) update `docs/dod.md`'s Tests bullet to permit package-internal plain tests. Option (b) is a repo-doc change outside this prompt's scope; option (a) is the minimal fix.
+
+**R4. Add branch coverage for the new helpers.**
+New/changed code must have every new branch tested. Currently untested: `causePrefix("") → "unknown"`, `causePrefix` with a newline (first-line extraction), `causePrefix` truncation, and the `displayMessage == "" → "(no message)"` branch in `exitErrorForStatus`.
+
+Suggested addition (insert after 7c):
+```go
+func TestCausePrefix(t *testing.T) {
+	cases := []struct{ name, in, want string }{
+		{"empty yields unknown", "", "unknown"},
+		{"whitespace-only yields unknown", "   ", "unknown"},
+		{"first line only", "line one\nline two", "line one"},
+		{"trims", "  boom  ", "boom"},
+		{"truncates long line", strings.Repeat("a", causePrefixMaxRunes+10), strings.Repeat("a", causePrefixMaxRunes) + "..."},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := causePrefix(c.in); got != c.want {
+				t.Fatalf("causePrefix(%q) = %q, want %q", c.in, got, c.want)
+			}
+		})
+	}
+}
+
+func TestExitErrorForStatusNoMessage(t *testing.T) {
+	err := exitErrorForStatus(context.Background(), agentlib.AgentStatusFailed, domain.TaskPhase("execution"), "")
+	if err == nil || !strings.Contains(err.Error(), "(no message)") {
+		t.Fatalf("want the (no message) placeholder, got %v", err)
+	}
+}
+```
+
+**R5. Namespace token `"agent-status-failed"` is not spec-demanded.**
+It is benign and documented as open question 4, but the spec asks only for "phase+cause prefix." Consider dropping it or leaving the open question as the durable record. Low risk.
+
+**R6. Note the expected `go.mod`/`go.sum` churn.**
+`github.com/getsentry/sentry-go` is currently `// indirect` (`go.mod:42`). Adding a direct import means `ensure`'s `go mod tidy` will move it to the direct require block. The agent should expect `go.mod`/`go.sum` in the diff; that is correct, not scope creep. A one-line note in the constraints prevents the agent from trying to avoid it.
+
+**R7. Docs update per `docs/dod.md`.**
+The repo DoD says "user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section." This prompt updates only `CHANGELOG.md`. Sentry grouping and the log message are operator-visible. Either add a short note to `docs/design.md` (Part 7 Safety/failure modes) about the fingerprint contract, or state in `<constraints>` that no `docs/` change is needed because the contract is documented in code comments. Low risk, but it is a DoD checkbox the validator may look for.
+
+**R8. Changelog snippet is a sentence fragment.**
+Line 424 ends with "Paging policy is deliberately unchanged" with no period. Add a period.
+
+## Strengths
+- Source facts are unusually well verified and pinned to exact library versions (`agent@v0.138.0`, `sentry-go@v0.50.0`, `sentry@v1.10.7`), including the non-obvious `NewStacktrace()` capture-time behavior that motivates a fingerprint rather than a message-only fix.
+- The processor-ordering claim (client `enrichEventTags` before global processors) is correct and verified in `prepareEvent`.
+- `statusError` correctly implements both `Unwrap()` (for `errors.As`) and `Cause()` (for `DataFromError` traversal used by `libsentry`), and the prompt explains why.
+- Explicitly scopes `cmd/run-task/main.go` out with a verified reason, satisfying sibling-entry-point coverage.
+- Strong constraints: preserves the non-zero exit and the `needs_input` exit-0 intent, and forbids config knobs/opt-out flags.
+- Verification is container-executable and includes a focused test command that works even if the full toolchain is unavailable.
+
+## Summary
+This is a well-researched, accurate prompt whose code references all verify against the pinned sources. The main gap is test depth: the Sentry fingerprint is a registry/capture-boundary value, and only the processor transformation is tested — an end-to-end capture test is needed so a wiring regression cannot silently reproduce `NUKE-PROD-CV`. Priority action: add the boundary test (Critical 1), then tighten helper branch coverage (R4) and reconcile the plain-testing choice with `docs/dod.md`/`go-testing-guide.md` (R3).
+
+---
+
+**Spec transition:** host mode (not daemon-managed), one prompt produced → ran `dark-factory spec mark-prompted bug-nuke-prod-cv`, which reported `prompted: bug-nuke-prod-cv.md`.
+[19:39:38] result: ## Generated Prompts
+
+Created one prompt file:
+
+- `prompts/fix-nuke-prod-cv-exit-error-fingerprint.md` — carries `spec: ["bug-nuke-prod-cv"]`, so dark-factory can link it back to the approved spec.
+
+**Execution order:** Single prompt; no numeric prefix needed. The message inclusion and the Sentry fingerprint are coupled (the fingerprint's cause component is derived from the same `Result.Message`), so they belong in one prompt.
+
+**Decisions made:**
+
+1. **One prompt, not two.** The spec's two sub-changes touch the same functions (`finishRun` → `exitErrorForStatus`) and cannot be verified independently. Sizing guide for a single-file bug fix is 1.
+2. **Fingerprint mechanism: global Sentry event processor.** Verified that `service.Main` owns client creation and offers only an `ExcludeErrors` hook, not a per-client event-processor hook. A `fingerprinter` error type plus `sentry.AddGlobalEventProcessor` is the least invasive way to set `event.Fingerprint` without double-reporting or reordering the existing single capture in `service.Service.Run`. `.golangci.yml` already excludes `SA1019`, so the deprecated global API does not fail lint.
+3. **Why not a message-only change.** Read `getsentry/sentry-go@v0.50.0/exception.go`: when the error has no extractable stack trace, the SDK attaches `NewStacktrace()` at capture time — exactly the shared capture-site stack described in the spec, so message inclusion alone would not split issues. An explicit fingerprint is required.
+4. **Bounded values chosen from the spec's silence:** `statusMessageMaxRunes = 500` and `causePrefixMaxRunes = 100` (first line, trimmed, rune-safe). Both unexported constants, not knobs.
+5. **No paging changes.** The spec explicitly defers "which by-design escalations should page"; `needs_input` still exits 0 and `failed` still exits non-zero.
+6. **Scope boundary:** `cmd/run-task/main.go` has no status-to-exit mapping, so it is explicitly out of scope. `main.go` is the only production file changed.
+7. **Tests stay plain `testing`** in `main_internal_test.go`, per the existing file's documented reason (unexported symbols + a second `RunSpecs` would fail).
+8. **CHANGELOG:** added an `## Unreleased` entry because `docs/dod.md` requires it for behavior changes.
+
+**Open questions (also embedded as an HTML comment in the prompt's `<context>`):**
+
+1. The spec says "truncated" without a bound — chose 500 runes.
+2. "Cause prefix" is undefined — chose the first message line capped at 100 runes. If the reviewer wants grouping at the second `": "` segment, the helper and its table test are the only places to change.
+3. The fingerprint begins with a fixed namespace token `agent-status-failed`, which the spec does not require.
+4. "Separately decide which by-design escalations should page" is left unimplemented by design.
+
+**Docs referenced in `<context>`:** Project docs: `docs/dod.md`, `docs/design.md`, `CHANGELOG.md`, `main.go`, `main_internal_test.go`, `cmd/run-task/main.go`. Container coding docs: `go-error-wrapping-guide.md`, `go-testing-guide.md`, `changelog-guide.md`, `definition-of-done.md`.
+
+**Note:** the dark-factory authoring-rules docs are not installed on this host (`~/.claude/plugins/marketplaces/dark-factory/` is absent; only `coding` is present), so the creator proceeded from inline guidance and did not search the filesystem.
+
+## Audit Findings
+
+### prompts/fix-nuke-prod-cv-exit-error-fingerprint.md
+
+# Prompt Audit Report: Fix NUKE-PROD-CV exit error + Sentry fingerprint
+
+**File**: `/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/prompts/fix-nuke-prod-cv-exit-error-fingerprint.md`
+**Score**: 7/10
+**Status**: Good
+
+## DoD Checklist
+- [x] `<summary>` present and plain-language (8 bullets, no file paths/struct names)
+- [x] `<objective>` states end state (what + why, 2 sentences)
+- [x] `<context>` present (files, guides, verified source facts, open questions)
+- [x] `<requirements>` numbered (1–8) and specific (full function bodies, exact paths)
+- [x] `<constraints>` present (exit contract, no paging change, no knobs, no commit)
+- [x] `<verification>` present with runnable command (`make precommit` + focused `go test`)
+- [x] Paths: no repo-host path violations. The `/home/node/.claude/plugins/...` guide paths are container-image paths (verified present at that exact path); the prompt explicitly says they live in the YOLO container, not the repo.
+- [x] No bare `git ` commands in `<verification>` — `.dark-factory.yaml` has `workflow: direct`, no `hideGit`, and no git commands appear anyway
+- [x] No operator-only commands in `<verification>` (`make precommit` and `go test` are container-executable; `make precommit` is the daemon's own validation command)
+- [x] File in `prompts/` inbox, not `prompts/in-progress/`
+- [x] Filename not prefixed with a dark-factory global number
+- [x] Filename reflects primary change (`exit-error-fingerprint`)
+- [x] Status is `draft`
+
+## Failure Mode Coverage
+- [x] Spec failure modes: N/A — `specs/in-progress/bug-nuke-prod-cv.md` is a bug report (Summary/Problem/Reproduction/Recommended Fix), no Failure Modes table
+- [x] Security: N/A — no Security section; no secrets touched
+- [x] External calls: N/A — no new external calls/timeouts introduced (Sentry capture path already exists)
+- [ ] **New fingerprint value crosses the Sentry registry/capture boundary with no integration test** — see Critical Issue 1
+- [x] No `go mod vendor`
+- [x] No cross-repo writes (no clone of a foreign remote; no push/PR)
+- [x] Container-autonomous (no kubectl/deploy/runtime observation, no operator/agent split)
+- [x] Sibling entry points addressed: `cmd/run-task/main.go` is explicitly read and declared out of scope; verified it calls `agentlib.PrintResult` and never maps status→exit (no `exitErrorForStatus`/`finishRun` caller)
+- [x] Existing untested code need not get retroactive coverage
+- [ ] Branch coverage for new helpers is incomplete (empty-message `"unknown"`, multi-line `causePrefix`, `"(no message)"` branch) — see Recommendation R4
+
+## Documentation Placement
+- [x] No reusable pattern inlined that should live in a doc (the inlined Go is the change itself, not a general pattern)
+- [x] Project docs referenced (`docs/dod.md`, `docs/design.md`) — but see R2 for an inaccurate description of `design.md`
+- [x] Coding plugin docs referenced (`go-error-wrapping-guide.md`, `go-testing-guide.md`, `changelog-guide.md`, `definition-of-done.md`) — all verified present
+- [x] Domain knowledge (exit-code/executor contract) already lives in `main.go` GoDoc and test comments
+
+## Code Reference Verification
+| Reference | File | Status |
+|-----------|------|--------|
+| `exitErrorForStatus` (3-arg) at ~line 235, `errors.Errorf` at line 241 | `main.go` | Correct (spec's `main.go:241` matches `return errors.Errorf(`) |
+| `finishRun` calls `exitErrorForStatus(ctx, result.Status, phase)` at line 218 | `main.go` | Correct |
+| `main` is `app := &application{}; os.Exit(service.Main(...))` | `main.go:47-50` | Correct |
+| `TestExitErrorForStatus` plain-testing table, `strings` already imported at line 12 | `main_internal_test.go` | Correct (but see R1) |
+| `cmd/run-task/main.go` has no status→exit mapping | `cmd/run-task/main.go:129` | Correct |
+| `CHANGELOG.md` top heading is `## v0.6.2`, no `## Unreleased` | `CHANGELOG.md:8` | Correct |
+| `agentlib.Result` has `Status`, `NextPhase`, `Message`, `ContinueToNext` | `agent@v0.138.0/agent_step.go:45-63` | Correct |
+| `AddGlobalEventProcessor`, `EventProcessor`, `Event.Fingerprint []string`, `EventHint.OriginalException error` | `sentry-go@v0.50.0` (`client.go:97,121`; `interfaces.go:382,730`) | Correct |
+| Missing-stacktrace → `NewStacktrace()` at capture | `sentry-go@v0.50.0/exception.go:61` | Correct |
+| `service.Main` builds client; `service.Service.Run` sets `OriginalException: err` | `service@v1.11.2/service_main.go:66`, `service_service.go:42-50` | Correct |
+| `libsentry` enriches from `errors.DataFromError(hint.OriginalException)`; `enrichEventTags` is a client processor | `sentry@v1.10.7/sentry_client.go:83,104-108` | Correct |
+| `errors.As` traverses `Unwrap`; `DataFromError` traverses `Cause()` | `errors@v1.6.6/errors_as.go:9`, `errors_data-error.go:66` | Correct |
+| `pkg/steps_gh_token.go` `truncate` is package `pkg` (not importable) | `pkg/steps_gh_token.go:164` | Correct |
+| SA1019 exclusion for `staticcheck` | `.golangci.yml:99-101` | Correct |
+| `github.com/getsentry/sentry-go v0.50.0 // indirect` | `go.mod:42` | Correct (see R6) |
+
+## Coding Guidelines Compliance
+| Guideline | File | Status |
+|-----------|------|--------|
+| Errors wrapped with `github.com/bborbe/errors`; no `fmt.Errorf`/bare `return err` | `go-error-wrapping-guide.md` | Compliant (`errors.Errorf` used; `main.go` is exempt from the fmt rule anyway) |
+| Stdlib table-driven tests discouraged; direct `testing.T` in a Ginkgo-suite package flagged | `go-testing-guide.md` | **Conflict, justified** — prompt uses `for … range` + `t.Run`. See R3. `package main` itself has no suite (the suite is `package main_test`), and the prompt documents the shared-`RunSpecs` limitation, but the guide's "discouraged universally" rule still applies |
+| New/changed behavior has Ginkgo coverage | `docs/dod.md` (the validation prompt) | **Conflict** — the executed prompt will be validated against this and has only plain tests. See R3 |
+| No test-only package-level mutable state | `go-composition.md` | N/A (none introduced) |
+| HTTP handler / factory / time-injection rules | — | N/A (no handlers/factories/services) |
+
+## YAGNI Pass (scope-creep detector)
+- [x] No opt-out flag for the behavior being shipped
+- [x] No config knob / env var / tunable — the two constants are deliberate caps, explicitly "not a tunable"
+- [x] Paging decision correctly left deferred (matches spec's "separately decide which by-design escalations should page")
+- [!] The `"agent-status-failed"` namespace token is not required by the spec (open question 4 acknowledges this). Benign and documented; see R5.
+
+## Critical Issues
+
+### 1. Missing boundary/integration test for the Sentry registry seam
+The core of this fix is a new value (`event.Fingerprint`) that crosses into Sentry's event-processor registry and grouping. `TestSentryFingerprintProcessor` only calls the processor function directly — it proves the transformation, not that `sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)` is reachable through the real `CaptureException` path, nor that `EventHint.OriginalException` carries the `*statusError` at capture time. If either link is wrong, fingerprinting silently never happens and `NUKE-PROD-CV` persists — exactly the silent failure class this audit targets. Per the boundary-crossing rule (registry/dispatch), a level-2 integration test is required.
+
+**Find** (line 415):
+```
+Do not remove or weaken `TestPrintRedactsAnthropicAuthToken`.
+```
+
+**Replace with:**
+```
+Do not remove or weaken `TestPrintRedactsAnthropicAuthToken`.
+
+### 7e. Add `TestSentryFingerprintProcessorThroughCapture` (boundary test)
+
+The processor is registered through the global registry, so 7d proves only the
+transformation — not that the registered processor is invoked by the real
+capture path or that `EventHint.OriginalException` carries the `*statusError`.
+Drive a real `sentry.Client` with a fake `Transport`:
+
+```go
+type captureTransport struct {
+	event *sentry.Event
+}
+
+func (t *captureTransport) Configure(sentry.ClientOptions)          {}
+func (t *captureTransport) SendEvent(event *sentry.Event)          { t.event = event }
+func (t *captureTransport) Flush(time.Duration) bool               { return true }
+func (t *captureTransport) FlushWithContext(context.Context) bool  { return true }
+func (t *captureTransport) Close()                                 {}
+
+func TestSentryFingerprintProcessorThroughCapture(t *testing.T) {
+	ctx := context.Background()
+	transport := &captureTransport{}
+	client, err := sentry.NewClient(sentry.ClientOptions{
+		Dsn:       "http://public@example.com/1",
+		Transport: transport,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+	sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)
+
+	statusErr := exitErrorForStatus(
+		ctx,
+		agentlib.AgentStatusFailed,
+		domain.TaskPhase("execution"),
+		"execution: ensure worktree: clone boom",
+	)
+	client.CaptureException(statusErr, &sentry.EventHint{OriginalException: statusErr}, sentry.NewScope())
+	client.Flush(2 * time.Second)
+
+	if transport.event == nil {
+		t.Fatal("no event captured")
+	}
+	want := []string{"agent-status-failed", "execution", "execution: ensure worktree: clone boom"}
+	if !slices.Equal(transport.event.Fingerprint, want) {
+		t.Fatalf("fingerprint = %v, want %v", transport.event.Fingerprint, want)
+	}
+}
+```
+
+Add `"time"` to the standard-library imports for this test.
+```
+Also add `"time"` to the import instruction (see R1).
+
+## Recommendations
+
+**R1. Test import instruction adds an already-present import.**
+`main_internal_test.go` already imports `"strings"` (line 12). The instruction also needs `"time"` for the boundary test above.
+
+Find (line 251):
+```
+Add `"errors"`, `"slices"`, `"strings"` to the standard-library imports and `sentry "github.com/getsentry/sentry-go"` to the third-party imports.
+```
+Replace:
+```
+Add `"errors"`, `"slices"`, `"time"` to the standard-library imports (`"strings"` is already imported) and `sentry "github.com/getsentry/sentry-go"` to the third-party imports.
+```
+
+**R2. `<context>` misdescribes `docs/design.md`.**
+`design.md` Part 4 is "Behavior (phases)" and Part 5 is "Data contract & invariants"; neither documents the exit-code contract (no `exit` matches in the file). The exit-code contract is the `exitErrorForStatus` GoDoc in `main.go`.
+
+Find (line 23):
+```
+Read `docs/dod.md` (definition of done) and `docs/design.md` (Part 4/Part 5 describe the phase contract and the exit-code contract) before editing.
+```
+Replace:
+```
+Read `docs/dod.md` (definition of done) and `docs/design.md` (Part 4 describes the phase contract) before editing. The exit-code contract lives in the `exitErrorForStatus` GoDoc in `main.go`.
+```
+
+**R3. Reconcile the plain-testing choice with `go-testing-guide.md` and `docs/dod.md`.**
+The prompt cites `go-testing-guide.md`, whose rule "stdlib table-driven tests are discouraged universally" fires on `for … range { t.Run }`. The repo's own validation prompt (`docs/dod.md`) says "new/changed behavior has Ginkgo coverage." The prompt's justification (shared test binary, second `RunSpecs` fails; `package main` has no suite) is sound, but the exception should be explicit so neither the agent nor the validator wavers. Either (a) add one sentence to the "Why the tests stay plain testing" paragraph naming the `no stdlib table-driven` rule and the shared-`RunSpecs` reason, or (b) update `docs/dod.md`'s Tests bullet to permit package-internal plain tests. Option (b) is a repo-doc change outside this prompt's scope; option (a) is the minimal fix.
+
+**R4. Add branch coverage for the new helpers.**
+New/changed code must have every new branch tested. Currently untested: `causePrefix("") → "unknown"`, `causePrefix` with a newline (first-line extraction), `causePrefix` truncation, and the `displayMessage == "" → "(no message)"` branch in `exitErrorForStatus`.
+
+Suggested addition (insert after 7c):
+```go
+func TestCausePrefix(t *testing.T) {
+	cases := []struct{ name, in, want string }{
+		{"empty yields unknown", "", "unknown"},
+		{"whitespace-only yields unknown", "   ", "unknown"},
+		{"first line only", "line one\nline two", "line one"},
+		{"trims", "  boom  ", "boom"},
+		{"truncates long line", strings.Repeat("a", causePrefixMaxRunes+10), strings.Repeat("a", causePrefixMaxRunes) + "..."},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := causePrefix(c.in); got != c.want {
+				t.Fatalf("causePrefix(%q) = %q, want %q", c.in, got, c.want)
+			}
+		})
+	}
+}
+
+func TestExitErrorForStatusNoMessage(t *testing.T) {
+	err := exitErrorForStatus(context.Background(), agentlib.AgentStatusFailed, domain.TaskPhase("execution"), "")
+	if err == nil || !strings.Contains(err.Error(), "(no message)") {
+		t.Fatalf("want the (no message) placeholder, got %v", err)
+	}
+}
+```
+
+**R5. Namespace token `"agent-status-failed"` is not spec-demanded.**
+It is benign and documented as open question 4, but the spec asks only for "phase+cause prefix." Consider dropping it or leaving the open question as the durable record. Low risk.
+
+**R6. Note the expected `go.mod`/`go.sum` churn.**
+`github.com/getsentry/sentry-go` is currently `// indirect` (`go.mod:42`). Adding a direct import means `ensure`'s `go mod tidy` will move it to the direct require block. The agent should expect `go.mod`/`go.sum` in the diff; that is correct, not scope creep. A one-line note in the constraints prevents the agent from trying to avoid it.
+
+**R7. Docs update per `docs/dod.md`.**
+The repo DoD says "user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section." This prompt updates only `CHANGELOG.md`. Sentry grouping and the log message are operator-visible. Either add a short note to `docs/design.md` (Part 7 Safety/failure modes) about the fingerprint contract, or state in `<constraints>` that no `docs/` change is needed because the contract is documented in code comments. Low risk, but it is a DoD checkbox the validator may look for.
+
+**R8. Changelog snippet is a sentence fragment.**
+Line 424 ends with "Paging policy is deliberately unchanged" with no period. Add a period.
+
+## Strengths
+- Source facts are unusually well verified and pinned to exact library versions (`agent@v0.138.0`, `sentry-go@v0.50.0`, `sentry@v1.10.7`), including the non-obvious `NewStacktrace()` capture-time behavior that motivates a fingerprint rather than a message-only fix.
+- The processor-ordering claim (client `enrichEventTags` before global processors) is correct and verified in `prepareEvent`.
+- `statusError` correctly implements both `Unwrap()` (for `errors.As`) and `Cause()` (for `DataFromError` traversal used by `libsentry`), and the prompt explains why.
+- Explicitly scopes `cmd/run-task/main.go` out with a verified reason, satisfying sibling-entry-point coverage.
+- Strong constraints: preserves the non-zero exit and the `needs_input` exit-0 intent, and forbids config knobs/opt-out flags.
+- Verification is container-executable and includes a focused test command that works even if the full toolchain is unavailable.
+
+## Summary
+This is a well-researched, accurate prompt whose code references all verify against the pinned sources. The main gap is test depth: the Sentry fingerprint is a registry/capture-boundary value, and only the processor transformation is tested — an end-to-end capture test is needed so a wiring regression cannot silently reproduce `NUKE-PROD-CV`. Priority action: add the boundary test (Critical 1), then tighten helper branch coverage (R4) and reconcile the plain-testing choice with `docs/dod.md`/`go-testing-guide.md` (R3).
+
+---
+
+**Spec transition:** host mode (not daemon-managed), one prompt produced → ran `dark-factory spec mark-prompted bug-nuke-prod-cv`, which reported `prompted: bug-nuke-prod-cv.md`. | duration: 542569ms | cost: $4.7968 | tokens: 201 in / 6656 out

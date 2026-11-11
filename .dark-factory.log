@@ -1,0 +1,40 @@
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="effective config" maxContainers=3 maxContainersSource=default containerImage=docker.io/bborbe/claude-yolo:v0.16.4 model=deepseek-v4-flash-max[1m] modelSource=arg workflow=direct workflowSource=project pr=false prSource=project autoRelease=false autoReleaseSource=project autoMerge=false autoMergeSource=project verificationGate=false validationCommand="make precommit" testCommand="make test" debounceMs=500 hideGit=true hideGitSource=arg autoApprovePrompts=true autoApprovePromptsSource=arg autoGeneratePrompts=true autoGeneratePromptsSource=arg dirtyFileThreshold=0 dirtyFileThresholdSource=default promptsInboxDir=prompts promptsInProgressDir=prompts/in-progress promptsCompletedDir=prompts/completed promptsLogDir=prompts/log preflightCommand="make precommit" preflightInterval=8h healthcheckEnabled=true healthcheckEnabledSource=default healthcheckInterval=8h healthcheckIntervalSource=default backend=local backendSource=arg envFromGlobal=[] envProjectOverrides=[] envProjectOnly=[]
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="watching for queued prompts" dir=prompts/in-progress
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="healthcheck gate disabled"
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="pipeline gate disabled"
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/prompts/in-progress
+time=2026-11-11T19:30:35.865+01:00 level=INFO msg="spec watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/specs/in-progress
+time=2026-11-11T19:30:35.866+01:00 level=INFO msg="processor started"
+time=2026-11-11T19:30:35.866+01:00 level=INFO msg="spec file created in in-progress, triggering generation" path=/home/node/.cache/github-dark-factory-agent/work/a1faf338-0c3f-515c-80ba-dc1a244d89a2/specs/in-progress/bug-nuke-prod-cv.md
+time=2026-11-11T19:30:40.866+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:31:45.869+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:32:50.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:33:50.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:34:55.868+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:36:00.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:37:00.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:38:00.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:39:00.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:39:35.866+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:39:39.063+01:00 level=INFO msg="auto-approve: auditing generated prompt" prompt=fix-nuke-prod-cv-exit-error-fingerprint.md
+time=2026-11-11T19:40:05.866+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:40:35.866+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:41:05.866+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:41:35.866+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:42:10.869+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:42:35.867+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:43:10.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:43:35.866+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:44:15.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:44:35.866+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:45:20.870+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T19:45:35.867+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T19:45:41.851+01:00 level=INFO msg="auto-approve: approved generated prompt" prompt=fix-nuke-prod-cv-exit-error-fingerprint.md
+time=2026-11-11T19:45:42.450+01:00 level=INFO msg="lock acquired" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint.md
+time=2026-11-11T19:45:42.451+01:00 level=INFO msg="found queued prompt" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint.md
+time=2026-11-11T19:45:42.452+01:00 level=INFO msg="executing prompt" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint spec_id=bug-nuke-prod-cv container="" workflow_type=direct title=001-fix-nuke-prod-cv-exit-error-fingerprint
+time=2026-11-11T19:45:42.452+01:00 level=INFO msg="syncing with remote default branch" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint spec_id=bug-nuke-prod-cv container="" workflow_type=direct
+time=2026-11-11T19:45:42.969+01:00 level=INFO msg="container assigned" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint spec_id=bug-nuke-prod-cv container="" workflow_type=direct container_old="" container=a1faf338-0c3f-515c-80ba-dc1a244d89a2-exec-001-fix-nuke-prod-cv-exit-error-fingerprint workflow_step=acquire_container
+time=2026-11-11T20:01:21.543+01:00 level=INFO msg="docker container exited" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=a1faf338-0c3f-515c-80ba-dc1a244d89a2-exec-001-fix-nuke-prod-cv-exit-error-fingerprint exit_code=0 workflow_step=run_claude
+time=2026-11-11T20:01:21.543+01:00 level=INFO msg="completion report" status=success summary="exitErrorForStatus now carries a 500-rune-bounded Result.Message and a phase + cause-prefix Sentry fingerprint via a global event processor, while failed still exits non-zero and needs_input still exits 0"
+time=2026-11-11T20:01:21.547+01:00 level=INFO msg="moved to completed" prompt_id=001-fix-nuke-prod-cv-exit-error-fingerprint spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=a1faf338-0c3f-515c-80ba-dc1a244d89a2-exec-001-fix-nuke-prod-cv-exit-error-fingerprint

@@ -7,14 +7,17 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"log"
 	"os"
+	"slices"
 	"strings"
 	"testing"
 
 	agentlib "github.com/bborbe/agent"
 	"github.com/bborbe/argument/v2"
 	"github.com/bborbe/vault-cli/pkg/domain"
+	sentry "github.com/getsentry/sentry-go"
 )
 
 // TestExitErrorForStatus guards the exit-code contract between this agent and
@@ -36,11 +39,13 @@ func TestExitErrorForStatus(t *testing.T) {
 	cases := []struct {
 		name    string
 		status  agentlib.AgentStatus
+		message string
 		wantErr bool
 	}{
 		{
 			name:    "failed must fail the Job so the executor does not record a phase success",
 			status:  agentlib.AgentStatusFailed,
+			message: "execution: ensure worktree: clone boom",
 			wantErr: true,
 		},
 		{
@@ -64,7 +69,7 @@ func TestExitErrorForStatus(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			err := exitErrorForStatus(ctx, c.status, phase)
+			err := exitErrorForStatus(ctx, c.status, phase, c.message)
 			if c.wantErr && err == nil {
 				t.Fatalf(
 					"status %q: expected a non-nil error, got nil — the Job would exit 0 and the executor would record it as a phase success",
@@ -74,8 +79,110 @@ func TestExitErrorForStatus(t *testing.T) {
 			if !c.wantErr && err != nil {
 				t.Fatalf("status %q: expected nil, got %v", c.status, err)
 			}
+			if c.wantErr && !strings.Contains(err.Error(), c.message) {
+				t.Fatalf(
+					"failed error must include Result.Message %q, got %q",
+					c.message,
+					err.Error(),
+				)
+			}
 		})
 	}
+}
+
+func TestExitErrorForStatusTruncatesLongMessage(t *testing.T) {
+	ctx := context.Background()
+	message := strings.Repeat("a", statusMessageMaxRunes+100)
+
+	err := exitErrorForStatus(
+		ctx,
+		agentlib.AgentStatusFailed,
+		domain.TaskPhase("ai_review"),
+		message,
+	)
+	if err == nil {
+		t.Fatal("expected an error")
+	}
+	if !strings.Contains(err.Error(), strings.Repeat("a", statusMessageMaxRunes)+"...") {
+		t.Fatalf(
+			"want the message truncated at %d runes with an ellipsis, got %q",
+			statusMessageMaxRunes,
+			err.Error(),
+		)
+	}
+	if strings.Contains(err.Error(), strings.Repeat("a", statusMessageMaxRunes+1)) {
+		t.Fatalf("message was not truncated: %q", err.Error())
+	}
+}
+
+func TestStatusErrorFingerprint(t *testing.T) {
+	ctx := context.Background()
+
+	err := exitErrorForStatus(
+		ctx,
+		agentlib.AgentStatusFailed,
+		domain.TaskPhase("execution"),
+		"execution: ensure worktree: clone boom",
+	)
+	if err == nil {
+		t.Fatal("expected an error")
+	}
+
+	var f fingerprinter
+	if !errors.As(err, &f) {
+		t.Fatalf("expected a fingerprinter error, got %T", err)
+	}
+	want := []string{
+		"agent-status-failed",
+		"execution",
+		"execution: ensure worktree: clone boom",
+	}
+	if !slices.Equal(f.Fingerprint(), want) {
+		t.Fatalf("fingerprint = %v, want %v", f.Fingerprint(), want)
+	}
+}
+
+func TestSentryFingerprintProcessor(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("sets the fingerprint from a status error", func(t *testing.T) {
+		err := exitErrorForStatus(
+			ctx,
+			agentlib.AgentStatusFailed,
+			domain.TaskPhase("planning"),
+			"planning: PR #7 is not a draft",
+		)
+		event := &sentry.Event{}
+		got := sentryFingerprintProcessor(
+			event,
+			&sentry.EventHint{OriginalException: err},
+		)
+		want := []string{
+			"agent-status-failed",
+			"planning",
+			"planning: PR #7 is not a draft",
+		}
+		if !slices.Equal(got.Fingerprint, want) {
+			t.Fatalf("fingerprint = %v, want %v", got.Fingerprint, want)
+		}
+	})
+
+	t.Run("leaves an unrelated error without a fingerprint", func(t *testing.T) {
+		event := &sentry.Event{}
+		got := sentryFingerprintProcessor(
+			event,
+			&sentry.EventHint{OriginalException: errors.New("boom")},
+		)
+		if len(got.Fingerprint) != 0 {
+			t.Fatalf("unexpected fingerprint %v", got.Fingerprint)
+		}
+	})
+
+	t.Run("nil event and hint are safe", func(t *testing.T) {
+		if got := sentryFingerprintProcessor(nil, nil); got != nil {
+			t.Fatalf("expected nil event, got %v", got)
+		}
+	})
 }
 
 // TestPrintRedactsAnthropicAuthToken guards the startup argument dump against

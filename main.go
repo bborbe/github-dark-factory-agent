@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"os"
+	"strings"
 	"time"
 
 	agentlib "github.com/bborbe/agent"
@@ -33,6 +34,7 @@ import (
 	"github.com/bborbe/service"
 	libtime "github.com/bborbe/time"
 	"github.com/bborbe/vault-cli/pkg/domain"
+	sentry "github.com/getsentry/sentry-go"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
@@ -44,7 +46,48 @@ import (
 // agentName is the identity string used for Prometheus metric grouping and logging.
 const agentName = "github-dark-factory-agent"
 
+const (
+	// statusMessageMaxRunes bounds the Result.Message copied into the
+	// non-zero-exit error (and therefore into the pod log and the Sentry
+	// event value). A failed ai_review result can carry a long rationale.
+	statusMessageMaxRunes = 500
+
+	// causePrefixMaxRunes bounds the cause component of the Sentry
+	// fingerprint so unrelated failures stay in separate issues without
+	// turning every distinct message into its own issue.
+	causePrefixMaxRunes = 100
+)
+
+// truncateRunes returns s capped at max runes plus a trailing ellipsis. It
+// counts runes, not bytes, so a multi-byte message is never cut mid-rune.
+func truncateRunes(s string, max int) string {
+	if max < 0 {
+		return ""
+	}
+	runes := []rune(s)
+	if len(runes) <= max {
+		return s
+	}
+	return string(runes[:max]) + "..."
+}
+
+// causePrefix returns a bounded, stable grouping key derived from
+// Result.Message: the first line, trimmed, capped at causePrefixMaxRunes.
+// An empty message yields "unknown" so the fingerprint is never empty.
+func causePrefix(message string) string {
+	line := message
+	if idx := strings.IndexByte(line, '\n'); idx >= 0 {
+		line = line[:idx]
+	}
+	line = strings.TrimSpace(line)
+	if line == "" {
+		return "unknown"
+	}
+	return truncateRunes(line, causePrefixMaxRunes)
+}
+
 func main() {
+	sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)
 	app := &application{}
 	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
 }
@@ -215,7 +258,7 @@ func finishRun(
 	if err := agentlib.PrintResult(ctx, result); err != nil {
 		return err
 	}
-	return exitErrorForStatus(ctx, result.Status, phase)
+	return exitErrorForStatus(ctx, result.Status, phase, result.Message)
 }
 
 // exitErrorForStatus returns a non-nil error when the agent's published status
@@ -236,16 +279,74 @@ func exitErrorForStatus(
 	ctx context.Context,
 	status agentlib.AgentStatus,
 	phase domain.TaskPhase,
+	message string,
 ) error {
-	if status == agentlib.AgentStatusFailed {
-		return errors.Errorf(
-			ctx,
-			"agent reported status %q for phase %q",
-			status,
-			phase,
-		)
+	if status != agentlib.AgentStatusFailed {
+		return nil
 	}
-	return nil
+	displayMessage := truncateRunes(message, statusMessageMaxRunes)
+	if displayMessage == "" {
+		displayMessage = "(no message)"
+	}
+	err := errors.Errorf(
+		ctx,
+		"agent reported status %q for phase %q: %s",
+		status,
+		phase,
+		displayMessage,
+	)
+	return &statusError{
+		err: err,
+		fingerprint: []string{
+			"agent-status-failed",
+			string(phase),
+			causePrefix(message),
+		},
+	}
+}
+
+// fingerprinter is implemented by errors that know their Sentry grouping key.
+type fingerprinter interface {
+	Fingerprint() []string
+}
+
+// statusError is the non-zero-exit error for a failed agent result. The
+// capture-site stack is identical for every failure, so Sentry would merge
+// unrelated planning / execution / ai_review causes into one issue; this type
+// carries an explicit fingerprint (phase + bounded cause prefix) that
+// sentryFingerprintProcessor installs on the event.
+type statusError struct {
+	err         error
+	fingerprint []string
+}
+
+func (e *statusError) Error() string { return e.err.Error() }
+
+// Unwrap keeps errors.Is / errors.As working through the wrapper.
+func (e *statusError) Unwrap() error { return e.err }
+
+// Cause keeps github.com/bborbe/errors DataFromError traversal working.
+func (e *statusError) Cause() error { return e.err }
+
+// Fingerprint is the Sentry grouping key for this failure.
+func (e *statusError) Fingerprint() []string { return e.fingerprint }
+
+// sentryFingerprintProcessor installs the fingerprint carried by a
+// fingerprinter error onto the Sentry event. It is a no-op for every other
+// error, so it can be registered globally: service.Main owns the Sentry client
+// and exposes no per-client event-processor hook.
+func sentryFingerprintProcessor(
+	event *sentry.Event,
+	hint *sentry.EventHint,
+) *sentry.Event {
+	if event == nil || hint == nil || hint.OriginalException == nil {
+		return event
+	}
+	var f fingerprinter
+	if errors.As(hint.OriginalException, &f) {
+		event.Fingerprint = f.Fingerprint()
+	}
+	return event
 }
 
 // buildClaudeEnv assembles the Claude CLI subprocess env from the raw env
