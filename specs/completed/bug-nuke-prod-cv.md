@@ -1,10 +1,10 @@
 ---
 status: completed
-approved: "2026-11-11T18:26:04.749966773Z"
-generating: "2026-11-11T18:30:35Z"
-prompted: "2026-11-11T18:39:17Z"
-verifying: "2026-11-11T19:01:21Z"
-completed: "2026-11-11T19:01:28Z"
+approved: "2026-11-12T12:03:00.850791013Z"
+generating: "2026-11-12T12:12:55Z"
+prompted: "2026-11-12T12:19:41Z"
+verifying: "2026-11-12T12:19:55Z"
+completed: "2026-11-12T12:34:33Z"
 ---
 
 ## Summary
@@ -13,7 +13,7 @@ Sentry issue `NUKE-PROD-CV` is a real bug in `bborbe/github-dark-factory-agent` 
 
 ## Problem
 
-exitErrorForStatus (main.go:241) drops result.Message and builds the error from status+phase only, so every dark-factory failure has an identical 7-frame stack and Sentry merges unrelated planning/execution/ai_review causes into one umbrella issue.
+finishRun (main.go:218) passes only result.Status to exitErrorForStatus, which formats "agent reported status %q for phase %q" and discards result.Message, collapsing 8 heterogeneous planning preconditions (worktree/git fetch, PR fetch, ref mismatch, non-draft, missing .dark-factory.yaml, no approved spec) into one cause-less Sentry issue.
 
 ## Reproduction
 
@@ -21,4 +21,4 @@ The implicated source location from the deep verdict is `main.go:241` in `bborbe
 
 ## Recommended Fix
 
-Include the truncated Result.Message in the exitErrorForStatus error (or wrap the sentinel with it) and fingerprint Sentry events by phase+cause prefix; keep the non-zero exit and separately decide which by-design escalations should page.
+Pass the *agentlib.Result into exitErrorForStatus and include a bounded (200-char truncate) result.Message in the errors.Errorf; extend TestExitErrorForStatus to assert the message is present for failed and unchanged for exit-0 statuses.
