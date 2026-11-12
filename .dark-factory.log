@@ -1,33 +1,36 @@
-time=2026-11-12T13:12:55.651+01:00 level=INFO msg="effective config" maxContainers=3 maxContainersSource=default containerImage=docker.io/bborbe/claude-yolo:v0.16.4 model=deepseek-v4-flash-max[1m] modelSource=arg workflow=direct workflowSource=project pr=false prSource=project autoRelease=false autoReleaseSource=project autoMerge=false autoMergeSource=project verificationGate=false validationCommand="make precommit" testCommand="make test" debounceMs=500 hideGit=true hideGitSource=arg autoApprovePrompts=true autoApprovePromptsSource=arg autoGeneratePrompts=true autoGeneratePromptsSource=arg dirtyFileThreshold=0 dirtyFileThresholdSource=default promptsInboxDir=prompts promptsInProgressDir=prompts/in-progress promptsCompletedDir=prompts/completed promptsLogDir=prompts/log preflightCommand="make precommit" preflightInterval=8h healthcheckEnabled=true healthcheckEnabledSource=default healthcheckInterval=8h healthcheckIntervalSource=default backend=local backendSource=arg envFromGlobal=[] envProjectOverrides=[] envProjectOnly=[]
-time=2026-11-12T13:12:55.652+01:00 level=INFO msg="watching for queued prompts" dir=prompts/in-progress
-time=2026-11-12T13:12:55.653+01:00 level=INFO msg="healthcheck gate disabled"
-time=2026-11-12T13:12:55.653+01:00 level=INFO msg="pipeline gate disabled"
-time=2026-11-12T13:12:55.653+01:00 level=INFO msg="processor started"
-time=2026-11-12T13:12:55.653+01:00 level=INFO msg="spec watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/specs/in-progress
-time=2026-11-12T13:12:55.653+01:00 level=INFO msg="spec file created in in-progress, triggering generation" path=/home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/specs/in-progress/bug-nuke-prod-cv.md
-time=2026-11-12T13:12:55.654+01:00 level=INFO msg="watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/prompts/in-progress
-time=2026-11-12T13:13:00.655+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:14:00.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:15:05.655+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:16:05.658+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:17:05.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:18:10.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:19:15.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:19:55.656+01:00 level=INFO msg="spec awaiting verification" spec=bug-nuke-prod-cv
-time=2026-11-12T13:19:55.656+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
-time=2026-11-12T13:20:14.382+01:00 level=INFO msg="auto-approve: auditing generated prompt" prompt=1-spec-bug-nuke-prod-cv-exit-error-message.md
-time=2026-11-12T13:20:20.655+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:20:55.657+01:00 level=INFO msg="spec awaiting verification" spec=bug-nuke-prod-cv
-time=2026-11-12T13:20:55.657+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
-time=2026-11-12T13:21:20.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:22:20.659+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:23:25.655+01:00 level=INFO msg="nothing to do, waiting for changes"
-time=2026-11-12T13:23:53.691+01:00 level=INFO msg="auto-approve: approved generated prompt" prompt=1-spec-bug-nuke-prod-cv-exit-error-message.md
-time=2026-11-12T13:23:54.291+01:00 level=INFO msg="lock acquired" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message.md
-time=2026-11-12T13:23:54.292+01:00 level=INFO msg="found queued prompt" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message.md
-time=2026-11-12T13:23:54.292+01:00 level=INFO msg="executing prompt" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message spec_id=bug-nuke-prod-cv container="" workflow_type=direct title=002-spec-bug-nuke-prod-cv-exit-error-message
-time=2026-11-12T13:23:54.292+01:00 level=INFO msg="syncing with remote default branch" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message spec_id=bug-nuke-prod-cv container="" workflow_type=direct
-time=2026-11-12T13:23:54.892+01:00 level=INFO msg="container assigned" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message spec_id=bug-nuke-prod-cv container="" workflow_type=direct container_old="" container=7511383e-a694-5f95-ae19-740904509a5c-exec-002-spec-bug-nuke-prod-cv-exit-error-message workflow_step=acquire_container
-time=2026-11-12T13:34:26.556+01:00 level=INFO msg="docker container exited" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=7511383e-a694-5f95-ae19-740904509a5c-exec-002-spec-bug-nuke-prod-cv-exit-error-message exit_code=0 workflow_step=run_claude
-time=2026-11-12T13:34:26.556+01:00 level=INFO msg="completion report" status=success summary="Verified the predecessor NUKE-PROD-CV fix is fully present in main.go, main_internal_test.go, and CHANGELOG.md (message forwarding, bounded 500-rune inclusion, nil for done/in_progress/needs_input, fingerprint processor, and failed-message test); made no code changes to avoid duplicating an existing fix, and make precommit passed."
-time=2026-11-12T13:34:26.560+01:00 level=INFO msg="moved to completed" prompt_id=002-spec-bug-nuke-prod-cv-exit-error-message spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=7511383e-a694-5f95-ae19-740904509a5c-exec-002-spec-bug-nuke-prod-cv-exit-error-message
+time=2026-11-12T14:35:48.758+01:00 level=INFO msg="effective config" maxContainers=3 maxContainersSource=default containerImage=docker.io/bborbe/claude-yolo:v0.16.4 model=deepseek-v4-flash-max[1m] modelSource=arg workflow=direct workflowSource=project pr=false prSource=project autoRelease=false autoReleaseSource=project autoMerge=false autoMergeSource=project verificationGate=false validationCommand="make precommit" testCommand="make test" debounceMs=500 hideGit=true hideGitSource=arg autoApprovePrompts=true autoApprovePromptsSource=arg autoGeneratePrompts=true autoGeneratePromptsSource=arg dirtyFileThreshold=0 dirtyFileThresholdSource=default promptsInboxDir=prompts promptsInProgressDir=prompts/in-progress promptsCompletedDir=prompts/completed promptsLogDir=prompts/log preflightCommand="make precommit" preflightInterval=8h healthcheckEnabled=true healthcheckEnabledSource=default healthcheckInterval=8h healthcheckIntervalSource=default backend=local backendSource=arg envFromGlobal=[] envProjectOverrides=[] envProjectOnly=[]
+time=2026-11-12T14:35:48.758+01:00 level=INFO msg="watching for queued prompts" dir=prompts/in-progress
+time=2026-11-12T14:35:48.760+01:00 level=INFO msg="healthcheck gate disabled"
+time=2026-11-12T14:35:48.760+01:00 level=INFO msg="pipeline gate disabled"
+time=2026-11-12T14:35:48.760+01:00 level=INFO msg="processor started"
+time=2026-11-12T14:35:48.761+01:00 level=INFO msg="watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/prompts/in-progress
+time=2026-11-12T14:35:48.761+01:00 level=INFO msg="spec watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/in-progress
+time=2026-11-12T14:35:48.761+01:00 level=INFO msg="spec file created in in-progress, triggering generation" path=/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/in-progress/bug-nuke-prod-cv.md
+time=2026-11-12T14:35:53.763+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:36:53.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:37:58.763+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:38:58.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:40:03.763+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:41:03.765+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:42:08.764+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:43:08.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:44:08.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:45:13.768+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:46:18.763+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:46:40.383+01:00 level=INFO msg="auto-approve: auditing generated prompt" prompt=spec-bug-nuke-prod-cv-sentry-context-tags.md
+time=2026-11-12T14:46:48.764+01:00 level=INFO msg="spec awaiting verification" spec=bug-nuke-prod-cv
+time=2026-11-12T14:46:48.764+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-12T14:47:18.764+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:48:23.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:49:28.764+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:50:33.766+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:51:38.767+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-12T14:51:42.189+01:00 level=INFO msg="auto-approve: approved generated prompt" prompt=spec-bug-nuke-prod-cv-sentry-context-tags.md
+time=2026-11-12T14:51:42.789+01:00 level=INFO msg="lock acquired" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags.md
+time=2026-11-12T14:51:42.789+01:00 level=INFO msg="found queued prompt" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags.md
+time=2026-11-12T14:51:42.789+01:00 level=INFO msg="executing prompt" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags spec_id=bug-nuke-prod-cv container="" workflow_type=direct title=003-spec-bug-nuke-prod-cv-sentry-context-tags
+time=2026-11-12T14:51:42.789+01:00 level=INFO msg="syncing with remote default branch" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags spec_id=bug-nuke-prod-cv container="" workflow_type=direct
+time=2026-11-12T14:51:43.331+01:00 level=INFO msg="container assigned" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags spec_id=bug-nuke-prod-cv container="" workflow_type=direct container_old="" container=30fa0379-21ca-5a81-a728-0f468982b548-exec-003-spec-bug-nuke-prod-cv-sentry-context-tags workflow_step=acquire_container
+time=2026-11-12T15:01:53.369+01:00 level=INFO msg="docker container exited" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=30fa0379-21ca-5a81-a728-0f468982b548-exec-003-spec-bug-nuke-prod-cv-sentry-context-tags exit_code=0 workflow_step=run_claude
+time=2026-11-12T15:01:53.369+01:00 level=INFO msg="completion report" status=success summary="Attached task_id, task_type, phase, and a bounded result message as Sentry tags via errors.AddToContext in finishRun, preserving fingerprint grouping and the exit-code contract."
+time=2026-11-12T15:01:53.375+01:00 level=INFO msg="moved to completed" prompt_id=003-spec-bug-nuke-prod-cv-sentry-context-tags spec_id=bug-nuke-prod-cv container="" workflow_type=direct container=30fa0379-21ca-5a81-a728-0f468982b548-exec-003-spec-bug-nuke-prod-cv-sentry-context-tags

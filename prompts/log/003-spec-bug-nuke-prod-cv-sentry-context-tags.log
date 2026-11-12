@@ -1,0 +1,455 @@
+[14:51:43] [init] session=4815135b model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548 tools=25
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] [system: thinking_tokens]
+[14:51:45] 💭 Let me start by reading the relevant files. Let me read main.go, main_internal_test.go, CHANGELOG.md, and the guides.
+
+Let me do parallel reads.
+[14:51:45] I'll start by reading the relevant files and guides.
+
+
+[14:51:45] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go
+[14:51:45] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go
+[14:51:45] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/CHANGELOG.md
+[14:51:45]   → 453 lines read
+[14:51:45]   → 232 lines read
+[14:51:45]   → 200 lines read
+[14:51:46] [system: thinking_tokens]
+[14:51:46] [system: thinking_tokens]
+[14:51:46] [system: thinking_tokens]
+[14:51:47] [system: thinking_tokens]
+[14:51:47] [system: thinking_tokens]
+[14:51:47] [system: thinking_tokens]
+[14:51:47] [system: thinking_tokens]
+[14:51:47] 💭 Now let me read the guides. Also cmd/run-task/main.go and docs/design.md. Let me read guides first.
+[14:51:47] Now let me read the guides and the out-of-scope files to confirm.
+
+
+[14:51:48] [read] /home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md
+[14:51:48] [read] /home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md
+[14:51:48] [read] /home/node/.claude/plugins/marketplaces/coding/docs/changelog-guide.md
+[14:51:48] [read] /home/node/.claude/plugins/marketplaces/coding/docs/definition-of-done.md
+[14:51:48] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/cmd/run-task/main.go
+[14:51:48]   → 370 lines read
+[14:51:48]   → 209 lines read
+[14:51:48]   → 51 lines read
+[14:51:48]   → 532 lines read
+[14:51:48]   → 170 lines read
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] [system: thinking_tokens]
+[14:51:49] 💭 Now I understand the task. Let me make the changes.
+
+1. Update `finishRun` in main.go.
+2. Update call site.
+3. Add tests.
+4. Add changelog.
+
+Let me verify `errors.AddToContext` exists in the vendored version. Let me check vendor. Actually the spec says verified. Let me quickly grep.
+
+Let me make the edits.
+[14:51:49] Now I'll make the code changes. First, `finishRun`:
+
+
+[14:51:51] [edit] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go
+    - func finishRun(\n	ctx context.Context,\n	result *agentlib.R…
+    + func finishRun(\n	ctx context.Context,\n	result *agentlib.R…
+[14:51:51] [edit] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go
+    - 	return finishRun(ctx, result, a.Phase)
+    + 	return finishRun(ctx, result, a.Phase, a.TaskID, a.TaskTyp…
+[14:51:51]   → The file /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go has been updated…
+[14:51:51]   → The file /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go has been updated…
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] [system: thinking_tokens]
+[14:51:52] 💭 Now add the tests. Need to add `fmt` import and `berrors "github.com/bborbe/errors"` alias. Let me edit imports.
+[14:51:52] Now the tests. Add imports and the two tests:
+
+
+[14:51:55] [edit] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go
+    - import (\n	"bytes"\n	"context"\n	"errors"\n	"log"\n	"os"\n	…
+    + import (\n	"bytes"\n	"context"\n	"errors"\n	"fmt"\n	"log"\n…
+[14:51:55] [edit] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go
+    - func TestStatusErrorFingerprint(t *testing.T) {
+    + func TestFinishRunAttachesSentryTags(t *testing.T) {\n	ctx …
+[14:51:55]   → The file /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go ha…
+[14:51:55]   → The file /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go ha…
+[14:51:56] [system: thinking_tokens]
+[14:51:56] [system: thinking_tokens]
+[14:51:56] [system: thinking_tokens]
+[14:51:56] [system: thinking_tokens]
+[14:51:56] [system: thinking_tokens]
+[14:51:56] 💭 I need to verify `domain.TaskPhasePlanning` and `domain.TaskPhaseAIReview` constants exist. Let me grep.
+[14:51:56] Let me verify the phase constants exist and check `AddToContext` is vendored:
+
+
+[14:51:57] $ grep -rn "TaskPhasePlanning\|TaskPhaseAIReview" vendor/github.com/bborbe/vault-cli/pkg/domain/ 2>/dev/null | head; echo "---AddToContext---"; grep -rn "func AddToContext" vendor/github.com/bborbe/err…
+[14:51:58] [system: thinking_tokens]
+[14:51:58] [system: thinking_tokens]
+[14:51:58] [system: thinking_tokens]
+[14:51:58] 💭 Vendor may not exist. Let me check.
+[14:51:58] $ ls vendor 2>/dev/null | head; echo "---"; grep -rn "TaskPhasePlanning\|TaskPhaseAIReview" $(go env GOMODCACHE)/github.com/bborbe/vault-cli*/pkg/domain/ 2>/dev/null | head; echo "---errors---"; grep -…
+[14:51:58] ⚠ [bash output]
+---
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:30:			Entry("planning", domain.TaskPhasePlanning),
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:32:			Entry("ai_review", domain.TaskPhaseAIReview),
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:49:			Expect(domain.TaskPhasePlanning.String()).To(Equal("planning"))
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:51:			Expect(domain.TaskPhaseAIReview.String()).To(Equal("ai_review"))
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:58:			ptr := domain.TaskPhasePlanning.Ptr()
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:60:			Expect(*ptr).To(Equal(domain.TaskPhasePlanning))
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:133:			Entry("planning", "planning", domain.TaskPhasePlanning),
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_phase_test.go:135:			Entry("ai_review", "ai_review", domain.TaskPhaseAIReview),
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_frontmatter_test.go:338:			Expect(*fm.Phase()).To(Equal(domain.TaskPhasePlanning))
+/home/node/go/pkg/mod/github.com/bborbe/vault-cli@v0.186.2/pkg/domain/task_frontmatter_test.go:351:			phase := domain.TaskPhasePlanning
+---errors---
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:19:func AddToContext(ctx context.Context, key string, value any) context.Context {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.5.15/errors_data-context.go:19:func AddToContext(ctx context.Context, key string, value any) context.Context {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.5.15/docs/prd/2025-12-09-map-string-any-support.md:130:func AddToContext(ctx context.Context, key, value string) context.Context
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.5.15/docs/prd/2025-12-09-map-string-any-support.md:133:func AddToContext(ctx context.Context, key string, value any) context.Context
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:130:func AddToContext(ctx context.Context, key, value string) context.Context
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:133:func AddToContext(ctx context.Context, key string, value any) context.Context
+[14:51:59] [system: thinking_tokens]
+[14:51:59] [system: thinking_tokens]
+[14:51:59] [system: thinking_tokens]
+[14:51:59] [system: thinking_tokens]
+[14:51:59] [system: thinking_tokens]
+[14:51:59] [system: thinking_tokens]
+[14:51:59] 💭 Good, both exist. Now update CHANGELOG.md, add the bullet at the top of Unreleased.
+[14:51:59] Now the changelog entry:
+
+
+[14:52:00] [edit] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/CHANGELOG.md
+    - ## Unreleased\n\n- fix: **carry the failed result's message…
+    + ## Unreleased\n\n- fix: **attach failure context to the Sen…
+[14:52:00]   → The file /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/CHANGELOG.md has been up…
+[14:52:01] Now run the fast feedback test command:
+
+
+[14:52:01] $ make test 2>&1 | tail -40
+[14:52:04] [system: task_started]
+[14:54:51] [system: task_notification]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] [system: thinking_tokens]
+[14:54:52] 💭 Tests pass. Now run the focused tests, grep verification, and then precommit once.
+[14:54:52] Tests pass. Run the focused tests and greps before the final gate:
+
+
+[14:54:54] $ go test -mod=mod -run 'TestFinishRun|TestExitErrorForStatus|TestStatusErrorFingerprint|TestSentryFingerprintProcessor' . 2>&1 | tail -20; echo "=== grep ==="; grep -n 'errors.AddToContext' main.go; g…
+[14:54:57] [system: task_started]
+[14:54:57] [system: task_notification]
+[14:54:57] ⚠ [bash output]
+ok  	github.com/bborbe/github-dark-factory-agent	0.018s
+=== grep ===
+263:	ctx = errors.AddToContext(ctx, "task_id", taskID.String())
+264:	ctx = errors.AddToContext(ctx, "task_type", taskType)
+265:	ctx = errors.AddToContext(ctx, "phase", phase.String())
+266:	ctx = errors.AddToContext(ctx, "message", truncateRunes(result.Message, statusMessageMaxRunes))
+248:	return finishRun(ctx, result, a.Phase, a.TaskID, a.TaskType)
+307:			"agent-status-failed",
+290:	if status != agentlib.AgentStatusFailed {
+[14:54:57] [system: thinking_tokens]
+[14:54:57] [system: thinking_tokens]
+[14:54:57] [system: thinking_tokens]
+[14:54:58] [system: thinking_tokens]
+[14:54:58] 💭 All good. Now run `make precommit` once.
+[14:54:58] All verification greps pass. Now the authoritative final validation:
+
+
+
+
+[14:54:58] $ make precommit 2>&1 | tail -60
+[14:55:01] [system: task_started]
+[15:00:56] [system: task_notification]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:57] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:58] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:00:59] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:00] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] [system: thinking_tokens]
+[15:01:01] 💭 The output ends with "ready to commit". But I need to confirm the exit code. The tail cut off. Let me check exit code explicitly. Actually `make precommit` output tail shows "ready to commit" which is likely the last step. But there could be more after. Let me re-run capturing exit code? The instruction says run once. But I already ran it once and the tail shows success-ish. Let me verify exit code by checking if the pipeline succeeded. Since I piped to tail, the exit code of the pipeline is tai…
+[15:01:02] The final line is "ready to commit" with no error. Let me confirm the exit code explicitly (deps are cached now):
+
+
+
+
+[15:01:02] $ make precommit >/tmp/precommit.out 2>&1; echo "EXIT=$?"; tail -5 /tmp/precommit.out
+[15:01:05] [system: task_started]
+[15:01:48] [system: task_notification]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:49] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:50] [system: thinking_tokens]
+[15:01:51] [system: thinking_tokens]
+[15:01:51] [system: thinking_tokens]
+[15:01:51] [system: thinking_tokens]
+[15:01:51] 💭 `make precommit` exits 0. 
+
+Let me review the quality criteria:
+- Builds: yes.
+- Tests: plain testing per prompt, new behavior covered. The definition-of-done says Ginkgo coverage, but the prompt explicitly mandates plain testing in main_internal_test.go (this is a special case documented in the file). Passing.
+- Scope: only main.go, main_internal_test.go, CHANGELOG.md. Good.
+- Errors: wrapped via bborbe/errors; the existing `return err` in finishRun is pre-existing (bare return in PrintResult c…
+[15:01:53] `make precommit` exits 0. All changes are complete and verified:
+
+- `finishRun` now accepts `taskID`/`taskType`, chains four `errors.AddToContext` calls, and passes the enriched `ctx` to `exitErrorForStatus` (`main.go:253-267`).
+- Call site updated (`main.go:248`).
+- Two new plain-`testing` tests prove tag presence and message truncation; existing exit-code/fingerprint tests untouched.
+- `exitErrorForStatus`, its fingerprint, and the nil behavior for `done`/`in_progress`/`needs_input` are unchanged.
+- CHANGELOG `## Unreleased` entry added.
+
+<!-- DARK-FACTORY-REPORT
+{"status":"success","summary":"Attached task_id, task_type, phase, and a bounded result message as Sentry tags via errors.AddToContext in finishRun, preserving fingerprint grouping and the exit-code contract.","blockers":[],"verification":{"command":"make precommit","exitCode":0}}
+DARK-FACTORY-REPORT -->
+[15:01:53] result: `make precommit` exits 0. All changes are complete and verified:
+
+- `finishRun` now accepts `taskID`/`taskType`, chains four `errors.AddToContext` calls, and passes the enriched `ctx` to `exitErrorForStatus` (`main.go:253-267`).
+- Call site updated (`main.go:248`).
+- Two new plain-`testing` tests prove tag presence and message truncation; existing exit-code/fingerprint tests untouched.
+- `exitErrorForStatus`, its fingerprint, and the nil behavior for `done`/`in_progress`/`needs_input` are unchanged.
+- CHANGELOG `## Unreleased` entry added.
+
+<!-- DARK-FACTORY-REPORT
+{"status":"success","summary":"Attached task_id, task_type, phase, and a bounded result message as Sentry tags via errors.AddToContext in finishRun, preserving fingerprint grouping and the exit-code contract.","blockers":[],"verification":{"command":"make precommit","exitCode":0}}
+DARK-FACTORY-REPORT --> | duration: 609317ms | cost: $0.9617 | tokens: 643 in / 4360 out

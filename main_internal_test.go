@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"slices"
@@ -16,6 +17,7 @@ import (
 
 	agentlib "github.com/bborbe/agent"
 	"github.com/bborbe/argument/v2"
+	berrors "github.com/bborbe/errors"
 	"github.com/bborbe/vault-cli/pkg/domain"
 	sentry "github.com/getsentry/sentry-go"
 )
@@ -112,6 +114,66 @@ func TestExitErrorForStatusTruncatesLongMessage(t *testing.T) {
 	}
 	if strings.Contains(err.Error(), strings.Repeat("a", statusMessageMaxRunes+1)) {
 		t.Fatalf("message was not truncated: %q", err.Error())
+	}
+}
+
+func TestFinishRunAttachesSentryTags(t *testing.T) {
+	ctx := context.Background()
+	result := &agentlib.Result{
+		Status:  agentlib.AgentStatusFailed,
+		Message: "planning: PR #7 is not a draft",
+	}
+
+	err := finishRun(
+		ctx,
+		result,
+		domain.TaskPhasePlanning,
+		agentlib.TaskIdentifier("task-123"),
+		"llm",
+	)
+	if err == nil {
+		t.Fatal("expected a non-nil error for a failed result")
+	}
+
+	data := berrors.DataFromError(err)
+	want := map[string]string{
+		"task_id":   "task-123",
+		"task_type": "llm",
+		"phase":     "planning",
+		"message":   "planning: PR #7 is not a draft",
+	}
+	for key, wantValue := range want {
+		if got := fmt.Sprintf("%v", data[key]); got != wantValue {
+			t.Fatalf("Sentry tag %q = %q, want %q", key, got, wantValue)
+		}
+	}
+}
+
+func TestFinishRunTruncatesMessageTag(t *testing.T) {
+	ctx := context.Background()
+	message := strings.Repeat("a", statusMessageMaxRunes+100)
+	result := &agentlib.Result{
+		Status:  agentlib.AgentStatusFailed,
+		Message: message,
+	}
+
+	err := finishRun(
+		ctx,
+		result,
+		domain.TaskPhaseAIReview,
+		agentlib.TaskIdentifier("task-456"),
+		"llm",
+	)
+	if err == nil {
+		t.Fatal("expected a non-nil error for a failed result")
+	}
+
+	got := fmt.Sprintf("%v", berrors.DataFromError(err)["message"])
+	if !strings.HasSuffix(got, "...") {
+		t.Fatalf("message tag must be truncated with an ellipsis, got %q", got)
+	}
+	if strings.Contains(got, strings.Repeat("a", statusMessageMaxRunes+1)) {
+		t.Fatalf("message tag was not truncated: %q", got)
 	}
 }
 

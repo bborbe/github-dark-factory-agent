@@ -245,7 +245,7 @@ func (a *application) Run(ctx context.Context, _ libsentry.Client) error {
 	}
 	jobMetrics.RecordRun(result.Status)
 	jobMetrics.RecordDuration(time.Since(start))
-	return finishRun(ctx, result, a.Phase)
+	return finishRun(ctx, result, a.Phase, a.TaskID, a.TaskType)
 }
 
 // finishRun publishes the agent's result and then decides the Job's exit code.
@@ -254,10 +254,16 @@ func finishRun(
 	ctx context.Context,
 	result *agentlib.Result,
 	phase domain.TaskPhase,
+	taskID agentlib.TaskIdentifier,
+	taskType string,
 ) error {
 	if err := agentlib.PrintResult(ctx, result); err != nil {
 		return err
 	}
+	ctx = errors.AddToContext(ctx, "task_id", taskID.String())
+	ctx = errors.AddToContext(ctx, "task_type", taskType)
+	ctx = errors.AddToContext(ctx, "phase", phase.String())
+	ctx = errors.AddToContext(ctx, "message", truncateRunes(result.Message, statusMessageMaxRunes))
 	return exitErrorForStatus(ctx, result.Status, phase, result.Message)
 }
 
