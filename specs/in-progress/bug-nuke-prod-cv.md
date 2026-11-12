@@ -1,7 +1,9 @@
 ---
-status: approved
-approved: 2026-11-12T12:03:00.850791013Z
-kind: bug
+status: verifying
+approved: "2026-11-12T12:03:00.850791013Z"
+generating: "2026-11-12T12:12:55Z"
+prompted: "2026-11-12T12:19:41Z"
+verifying: "2026-11-12T12:19:55Z"
 ---
 
 ## Summary
