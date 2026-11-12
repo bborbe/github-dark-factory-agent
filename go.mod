@@ -1,6 +1,6 @@
 module github.com/bborbe/github-dark-factory-agent
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/bborbe/agent v0.138.0
@@ -13,6 +13,7 @@ require (
 	github.com/bborbe/service v1.11.2
 	github.com/bborbe/time v1.27.25
 	github.com/bborbe/vault-cli v0.186.2
+	github.com/getsentry/sentry-go v0.50.0
 	github.com/golang/glog v1.2.5
 	github.com/onsi/ginkgo/v2 v2.34.0
 	github.com/onsi/gomega v1.44.0
@@ -39,7 +40,6 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.10.0 // indirect
-	github.com/getsentry/sentry-go v0.50.0 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-openapi/jsonpointer v1.0.2 // indirect
 	github.com/go-openapi/jsonreference v1.0.3 // indirect

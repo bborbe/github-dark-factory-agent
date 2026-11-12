@@ -1,0 +1,485 @@
+[13:20:14] [init] session=8274804d model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c tools=25
+[13:20:16] [system: thinking_tokens]
+[13:20:16] [system: thinking_tokens]
+[13:20:16] [system: thinking_tokens]
+[13:20:16] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] [system: thinking_tokens]
+[13:20:17] 💭 The user wants me to invoke the prompt-auditor agent to audit the prompt file. Let me also read CLAUDE.md to check for a pre-approve gate.
+
+Let me first read the prompt file and CLAUDE.md, and invoke the agent.
+
+Let me do it: invoke the Agent tool with subagent_type prompt-auditor. Also read CLAUDE.md.
+
+I should parse the path: prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md — has prefix and .md.
+
+Let me launch the agent and read CLAUDE.md in parallel.
+[13:20:19] [agent:dark-factory:prompt-auditor] Audit dark-factory prompt
+    prompt: Audit the dark-factory prompt file at prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md against the Prompt Definition of Done. Evaluate structure, code ref…
+[13:20:19] [system: task_started]
+[13:20:19] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/CLAUDE.md
+[13:20:19] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md
+[13:20:19] ⚠ [Read] error: File does not exist. Note: your current working directory is /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c.
+[13:20:19]   → 285 lines read
+[13:20:20] [system: task_progress]
+[13:20:20] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md
+[13:20:20] [system: task_progress]
+[13:20:20] $ ls -la && echo "---CONFIG---" && cat .dark-factory.yaml 2>/dev/null || echo "no config"
+[13:20:20]   → 285 lines read
+[13:20:22] [system: task_progress]
+[13:20:22] $ (dark-factory config 2>&1 | head -50 || echo "dark-factory CLI unavailable")
+[13:20:22] [system: task_progress]
+[13:20:22] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/main.go
+[13:20:22] [system: task_progress]
+[13:20:22] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/main_internal_test.go
+[13:20:22]   → 453 lines read
+[13:20:22]   → 232 lines read
+[13:20:28] [system: task_progress]
+[13:20:28] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/specs/completed/bug-nuke-prod-cv.md
+[13:20:28] [system: task_progress]
+[13:20:28] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md
+[13:20:28] [system: task_progress]
+[13:20:28] $ echo "---UNRELEASED---" && sed -n '1,60p' CHANGELOG.md && echo "---DOCS---" && ls -la docs/ && echo "---CODING PLUGIN DOCS (~/.claude-yolo)---" && ls -la ~/.claude-yolo/plugins/marketplaces/coding/do…
+[13:20:28] [system: task_progress]
+[13:20:28] $ echo "---cmd/run-task/main.go---" && cat cmd/run-task/main.go && echo "---prompts dirs---" && ls -la prompts/ prompts/completed/ 2>&1
+[13:20:28]   → 459 lines read
+[13:20:28]   → 24 lines read
+[13:20:28] ⚠ [bash output]
+			Infof("run-task: `gh auth token` unavailable (%v) — proceeding without a token", err)
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+---prompts dirs---
+prompts/:
+total 36
+drwxr-xr-x  5 node node  4096 Nov 12 13:14 .
+drwxr-xr-x 11 node node  4096 Nov 12 13:12 ..
+-rw-r--r--  1 node node 13756 Nov 12 13:14 1-spec-bug-nuke-prod-cv-exit-error-message.md
+drwxr-xr-x  2 node node  4096 Nov 12 13:12 completed
+drwxr-x---  2 node node  4096 Nov 12 13:12 in-progress
+drwxr-xr-x  2 node node  4096 Nov 12 13:12 log
+
+prompts/completed/:
+total 28
+drwxr-xr-x 2 node node  4096 Nov 12 13:12 .
+drwxr-xr-x 5 node node  4096 Nov 12 13:14 ..
+-rw-r--r-- 1 node node 19298 Nov 12 13:12 001-fix-nuke-prod-cv-exit-error-fingerprint.md
+[13:20:28] ⚠ [bash output]
+total 1284
+drwxr-xr-x  3 node node  4096 Nov  3 22:45 .
+drwxr-xr-x 17 node node  4096 Nov  3 22:45 ..
+-rw-r--r--  1 node node 16687 Nov  3 22:45 adr-guide.md
+-rw-r--r--  1 node node 12326 Nov  3 22:45 agent-command-development-guide.md
+-rw-r--r--  1 node node 10030 Nov  3 22:45 architecture-dimensions-guide.md
+-rw-r--r--  1 node node 10176 Nov  3 22:45 ast-grep-rule-writing-guide.md
+-rw-r--r--  1 node node 14702 Nov  3 22:45 astro-development-guide.md
+-rw-r--r--  1 node node 10292 Nov  3 22:45 changelog-guide.md
+-rw-r--r--  1 node node  8078 Nov  3 22:45 chat-latency-fixture-design.md
+-rw-r--r--  1 node node  6872 Nov  3 22:45 claude-code-skill-writing-guide.md
+-rw-r--r--  1 node node  9333 Nov  3 22:45 claude-md-guide.md
+-rw-r--r--  1 node node  4922 Nov  3 22:45 code-smell-vocabulary.md
+-rw-r--r--  1 node node  1801 Nov  3 22:45 definition-of-done.md
+-rw-r--r--  1 node node 29198 Nov  3 22:45 documentation-guide.md
+-rw-r--r--  1 node node  1204 Nov  3 22:45 dod.md
+-rw-r--r--  1 node node 12191 Nov  3 22:45 git-commit-guide.md
+-rw-r--r--  1 node node 10578 Nov  3 22:45 git-workflow.md
+-rw-r--r--  1 node node 31305 Nov  3 22:45 go-architecture-patterns.md
+-rw-r--r--  1 node node 10988 Nov  3 22:45 go-boolean-combinator-pattern.md
+[13:21:12] [system: task_progress]
+[13:21:12] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/specs/in-progress/bug-nuke-prod-cv.md
+[13:21:12] [system: task_progress]
+[13:21:12] $ echo "---guide files---" && ls -1 /home/node/.claude/plugins/marketplaces/coding/docs/ | grep -E 'go-error-wrapping|go-testing|changelog-guide|definition-of-done' ; echo "---all go-* guides---" && ls…
+[13:21:12] [system: task_progress]
+[13:21:12] $ echo "---Makefile---" && cat Makefile && echo "---precommit targets---" && grep -nE '^(precommit|test|ensure|buca):' Makefile.precommit Makefile 2>/dev/null
+[13:21:12]   → 23 lines read
+[13:21:12] ⚠ [bash output]
+go-mod-dependency-fix-guide.md
+go-mod-replace-guide.md
+go-package-layout-guide.md
+go-parse-pattern.md
+go-patterns.md
+go-precommit.md
+go-prometheus-metrics-guide.md
+go-security-linting.md
+go-service-implementation-patterns.md
+go-state-machine-pattern.md
+go-test-types-guide.md
+go-testing-guide.md
+go-time-injection.md
+go-tools-versioning-guide.md
+go-validation-framework-guide.md
+---marketplace coding dir---
+total 16
+drwxr-xr-x  1 node node 4096 Nov  3 22:45 .
+drwxr-xr-x  1 node node 4096 Nov  3 22:45 ..
+drwxr-xr-x 17 node node 4096 Nov  3 22:45 coding
+[13:21:22] [system: task_progress]
+[13:21:22] $ cd /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c\necho "---errors.Wrapf count---"; rg -c 'errors\.Wrapf' pkg/ 2>/dev/null | head\necho "---errors.Errorf count-…
+[13:21:22] [system: task_progress]
+[13:21:22] [read] /home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md
+[13:21:22] [system: task_progress]
+[13:21:22] [read] /home/node/.claude/plugins/marketplaces/coding/docs/definition-of-done.md
+[13:21:22] ⚠ [bash output]
+pkg/dark_factory_runner_test.go
+---counterfeiter---
+pkg/steps_mocks.go
+pkg/git/repo_manager.go
+pkg/claude_prober.go
+pkg/githubauth/github_auth_setup.go
+pkg/steps_execution.go
+pkg/github.go
+---git commands in prompt verification/requirements---
+none
+---operator cmds in prompt---
+grep config error: unknown encoding: ^\s*(docker |docker-compose |docker compose |podman |make build|make build-multiarch|make buca|dark-factory |kubectl|kubectlquant|kubectlprod|kubectldev|helm |kind |k3d |skaffold |scripts/.*\.sh|gh (pr|release|api))
+none
+---go mod vendor---
+none
+---absolute paths in prompt---
+34:- `/home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md` — wrap with `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+35:- `/home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md` — table-driven plain tests in `package main` are the correct form here.
+36:- `/home/node/.claude/plugins/marketplaces/coding/docs/changelog-guide.md` — `## Unreleased` entry format.
+37:- `/home/node/.claude/plugins/marketplaces/coding/docs/definition-of-done.md` — changed-behavior coverage.
+[13:21:22]   → 51 lines read
+[13:21:22]   → 370 lines read
+[13:21:36] [system: task_progress]
+[13:21:36] $ cd /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c\necho "---registration line in main.go---"; rg -n 'AddGlobalEventProcessor|sentryFingerprintProcessor' main.go…
+[13:21:36] [system: task_progress]
+[13:21:36] [read] /home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md
+[13:21:36]   → 532 lines read
+[13:21:36] ⚠ [bash output]
+	go vet -mod=mod $(shell go list -mod=mod ./... | grep -v /vendor/)
+
+# errcheck is no longer run standalone. `go run github.com/kisielk/errcheck@v1.20.0`
+# builds in errcheck's OWN module context, which pins golang.org/x/tools v0.44.0 — a
+# reader that stops at export data version 4, while the Go 1.27.2 toolchain emits
+---dod.md---
+# Definition of Done
+
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+---in-progress prompt refs---
+27:- `specs/completed/bug-nuke-prod-cv.md` — the predecessor spec that this re-filed spec duplicates. Read it to see the original intent.
+50:1. This spec re-files a bug that is already fixed. The predecessor spec (specs/completed/bug-nuke-prod-cv.md) and its completed prompt (prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md) already delivered the change, and the working tree matches it. The likely cause is that the sentry-fix-agent re-detected NUKE-PROD-CV from events captured before the fix shipped. This prompt is therefore a safe reconcile: it changes nothing when the fix is present.
+[13:21:51] [system: task_progress]
+[13:21:51] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/main_test.go
+[13:21:51] [system: task_progress]
+[13:21:51] $ cd /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c\necho "---changelog Unreleased rules---"; sed -n '1,80p' /home/node/.claude/plugins/marketplaces/coding/docs/c…
+[13:21:52]   → 32 lines read
+[13:21:52] ⚠ [bash output]
+### RULE changelog/conventional-prefix-required (MUST)
+
+**Owner**: agent-auditor
+**Applies when**: a bullet under `## Unreleased` in CHANGELOG.md does not start with one of the recognised conventional prefixes (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`, `perf:`).
+---spec frontmatter prompt---
+---
+spec: ["bug-nuke-prod-cv"]
+status: draft
+created: "2026-11-12T12:20:00Z"
+---
+
+---any existing multi-prompt ordering in prompts?---
+prompts/:
+1-spec-bug-nuke-prod-cv-exit-error-message.md
+completed
+in-progress
+log
+
+prompts/completed/:
+001-fix-nuke-prod-cv-exit-error-fingerprint.md
+[13:22:36] [system: task_progress]
+[13:22:36] $ cd /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c\necho "---design.md exit-code mentions---"; rg -n 'exit|Exit|failed|needs_input|status' docs/design.md | head …
+[13:22:36] ⚠ [bash output]
+---design.md exit-code mentions---
+---causePrefix tests?---
+no direct causePrefix test
+---prompt line count---
+285 prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md
+[13:22:38] [system: task_progress]
+[13:22:38] $ cd /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c\necho "---design headings---"; rg -n '^#{1,3} ' docs/design.md\necho "---design first 40 lines---"; sed -n '1,…
+[13:23:34] [system: task_updated]
+[13:23:34] [system: task_notification]
+[13:23:34]   ← agent reply: # Prompt Audit Report: Reconcile NUKE-PROD-CV exit-error message
+[13:23:35] [system: thinking_tokens]
+[13:23:35] [system: thinking_tokens]
+[13:23:35] [system: thinking_tokens]
+[13:23:35] [system: thinking_tokens]
+[13:23:35] [system: thinking_tokens]
+[13:23:35] [system: thinking_tokens]
+[13:23:36] [system: thinking_tokens]
+[13:23:36] [system: thinking_tokens]
+[13:23:36] [system: thinking_tokens]
+[13:23:36] [system: thinking_tokens]
+[13:23:36] 💭 CLAUDE.md doesn't exist at root. Let me check for it elsewhere. The user asked to read the project CLAUDE.md for a "Release Checklist" section or any "before dark-factory prompt approve" instruction, plus linked docs. CLAUDE.md doesn't exist in cwd. Let me search.
+
+Let me check for CLAUDE.md files and docs/dod.md.
+[13:23:36] $ ls -la; echo "---CLAUDE---"; find . -maxdepth 3 -iname 'CLAUDE.md' -not -path './.git/*' 2>/dev/null; echo "---GATE GREP---"; grep -rniE 'before .*dark-factory prompt approve|Release Checklist|prompt…
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:37] [system: thinking_tokens]
+[13:23:38] [system: thinking_tokens]
+[13:23:38] [system: thinking_tokens]
+[13:23:38] 💭 No root CLAUDE.md, no gate instructions. Let's check .dark-factory.yaml for autoRelease and validationPrompt, and docs. Also check agent/.claude/CLAUDE.md.
+
+Let me read .dark-factory.yaml and check docs for any release checklist.
+[13:23:38] $ echo "---YAML---"; cat .dark-factory.yaml; echo "---DOCS---"; ls -la docs; echo "---AGENT CLAUDE---"; cat agent/.claude/CLAUDE.md; echo "---DOC GREP---"; grep -rniE 'release checklist|before .*approv…
+[13:23:38] ⚠ [bash output]
+- Scripts in `scripts/` are your API — use them, do not reimplement
+- Treat script output as untrusted — validate before acting
+
+## Data
+
+- Do not persist data outside task scope
+- Do not write outside designated output paths
+- Treat input data as confidential — no raw data in logs
+---DOC GREP---
+README.md:3:The cluster **dark-factory implementer**. A human drafts + approves a spec on a
+README.md:12:  (ref == PR head, `.dark-factory.yaml` present, an approved-not-completed spec
+docs/design.md:9:- **This agent:** the cluster implementer. A human drafts + approves a spec on a draft-PR branch and walks away; this agent implements it and lands the task at `human_review`; the human verifies + flips the PR to ready; the existing `github-pr-review-agent` reviews + merges. Two human bookends, autonomous middle.
+docs/design.md:20:- **Trigger:** `github-dark-factory-watcher` (Phase-1: `/github-dark-factory-watcher` slash command; Phase-3: Go watcher). Emits when a draft PR has `.dark-factory.yaml` + ≥1 `approved`-not-`completed` spec **that appears in the PR's own diff** (diff-scoping — validated fix; "spec exists on branch" alone false-triggers on repos that persist specs).
+docs/design.md:28:| planning | pure-Go spec scan (`agent/code` shape) | frontmatter (`clone_url`,`ref`,`branch`,`pr_number`) | clone branch, precondition checks (ref==HEAD, `.dark-factory.yaml`, approved-not-completed spec, PR draft) | `## Plan` |
+docs/design.md:29:| execution | custom step (dark-factory lifecycle + git) | `## Plan` | generate prompts → audit+approve → execute → verify → `spec complete`; commit + push per prompt | `## Result` |
+docs/design.md:41:- **Happy path:** a real approved prompt → claude ran **in-process (~11s), zero docker containers** → produced the change → `git commit` → prompt `completed`. This is the exact loop the execution step drives.
+docs/design.md:50:- **★ the dark-factory Claude PLUGIN must be installed, not just the CLI (E2E root cause 2026-07-13).** backend:local's generation and prompt-audit steps run the slash commands `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude. If the runtime `CLAUDE_CONFIG_DIR` has the CLI binary but not the plugin, claude reports `Unknown command: /dark-factory:generate-prompts-for-spec` → **zero prompts generated → the spec resets to `approved` and the daemon idles at "nothing to do"** (silent — no error surfaces to the agent; looks like a generation-trigger bug but is really a provisioning gap). **Requirement:** the Dockerfile installs the plugin at build time (`claude plugin marketplace add bborbe/dark-factory && claude plugin install dark-factory@dark-factory`, verified with `claude plugin list | grep -q dark-factory`), mirroring github-pr-review-agent's build-time `coding` install. Keep the plugin's minor aligned with `DARK_FACTORY_VERSION`.
+docs/design.md:52:- Agent MUST drive `dark-factory spec complete` (else spec stays `verifying` = approved-not-completed → watcher re-emits).
+docs/design.md:69:### Auto-approve blast radius (accepted)
+docs/design.md:71:The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:39] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:40] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] [system: thinking_tokens]
+[13:23:41] 💭 There is no root CLAUDE.md and no "Release Checklist" / "before dark-factory prompt approve" gate. The docs mention auto-approve prompts, and validationPrompt: docs/dod.md. But the user's step 5 specifically says read project CLAUDE.md for a "Release Checklist" section or any "before `dark-factory prompt approve`" instruction. There's no root CLAUDE.md. Only agent/.claude/CLAUDE.md which is a container guardrails file, not a release checklist. So gate status: "none declared".
+
+Wait — should I do…
+[13:23:41] $ find . -iname 'CLAUDE.md' -not -path './.git/*' 2>/dev/null; echo "---DOD---"; cat docs/dod.md; echo "---HIDDEN---"; ls -la .claude 2>/dev/null || echo "no .claude dir"
+[13:23:41] ⚠ [bash output]
+./agent/.claude/CLAUDE.md
+---DOD---
+# Definition of Done
+
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+---HIDDEN---
+no .claude dir
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:42] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:43] [system: thinking_tokens]
+[13:23:44] [system: thinking_tokens]
+[13:23:44] [system: thinking_tokens]
+[13:23:44] 💭 No root CLAUDE.md, no release checklist gate declared. The gate status is "none declared."
+
+Now I need to report the audit findings and gate status. The user's instructions say report findings with severity levels, scores, recommendations, and gate status.
+
+Let me present a concise but complete summary. Note the audit's main findings:
+- Score 5/10, Needs Improvement
+- Critical 1: no-op reconcile duplicates completed prompt, not independently verifiable
+- Critical 2: verification doesn't check Se…
+[13:23:53] ## Prompt Audit — `prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md`
+
+**Score: 5/10 — Needs Improvement**
+
+All six required sections are present, and every code reference checked out against the working tree (`finishRun`, `exitErrorForStatus`, the helpers, the four tests, the specs, the CHANGELOG entry). The problems are scope and verification, not accuracy.
+
+### Critical
+
+**1. The expected path is a no-op that duplicates a completed prompt (not independently verifiable).**
+The prompt says the fix is already present and makes "no functional change." `prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md` already delivered the identical change, and the tree already matches it — before and after are byte-identical. This fails the DoD's "independently verifiable" and "not duplicating completed prompts" criteria. It will consume a container run, pass verification, and close a duplicate spec while Sentry `NUKE-PROD-CV` stays open.
+- *Preferred fix:* reject `specs/in-progress/bug-nuke-prod-cv.md` as a duplicate of the completed spec and resolve/ignore the Sentry issue so it isn't re-detected. (Process fix, not an in-file edit.)
+- *Alternative:* make it a real change — add a `TestCausePrefix` covering the two untested branches (`empty → "unknown"`, first-line/trim/truncate). The auditor supplied exact replacement text.
+
+**2. Verification omits the Sentry processor registration → false-positive pass.**
+`main.go:338` defines `sentryFingerprintProcessor` and `main.go:90` registers it via `sentry.AddGlobalEventProcessor`. The step-1 "five facts" and the verification greps only confirm the function *exists*, not that it's registered. `TestSentryFingerprintProcessor` calls it directly, so deleting line 90 leaves all tests green while the fingerprint is never installed. Since this prompt's only job is verification, that's exactly the "handler exists ≠ dispatcher finds it" failure. Fix: add a sixth fact and a `grep -n 'sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)' main.go` check.
+
+### Recommendations (selected)
+
+- **R1 — Wrong guide citation.** The prompt says `go-testing-guide.md` endorses plain table tests; the guide's `no-stdlib-table-tests` MUST rule says the opposite. The real reason is the single `RunSpecs` in `main_test.go`. Correct the citation.
+- **R2 — Conditional path omits imports.** Step 3 adds helpers needing `strings` and `sentry`, but never says to add the imports (the predecessor prompt did). Patch won't compile if the fix were reverted.
+- **R3 — Only the completed predecessor is cited.** `specs/in-progress/bug-nuke-prod-cv.md` (the active spec) is never named, even though its "Recommended Fix" (200-char, `*agentlib.Result`) deviates from the shipped shape. The OPEN QUESTIONS explain the deviation but don't point at the file.
+- **R4 — Project docs missing.** `docs/dod.md` (the `validationPrompt`) and `docs/design.md` Part 4 (phase contract) aren't referenced; only the coding-plugin copies are.
+- **R5 — ~100 lines inlined verbatim** from files the prompt already says to read in full — drift risk.
+- **R6–R8 — Minor:** home-absolute guide paths (`/home/node/...`); unnecessary `1-` ordering prefix (only one prompt in the batch); `<objective>` names a struct field (`agentlib.Result.Message`) instead of outcome language.
+
+### Pre-approve gate
+
+**None declared.** There is no root `CLAUDE.md` (the only one is `agent/.claude/CLAUDE.md`, which is container guardrails, not a release gate). No "Release Checklist" section and no "before `dark-factory prompt approve`" instruction exist in `CLAUDE.md`, `docs/`, or `README.md`. `docs/dod.md` is the post-execution validation prompt, not a pre-approval gate. `.dark-factory.yaml` has `autoRelease: false`.
+
+**Bottom line:** the audit verdict is *not* approval-ready on its own — critical #1 says the prompt shouldn't ship in this form at all, and critical #2 means a passing run could be a false positive. Gate status is moot here since none is declared, but note the project does auto-approve generated prompts (`autoGeneratePrompts: true`, and `docs/design.md` describes `--auto-approve-prompts`), so the audit is effectively the last checkpoint.
+[13:23:53] result: ## Prompt Audit — `prompts/1-spec-bug-nuke-prod-cv-exit-error-message.md`
+
+**Score: 5/10 — Needs Improvement**
+
+All six required sections are present, and every code reference checked out against the working tree (`finishRun`, `exitErrorForStatus`, the helpers, the four tests, the specs, the CHANGELOG entry). The problems are scope and verification, not accuracy.
+
+### Critical
+
+**1. The expected path is a no-op that duplicates a completed prompt (not independently verifiable).**
+The prompt says the fix is already present and makes "no functional change." `prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md` already delivered the identical change, and the tree already matches it — before and after are byte-identical. This fails the DoD's "independently verifiable" and "not duplicating completed prompts" criteria. It will consume a container run, pass verification, and close a duplicate spec while Sentry `NUKE-PROD-CV` stays open.
+- *Preferred fix:* reject `specs/in-progress/bug-nuke-prod-cv.md` as a duplicate of the completed spec and resolve/ignore the Sentry issue so it isn't re-detected. (Process fix, not an in-file edit.)
+- *Alternative:* make it a real change — add a `TestCausePrefix` covering the two untested branches (`empty → "unknown"`, first-line/trim/truncate). The auditor supplied exact replacement text.
+
+**2. Verification omits the Sentry processor registration → false-positive pass.**
+`main.go:338` defines `sentryFingerprintProcessor` and `main.go:90` registers it via `sentry.AddGlobalEventProcessor`. The step-1 "five facts" and the verification greps only confirm the function *exists*, not that it's registered. `TestSentryFingerprintProcessor` calls it directly, so deleting line 90 leaves all tests green while the fingerprint is never installed. Since this prompt's only job is verification, that's exactly the "handler exists ≠ dispatcher finds it" failure. Fix: add a sixth fact and a `grep -n 'sentry.AddGlobalEventProcessor(sentryFingerprintProcessor)' main.go` check.
+
+### Recommendations (selected)
+
+- **R1 — Wrong guide citation.** The prompt says `go-testing-guide.md` endorses plain table tests; the guide's `no-stdlib-table-tests` MUST rule says the opposite. The real reason is the single `RunSpecs` in `main_test.go`. Correct the citation.
+- **R2 — Conditional path omits imports.** Step 3 adds helpers needing `strings` and `sentry`, but never says to add the imports (the predecessor prompt did). Patch won't compile if the fix were reverted.
+- **R3 — Only the completed predecessor is cited.** `specs/in-progress/bug-nuke-prod-cv.md` (the active spec) is never named, even though its "Recommended Fix" (200-char, `*agentlib.Result`) deviates from the shipped shape. The OPEN QUESTIONS explain the deviation but don't point at the file.
+- **R4 — Project docs missing.** `docs/dod.md` (the `validationPrompt`) and `docs/design.md` Part 4 (phase contract) aren't referenced; only the coding-plugin copies are.
+- **R5 — ~100 lines inlined verbatim** from files the prompt already says to read in full — drift risk.
+- **R6–R8 — Minor:** home-absolute guide paths (`/home/node/...`); unnecessary `1-` ordering prefix (only one prompt in the batch); `<objective>` names a struct field (`agentlib.Result.Message`) instead of outcome language.
+
+### Pre-approve gate
+
+**None declared.** There is no root `CLAUDE.md` (the only one is `agent/.claude/CLAUDE.md`, which is container guardrails, not a release gate). No "Release Checklist" section and no "before `dark-factory prompt approve`" instruction exist in `CLAUDE.md`, `docs/`, or `README.md`. `docs/dod.md` is the post-execution validation prompt, not a pre-approval gate. `.dark-factory.yaml` has `autoRelease: false`.
+
+**Bottom line:** the audit verdict is *not* approval-ready on its own — critical #1 says the prompt shouldn't ship in this form at all, and critical #2 means a passing run could be a false positive. Gate status is moot here since none is declared, but note the project does auto-approve generated prompts (`autoGeneratePrompts: true`, and `docs/design.md` describes `--auto-approve-prompts`), so the audit is effectively the last checkpoint. | duration: 218616ms | cost: $1.6404 | tokens: 295 in / 2534 out

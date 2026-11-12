@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: **attach failure context to the Sentry event as tags.** Failed agent runs now carry `task_id`, `task_type`, `phase`, and a 500-rune-bounded `result.Message` on the Sentry event as tags, via `errors.AddToContext` before `exitErrorForStatus` builds the error. The fingerprint grouping and the non-zero exit for `failed` are unchanged; `needs_input` still exits 0.
+- fix: **carry the failed result's message into the non-zero-exit error and fingerprint the Sentry event by phase + cause prefix.** `exitErrorForStatus` built its error from status and phase only, so every failed run produced the same capture-site stack and Sentry merged unrelated planning / execution / ai_review causes into one umbrella issue (`NUKE-PROD-CV`). The error now includes a 500-rune-bounded `Result.Message`, and a global Sentry event processor sets `event.Fingerprint` to `["agent-status-failed", <phase>, <first-line cause prefix, 100 runes>]`. The non-zero exit for `failed` is unchanged, and `needs_input` still exits 0 because parking for a human answer is its intent. Paging policy is deliberately unchanged
+- chore: update Go to 1.27.4 (go.mod + Dockerfile) — clears `GO-2026-6859` (stdlib `net/http` `MaxBytesReader` header race), which the `vulncheck` gate reports at 1.27.3
+
 ## v0.6.2
 
 - fix: link the pinned dark-factory clone to `~/.claude/plugins/marketplaces/dark-factory` so the authoring-rule paths the agents hardcode resolve — a local-path `marketplace add` never creates that directory, so prompt generation ran with no guides
