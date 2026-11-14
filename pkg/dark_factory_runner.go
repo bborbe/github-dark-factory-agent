@@ -275,7 +275,7 @@ func (r *darkFactoryRunner) waitForDrain(
 // Returns "" while work is in flight — a prompt that has just landed in the
 // inbox is precisely the one about to be approved and executed.
 func findStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) ||
+	if hasInboxPrompts(ctx, workdir, specIDs) || hasInProgressPrompts(workdir) ||
 		anySpecGenerating(ctx, workdir) {
 		return ""
 	}
@@ -429,7 +429,7 @@ func specNumPrefix(id string) string {
 // approved/executed, and the implementation file (e.g. the marker) is never
 // created. A spec still in approved/generating/prompted also means work ongoing.
 func (r *darkFactoryRunner) drained(ctx context.Context, workdir string, specIDs []string) bool {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
+	if hasInboxPrompts(ctx, workdir, specIDs) || hasInProgressPrompts(workdir) {
 		return false
 	}
 	for _, id := range specIDs {
@@ -540,15 +540,83 @@ func (r *darkFactoryRunner) run(
 	return nil
 }
 
+// Prompt statuses in the inbox that can no longer advance a spec: `rejected`
+// and `cancelled` are terminal, `completed` is already done.
+const (
+	promptStatusRejected  = "rejected"
+	promptStatusCancelled = "cancelled"
+	promptStatusCompleted = "completed"
+)
+
 // hasInboxPrompts reports whether the generation inbox — prompts/*.md at the
-// repo root — holds any prompt. A newly generated prompt lands here and stays
-// until the daemon's auto-approve audit moves it to prompts/in-progress. The
+// repo root — holds a prompt that can still advance one of specIDs. The
 // subdirectories (in-progress/completed/log) are not *.md files, so this glob
 // matches only inbox prompts. See drained() for why the inbox is treated as
 // work-in-flight.
-func hasInboxPrompts(workdir string) bool {
+//
+// A prompt for some OTHER spec must not count as work in flight. Measured
+// 2026-11-14: four `status: draft` prompts for unrelated specs (023, 010, 021,
+// bab89662) sat in the inbox of bborbe/agent-task-executor for a whole
+// 90-minute run, and the bare glob made drained() and findStalledSpec() read
+// them as work in flight for a run that only requested `bug-nuke-dev-fm`. The
+// drain never completed, the stall detector never fired, and the Job was killed
+// at its deadline over work that had already succeeded.
+//
+// The auto-approve window this guard protects is preserved: the prompt the run
+// just generated is linked to a requested spec, so it stays in flight while the
+// audit runs. Whether the daemon auto-approves is not consulted — every
+// lifecycle run passes --auto-approve-prompts (executionFlags), so it is not a
+// discriminator.
+//
+// A prompt that cannot be read, or that carries no `spec:` link at all
+// (mid-write, or dark-factory's unlinked fallback), stays in flight: it cannot
+// be proven parked.
+func hasInboxPrompts(ctx context.Context, workdir string, specIDs []string) bool {
 	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "*.md"))
-	return len(matches) > 0
+	for _, path := range matches {
+		if ctx.Err() != nil {
+			return true
+		}
+		if inboxPromptCanAdvanceSpecs(ctx, path, specIDs) {
+			return true
+		}
+	}
+	return false
+}
+
+// inboxPromptCanAdvanceSpecs reports whether one inbox prompt file can still
+// advance any of specIDs. Split from hasInboxPrompts so each loop stays under
+// the cognitive-complexity ceiling.
+//
+// An unreadable file, or one carrying no `spec:` link at all (mid-write, or
+// dark-factory's unlinked fallback prompt), cannot be proven parked and stays
+// in flight.
+func inboxPromptCanAdvanceSpecs(ctx context.Context, path string, specIDs []string) bool {
+	content, err := os.ReadFile(path) // #nosec G304 -- path from Glob over the managed worktree
+	if err != nil {
+		return true
+	}
+	parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+	if err != nil {
+		return true
+	}
+	status, _ := parsed.Frontmatter.String("status")
+	switch strings.TrimSpace(status) {
+	case promptStatusRejected, promptStatusCancelled, promptStatusCompleted:
+		return false
+	}
+	specs := promptSpecValues(parsed.Frontmatter["spec"])
+	if len(specs) == 0 {
+		return true
+	}
+	for _, spec := range specs {
+		for _, id := range specIDs {
+			if specNumPrefix(spec) == specNumPrefix(id) || spec == id {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // hasInProgressPrompts reports whether prompts/in-progress holds any *.md file.

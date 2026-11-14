@@ -85,13 +85,23 @@ var _ = Describe("darkFactoryRunner", func() {
 			Expect(os.WriteFile(
 				filepath.Join(work, "prompts", "completed", "done.md"), []byte("x"), 0600,
 			)).To(BeNil())
-			Expect(pkg.HasInboxPrompts(work)).To(BeFalse())
+			Expect(pkg.HasInboxPrompts(ctx, work, []string{"001-hello"})).To(BeFalse())
 
 			// A generated prompt awaiting auto-approve lands in the inbox (root).
 			Expect(os.WriteFile(
 				filepath.Join(work, "prompts", "001-inbox.md"), []byte("x"), 0600,
 			)).To(BeNil())
-			Expect(pkg.HasInboxPrompts(work)).To(BeTrue())
+			Expect(pkg.HasInboxPrompts(ctx, work, []string{"001-hello"})).To(BeTrue())
+
+			// An unparseable inbox prompt stays in flight (mid-write), but a prompt
+			// linked only to some OTHER spec must not hold a run for this one.
+			Expect(os.WriteFile(
+				filepath.Join(work, "prompts", "001-inbox.md"),
+				[]byte("---\nstatus: draft\nspec: [\"023-other\"]\n---\n\nbody\n"),
+				0600,
+			)).To(BeNil())
+			Expect(pkg.HasInboxPrompts(ctx, work, []string{"001-hello"})).To(BeFalse())
+			Expect(pkg.HasInboxPrompts(ctx, work, []string{"023-other"})).To(BeTrue())
 		})
 
 		It("finds a failed prompt but ignores approved/executing/unparseable ones", func() {
@@ -324,6 +334,51 @@ esac
 				Expect(err.Error()).To(ContainSubstring("drain"))
 			},
 		)
+
+		It("drains while the inbox holds only prompts for other specs", func() {
+			work := GinkgoT().TempDir()
+			// Measured 2026-11-14: four `status: draft` prompts for unrelated specs
+			// sat in the inbox for a whole run. The bare glob read them as work in
+			// flight, the drain never completed, and the Job was killed at its
+			// deadline over work that had already succeeded. A prompt that cannot
+			// advance a requested spec must not hold the drain.
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts specs/in-progress
+    printf -- '---\nstatus: draft\nspec: ["023-other"]\n---\n\nbody\n' > prompts/023-other.md
+    printf -- '---\nstatus: draft\nspec: ["010-another"]\n---\n\nbody\n' > prompts/010-another.md
+    printf -- '---\nstatus: verifying\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 5*time.Second)
+			res, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+			Expect(err).To(BeNil())
+			Expect(res.SpecStatuses["001-hello"]).To(Equal("verifying"))
+		})
+
+		It("still holds the drain while a requested spec's prompt awaits approval", func() {
+			work := GinkgoT().TempDir()
+			// The other-spec fix must not reopen the auto-approve window: this draft
+			// IS linked to the requested spec, so the audit approves it next tick and
+			// draining over it would SIGKILL the in-flight audit.
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts specs/in-progress
+    printf -- '---\nstatus: draft\nspec: ["001-hello"]\n---\n\nbody\n' > prompts/001-audit.md
+    printf -- '---\nstatus: verifying\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 250*time.Millisecond)
+			_, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+			Expect(err).NotTo(BeNil())
+			Expect(err.Error()).To(ContainSubstring("drain"))
+		})
 
 		It("errors when the lifecycle does not drain before the deadline", func() {
 			work := GinkgoT().TempDir()
