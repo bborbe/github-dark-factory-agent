@@ -85,13 +85,13 @@ var _ = Describe("darkFactoryRunner", func() {
 			Expect(os.WriteFile(
 				filepath.Join(work, "prompts", "completed", "done.md"), []byte("x"), 0600,
 			)).To(BeNil())
-			Expect(pkg.HasInboxPrompts(work)).To(BeFalse())
+			Expect(pkg.HasInboxPrompts(ctx, work)).To(BeFalse())
 
 			// A generated prompt awaiting auto-approve lands in the inbox (root).
 			Expect(os.WriteFile(
 				filepath.Join(work, "prompts", "001-inbox.md"), []byte("x"), 0600,
 			)).To(BeNil())
-			Expect(pkg.HasInboxPrompts(work)).To(BeTrue())
+			Expect(pkg.HasInboxPrompts(ctx, work)).To(BeTrue())
 		})
 
 		It("finds a failed prompt but ignores approved/executing/unparseable ones", func() {
@@ -324,6 +324,57 @@ esac
 				Expect(err.Error()).To(ContainSubstring("drain"))
 			},
 		)
+
+		It("drains when the only inbox prompts are parked drafts (autoApprovePrompts off)", func() {
+			work := GinkgoT().TempDir()
+			// Measured 2026-11-14: four `status: draft` prompts sat in the inbox
+			// with autoApprovePrompts off, so nothing would ever approve them. The
+			// bare glob read them as work in flight, the drain never completed, and
+			// the Job was killed at its deadline over work that had already
+			// succeeded. A parked prompt must not hold the drain.
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts specs/in-progress
+    printf -- '---\nstatus: draft\nspec: ["001-hello"]\n---\n\nbody\n' > prompts/001-parked.md
+    printf -- '---\nstatus: verifying\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 5*time.Second)
+			res, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+			Expect(err).To(BeNil())
+			Expect(res.SpecStatuses["001-hello"]).To(Equal("verifying"))
+		})
+
+		It("still treats an inbox draft as in flight when autoApprovePrompts is on", func() {
+			work := GinkgoT().TempDir()
+			// The parked-draft fix must not reopen the auto-approve window: with
+			// autoApprovePrompts on the audit approves this draft next tick, so
+			// draining over it would SIGKILL the in-flight audit.
+			Expect(
+				os.WriteFile(
+					filepath.Join(work, ".dark-factory.yaml"),
+					[]byte("autoApprovePrompts: true\n"),
+					0600,
+				),
+			).To(BeNil())
+			stub := writeStub(work, `
+case "$1" in
+  daemon)
+    mkdir -p prompts specs/in-progress
+    printf -- '---\nstatus: draft\nspec: ["001-hello"]\n---\n\nbody\n' > prompts/001-audit.md
+    printf -- '---\nstatus: verifying\n---\n\nbody\n' > specs/in-progress/001-hello.md
+    while true; do sleep 0.1; done ;;
+  *) exit 0 ;;
+esac
+`)
+			runner := pkg.NewTestExecutionRunner(stub, 20*time.Millisecond, 250*time.Millisecond)
+			_, err := runner.RunLifecycle(ctx, work, []string{"001-hello"}, nil)
+			Expect(err).NotTo(BeNil())
+			Expect(err.Error()).To(ContainSubstring("drain"))
+		})
 
 		It("errors when the lifecycle does not drain before the deadline", func() {
 			work := GinkgoT().TempDir()

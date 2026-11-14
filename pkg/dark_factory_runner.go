@@ -275,7 +275,7 @@ func (r *darkFactoryRunner) waitForDrain(
 // Returns "" while work is in flight — a prompt that has just landed in the
 // inbox is precisely the one about to be approved and executed.
 func findStalledSpec(ctx context.Context, workdir string, specIDs []string) string {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) ||
+	if hasInboxPrompts(ctx, workdir) || hasInProgressPrompts(workdir) ||
 		anySpecGenerating(ctx, workdir) {
 		return ""
 	}
@@ -429,7 +429,7 @@ func specNumPrefix(id string) string {
 // approved/executed, and the implementation file (e.g. the marker) is never
 // created. A spec still in approved/generating/prompted also means work ongoing.
 func (r *darkFactoryRunner) drained(ctx context.Context, workdir string, specIDs []string) bool {
-	if hasInboxPrompts(workdir) || hasInProgressPrompts(workdir) {
+	if hasInboxPrompts(ctx, workdir) || hasInProgressPrompts(workdir) {
 		return false
 	}
 	for _, id := range specIDs {
@@ -540,15 +540,80 @@ func (r *darkFactoryRunner) run(
 	return nil
 }
 
+// Prompt statuses that can sit in the inbox while nothing advances them:
+// `idea` and `draft` await approval, `rejected` and `cancelled` are terminal,
+// `completed` is already done.
+const (
+	promptStatusIdea      = "idea"
+	promptStatusDraft     = "draft"
+	promptStatusRejected  = "rejected"
+	promptStatusCancelled = "cancelled"
+	promptStatusCompleted = "completed"
+)
+
 // hasInboxPrompts reports whether the generation inbox — prompts/*.md at the
-// repo root — holds any prompt. A newly generated prompt lands here and stays
-// until the daemon's auto-approve audit moves it to prompts/in-progress. The
-// subdirectories (in-progress/completed/log) are not *.md files, so this glob
-// matches only inbox prompts. See drained() for why the inbox is treated as
-// work-in-flight.
-func hasInboxPrompts(workdir string) bool {
+// repo root — holds a prompt the daemon will act on. The subdirectories
+// (in-progress/completed/log) are not *.md files, so this glob matches only
+// inbox prompts. See drained() for why the inbox is treated as work-in-flight.
+//
+// A parked prompt must NOT count as work in flight. Measured 2026-11-14: four
+// `status: draft` prompts sat in the inbox of bborbe/agent-task-executor for a
+// whole 90-minute run with autoApprovePrompts off, so nothing would ever
+// approve them — yet the bare glob made drained() and findStalledSpec() read
+// them as work in flight. The drain never completed, the stall detector never
+// fired, and the Job was killed at its deadline over work that had already
+// succeeded.
+//
+// `draft` is in flight only when the repo enables autoApprovePrompts, because
+// then the daemon's audit approves it on the next tick. An unreadable or
+// not-yet-written status stays in flight: a prompt mid-write must never be read
+// as parked.
+func hasInboxPrompts(ctx context.Context, workdir string) bool {
 	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "*.md"))
-	return len(matches) > 0
+	if len(matches) == 0 {
+		return false
+	}
+	autoApprove := autoApprovePromptsEnabled(workdir)
+	for _, path := range matches {
+		content, err := os.ReadFile(path) // #nosec G304 -- path from Glob over the managed worktree
+		if err != nil {
+			return true
+		}
+		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+		if err != nil {
+			return true
+		}
+		status, _ := parsed.Frontmatter.String("status")
+		switch strings.TrimSpace(status) {
+		case promptStatusIdea, promptStatusRejected, promptStatusCancelled, promptStatusCompleted:
+			continue
+		case promptStatusDraft:
+			if !autoApprove {
+				continue
+			}
+		}
+		return true
+	}
+	return false
+}
+
+// autoApprovePromptsEnabled reports whether the worktree's .dark-factory.yaml
+// turns on the daemon's prompt auto-approval (draft -> approved). Absent or
+// unreadable reads as off, which is the config default.
+func autoApprovePromptsEnabled(workdir string) bool {
+	content, err := os.ReadFile(filepath.Join(workdir, ".dark-factory.yaml"))
+	if err != nil {
+		return false
+	}
+	for _, line := range strings.Split(string(content), "\n") {
+		key, value, found := strings.Cut(strings.TrimSpace(line), ":")
+		if !found || strings.TrimSpace(key) != "autoApprovePrompts" {
+			continue
+		}
+		value = strings.TrimSpace(strings.SplitN(value, "#", 2)[0])
+		return strings.Trim(value, `"'`) == "true"
+	}
+	return false
 }
 
 // hasInProgressPrompts reports whether prompts/in-progress holds any *.md file.

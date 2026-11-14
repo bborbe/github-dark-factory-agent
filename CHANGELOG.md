@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: count only runnable inbox prompts as work in flight, so a parked `status: draft` prompt can no longer hold the lifecycle drain to the Job deadline. `hasInboxPrompts` was a bare `prompts/*.md` glob with no status filter, so on 2026-11-14 four drafts sat in the inbox of `bborbe/agent-task-executor` (autoApprovePrompts off, nothing would ever approve them) and both `drained()` and `findStalledSpec()` read them as work in flight: the drain never completed, the stall detector never fired, and a Job whose prompt had already reported success was killed at its deadline and republished as `failed`. `idea`/`rejected`/`cancelled`/`completed` no longer count, `draft` counts only when the repo enables `autoApprovePrompts`, and an unreadable or not-yet-written status still counts so a prompt mid-write is never read as parked.
+
 ## v0.7.0
 
 - feat: add a `check-task-link` gate that fails a PR whose body carries no `Task: <task_identifier>` line, and install a pinned, checksum-verified Trivy release so `test` stops failing on the retired keyring helper
