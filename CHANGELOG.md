@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- feat: add a `check-task-link` gate that fails a PR whose body carries no `Task: <task_identifier>` line, and install a pinned, checksum-verified Trivy release so `test` stops failing on the retired keyring helper
+
 ## v0.6.3
 
 - fix: bump the `go` directive to 1.27.4 and the Dockerfile build image to `golang:1.27.4`, so the image and `go.mod` name the same toolchain. The update-go agent could not proceed because `make precommit` failed with exit 2 and no parseable findings, which it treats as a broken gate and never retries — the real cause was the stale toolchain, not the code. `GOSEC_VERSION` moves to v2.30.0 in step with the canonical `tools.env`; this repo runs gosec inside golangci-lint rather than standalone, so the pin is kept for sync only.
