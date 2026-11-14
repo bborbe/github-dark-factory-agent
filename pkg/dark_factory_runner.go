@@ -573,37 +573,46 @@ const (
 // be proven parked.
 func hasInboxPrompts(ctx context.Context, workdir string, specIDs []string) bool {
 	matches, _ := filepath.Glob(filepath.Join(workdir, "prompts", "*.md"))
-	if len(matches) == 0 {
-		return false
-	}
 	for _, path := range matches {
 		if ctx.Err() != nil {
 			return true
 		}
-		content, err := os.ReadFile(path) // #nosec G304 -- path from Glob over the managed worktree
-		if err != nil {
+		if inboxPromptCanAdvanceSpecs(ctx, path, specIDs) {
 			return true
 		}
-		parsed, err := agentlib.ParseMarkdown(ctx, string(content))
-		if err != nil {
-			return true
-		}
-		status, _ := parsed.Frontmatter.String("status")
-		switch strings.TrimSpace(status) {
-		case promptStatusRejected, promptStatusCancelled, promptStatusCompleted:
-			continue
-		}
-		specs := promptSpecValues(parsed.Frontmatter["spec"])
-		if len(specs) == 0 {
-			// No spec link — mid-write, or dark-factory's unlinked fallback prompt.
-			// It cannot be proven parked, so keep it in flight.
-			return true
-		}
-		for _, spec := range specs {
-			for _, id := range specIDs {
-				if specNumPrefix(spec) == specNumPrefix(id) || spec == id {
-					return true
-				}
+	}
+	return false
+}
+
+// inboxPromptCanAdvanceSpecs reports whether one inbox prompt file can still
+// advance any of specIDs. Split from hasInboxPrompts so each loop stays under
+// the cognitive-complexity ceiling.
+//
+// An unreadable file, or one carrying no `spec:` link at all (mid-write, or
+// dark-factory's unlinked fallback prompt), cannot be proven parked and stays
+// in flight.
+func inboxPromptCanAdvanceSpecs(ctx context.Context, path string, specIDs []string) bool {
+	content, err := os.ReadFile(path) // #nosec G304 -- path from Glob over the managed worktree
+	if err != nil {
+		return true
+	}
+	parsed, err := agentlib.ParseMarkdown(ctx, string(content))
+	if err != nil {
+		return true
+	}
+	status, _ := parsed.Frontmatter.String("status")
+	switch strings.TrimSpace(status) {
+	case promptStatusRejected, promptStatusCancelled, promptStatusCompleted:
+		return false
+	}
+	specs := promptSpecValues(parsed.Frontmatter["spec"])
+	if len(specs) == 0 {
+		return true
+	}
+	for _, spec := range specs {
+		for _, id := range specIDs {
+			if specNumPrefix(spec) == specNumPrefix(id) || spec == id {
+				return true
 			}
 		}
 	}
