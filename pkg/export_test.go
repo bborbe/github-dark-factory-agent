@@ -48,8 +48,8 @@ func ReadSpecStatus(ctx context.Context, workdir, id string) string {
 func HasInProgressPrompts(workdir string) bool { return hasInProgressPrompts(workdir) }
 
 // HasInboxPrompts exposes the generation-inbox check for tests.
-func HasInboxPrompts(ctx context.Context, workdir string) bool {
-	return hasInboxPrompts(ctx, workdir)
+func HasInboxPrompts(ctx context.Context, workdir string, specIDs []string) bool {
+	return hasInboxPrompts(ctx, workdir, specIDs)
 }
 
 // CountCompletedPrompts exposes the completed-prompt counter for tests.
