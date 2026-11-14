@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.7.1
 
 - fix: count an inbox prompt as work in flight only when it can still advance one of the run's requested specs, so an unrelated `status: draft` prompt can no longer hold the lifecycle drain to the Job deadline. `hasInboxPrompts` was a bare `prompts/*.md` glob, so on 2026-11-14 four drafts for other specs (023, 010, 021, bab89662) sat in the inbox of `bborbe/agent-task-executor` and both `drained()` and `findStalledSpec()` read them as work in flight for a run that requested only `bug-nuke-dev-fm`: the drain never completed, the stall detector never fired, and a Job whose prompt had already reported success was killed at its deadline and republished as `failed`. `rejected`/`cancelled`/`completed` never count, and an unreadable or not-yet-written prompt still counts so a mid-write prompt is never read as parked. The auto-approve window is preserved because the prompt the run just generated is linked to a requested spec; the daemon's auto-approve setting is not consulted, since every lifecycle run passes `--auto-approve-prompts`.
 
