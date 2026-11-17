@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.7.2
 
 - fix: **a planning precondition that cannot be cleared by a re-run now parks as `needs_input` instead of `failed`.** `failed` is defined as transient — the controller retries it, incrementing `trigger_count` until `max_triggers` holds the record — so a record whose PR head had advanced since emit re-ran the identical refusal until the budget was gone. Measured on sun 2026-11-17: record `291e00a7` (PR `bborbe/agent-task-controller#163`, ref `67c699b6`) failed 07:44–07:49Z as `pod_crash_no_stdout (Error/1)`, because the process exits non-zero for `failed` but returns nil for every other status. The four permanent preconditions — ref≠HEAD, PR not a draft, `.dark-factory.yaml` missing, no approved-not-completed spec in the diff — now return `needs_input`, which the deliverer writes as `status: in_progress` with the assignee cleared and the phase preserved, so the record parks for a human on its first trigger. Clone and GitHub API errors keep `failed`; those are genuinely transient.
 
