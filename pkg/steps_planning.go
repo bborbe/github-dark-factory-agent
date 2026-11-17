@@ -145,22 +145,26 @@ func (s *planningStep) validateAndPlan(
 	}
 
 	// (a) ref must equal the PR head SHA — the watcher emits the SHA it saw;
-	// a mismatch means the branch advanced under us.
+	// a mismatch means the branch advanced under us. Terminal (needs_input), not
+	// failed: a new head SHA mints its own record, so retrying this one against
+	// the same ref can never succeed. `failed` is defined as transient and is
+	// retried, which is what turned this refusal into a retry loop.
 	if pr.HeadSHA != fields["ref"] {
-		return failed(fmt.Sprintf(
+		return needsInput(fmt.Sprintf(
 			"planning: ref %q != PR #%d head sha %q (branch advanced since emit)",
 			fields["ref"], prNumber, pr.HeadSHA,
 		)), nil
 	}
 
-	// (d) PR must be a draft — this agent never operates on a ready PR.
+	// (d) PR must be a draft — this agent never operates on a ready PR. Permanent
+	// for this SHA: a re-trigger cannot make a ready PR draft again.
 	if !pr.Draft {
-		return failed(fmt.Sprintf("planning: PR #%d is not a draft", prNumber)), nil
+		return needsInput(fmt.Sprintf("planning: PR #%d is not a draft", prNumber)), nil
 	}
 
-	// (b) .dark-factory.yaml must be present on the branch.
+	// (b) .dark-factory.yaml must be present on the branch. Permanent for this SHA.
 	if !fileExists(filepath.Join(worktree, darkFactoryConfigFile)) {
-		return failed("planning: " + darkFactoryConfigFile + " missing in worktree"), nil
+		return needsInput("planning: " + darkFactoryConfigFile + " missing in worktree"), nil
 	}
 
 	// (c) at least one approved-not-completed spec under specs/in-progress/
@@ -174,11 +178,12 @@ func (s *planningStep) validateAndPlan(
 		return failed("planning: scan specs: " + err.Error()), nil
 	}
 	if len(matched) == 0 {
-		// Terminal (failed), not needs_input: retrying the same head SHA cannot
+		// Terminal (needs_input), not failed: retrying the same head SHA cannot
 		// help — the PR diff carries no implementable spec, and no re-trigger of
 		// this SHA will make one appear. A new commit (new SHA) re-emits a fresh
-		// task; that is the only path forward, so escalate rather than retry.
-		return failed(
+		// task; that is the only path forward, so park for a human rather than
+		// burn the trigger budget.
+		return needsInput(
 			"planning: no approved-not-completed spec under " + specGlobDir + "/ found in PR #" +
 				strconv.Itoa(prNumber) + " diff",
 		), nil
