@@ -1,0 +1,1045 @@
+[20:35:25] [init] session=724d1a87 model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735 tools=25
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:26] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] [system: thinking_tokens]
+[20:35:27] 💭 Let me start by reading the prompt file and the project's CLAUDE.md to check the gate.
+
+The command says to invoke the prompt-auditor agent. Let me do that. But first, maybe read the prompt file myself? The instructions say to invoke the agent with the prompt path. Let me do that and also read CLAUDE.md in parallel.
+
+Actually, let me invoke the agent and read CLAUDE.md simultaneously.
+[20:35:29] [agent:dark-factory:prompt-auditor] Audit dark-factory prompt
+    prompt: Audit the dark-factory prompt file at `prompts/bug-nuke-dev-g9-sentry-phase-fingerprint.md` (relative to the repository root /home/node/.cache/github-dark-fact…
+[20:35:29] [system: task_started]
+[20:35:29] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/CLAUDE.md
+[20:35:29] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/prompts/bug-nuke-dev-g9-sentry-phase-fingerprint.md
+[20:35:29] ⚠ [Read] error: File does not exist. Note: your current working directory is /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735.
+[20:35:29]   → 285 lines read
+[20:35:30] [system: task_progress]
+[20:35:30] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/prompts/bug-nuke-dev-g9-sentry-phase-fingerprint.md
+[20:35:30] [system: task_progress]
+[20:35:30] $ ls -la && echo "--- prompts ---" && ls -la prompts/ && echo "--- config ---" && cat .dark-factory.yaml 2>/dev/null || echo "no .dark-factory.yaml"
+[20:35:30]   → 285 lines read
+[20:35:33] [system: task_progress]
+[20:35:33] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/main.go
+[20:35:33] [system: task_progress]
+[20:35:33] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/main_internal_test.go
+[20:35:33] [system: task_progress]
+[20:35:33] $ ls -la /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/specs/ && echo "---" && find /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb6…
+[20:35:33] [system: task_progress]
+[20:35:33] $ cat /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/cmd/run-task/main.go 2>/dev/null | head -120; echo "=== docs ==="; ls -la /home/node/.cache/github-dark-facto…
+[20:35:33]   → 125 lines read
+[20:35:33]   → 352 lines read
+[20:35:33] ⚠ [bash output]
+		a.AnthropicModel,
+		ghToken,
+		claudeEnv,
+		repoManager,
+		githubClient,
+		claudeProber,
+		// Local CLI path: the credential is the operator's own long-lived gh
+=== docs ===
+total 40
+drwxr-xr-x  2 node node  4096 Nov 11 20:22 .
+drwxr-xr-x 11 node node  4096 Nov 11 20:22 ..
+-rw-r--r--  1 node node  2446 Nov 11 20:22 claude-oauth-setup.md
+-rw-r--r--  1 node node  9946 Nov 11 20:22 creating-claude-agents.md
+-rw-r--r--  1 node node 10481 Nov 11 20:22 design.md
+-rw-r--r--  1 node node   827 Nov 11 20:22 dod.md
+=== go.mod sentry ===
+9:	github.com/bborbe/errors v1.6.6
+12:	github.com/bborbe/sentry v1.10.7
+13:	github.com/bborbe/service v1.11.2
+42:	github.com/getsentry/sentry-go v0.50.0 // indirect
+[20:35:37] [system: task_progress]
+[20:35:37] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/specs/in-progress/bug-nuke-dev-g9.md
+[20:35:37] [system: task_progress]
+[20:35:37] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/docs/dod.md
+[20:35:37] [system: task_progress]
+[20:35:37] $ head -40 /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/CHANGELOG.md; echo "=== pkg files ==="; ls /home/node/.cache/github-dark-factory-agent/work/34cfba53-59a…
+[20:35:37] [system: task_progress]
+[20:35:37] $ GOPATH=$(go env GOPATH); echo "GOPATH=$GOPATH"; find "$GOPATH/pkg/mod/github.com/bborbe" -maxdepth 1 -type d -name 'sentry*' -o -maxdepth 1 -type d -name 'service*' -o -maxdepth 1 -type d -name 'erro…
+[20:35:37]   → 11 lines read
+[20:35:37]   → 22 lines read
+[20:35:37] ⚠ [bash output]
+89:func NewAIReviewStep(
+98:func (s *aiReviewStep) Name() string { return "df-ai-review" }
+103:func (s *aiReviewStep) ShouldRun(_ context.Context, _ *agentlib.Markdown) (bool, error) {
+111:func (s *aiReviewStep) Run(ctx context.Context, md *agentlib.Markdown) (*agentlib.Result, error) {
+153:func (s *aiReviewStep) review(
+227:func (s *aiReviewStep) claudeVerdict(
+261:func (s *aiReviewStep) writeAndRoute(
+300:func (s *aiReviewStep) routeRecorded(
+323:func reviewFrontmatter(md *agentlib.Markdown) (map[string]string, string) {
+347:func firstIncompleteSpec(ctx context.Context, worktree string, specIDs []string) string {
+357:func specCompleted(ctx context.Context, worktree, id string) bool {
+=== steps_gh_token funcs ===
+50:func NewGHTokenCheckStep(ghToken string) agentlib.Step {
+56:func newGHTokenCheckStep(ghToken, httpURL string) *ghTokenCheckStep {
+65:func (s *ghTokenCheckStep) Name() string { return "verify-gh-token" }
+69:func (s *ghTokenCheckStep) ShouldRun(_ context.Context, _ *agentlib.Markdown) (bool, error) {
+75:func (s *ghTokenCheckStep) Run(
+143:func needsInput(msg string) *agentlib.Result {
+150:func failed(msg string) *agentlib.Result {
+164:func truncate(s string) string {
+[20:35:37] ⚠ [bash output]
+GOPATH=/home/node/go
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.5.15
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6
+=== getsentry ===
+/home/node/go/pkg/mod/github.com/getsentry
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.47.0
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0
+[20:35:43] [system: task_progress]
+[20:35:43] $ S=/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2; echo "=== service files ==="; ls $S; echo "=== grep Main/Run/CaptureException ==="; grep -rn 'func Main\|func Run\|CaptureException\|NewScop…
+[20:35:43] [system: task_progress]
+[20:35:43] $ SE=/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7; echo "=== files ==="; ls $SE; echo "=== NewClient ==="; grep -rn 'func NewClient\|enrichEventTags\|AddEventProcessor\|EventProcessor' $SE --…
+[20:35:43] [system: task_progress]
+[20:35:43] $ E=/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6; echo "=== AddDataToError / DataFromError / DataError / New / Errorf ==="; grep -rn 'func AddDataToError\|func DataFromError\|type DataError\|f…
+[20:35:43] [system: task_progress]
+[20:35:43] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== AddGlobalEventProcessor ==="; grep -rn 'func AddGlobalEventProcessor\|type Transport interface\|type EventHint struct\|Origin…
+[20:35:43] ⚠ [bash output]
+docs
+example
+go.mod
+go.sum
+mocks
+prompts
+sentry_client.go
+sentry_event-modifier.go
+sentry_event-modifier_test.go
+sentry_exclude-error.go
+sentry_proxy-roundtripper.go
+sentry_skip-error-and-report.go
+sentry_skip-error-and-report_test.go
+sentry_suite_test.go
+specs
+tools.env
+=== NewClient ===
+(eval):1: no matches found: --include=*.go
+=== ClientOptions/Transport refs ===
+(eval):1: no matches found: --include=*.go
+[20:35:43] ⚠ [bash output]
+=== AddDataToError / DataFromError / DataError / New / Errorf ===
+(eval):1: no matches found: --include=*.go
+[20:35:43] ⚠ [bash output]
+=== AddGlobalEventProcessor ===
+(eval):1: no matches found: --include=*.go
+=== Transport interface body ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go:30:type Transport interface {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-31-	Flush(timeout time.Duration) bool
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-32-	FlushWithContext(ctx context.Context) bool
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-33-	Configure(options ClientOptions)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-34-	SendEvent(event *Event)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-35-	Close()
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-36-}
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-37-
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-38-func getProxyConfig(options ClientOptions) func(*http.Request) (*url.URL, error) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-39-	if options.HTTPSProxy != "" {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-40-		return func(*http.Request) (*url.URL, error) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-41-			return url.Parse(options.HTTPSProxy)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-42-		}
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-43-	}
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-44-
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/transport.go-45-	if options.HTTPProxy != "" {
+[20:35:46] [system: task_progress]
+[20:35:46] $ S=/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2; grep -rn --include='*.go' 'func Main\|func Run\|CaptureException\|NewScope\|EventHint' $S | grep -v _test.go
+[20:35:46] [system: task_progress]
+[20:35:46] $ SE=/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7; echo "=== NewClient ==="; grep -rn --include='*.go' 'func NewClient\|enrichEventTags\|AddEventProcessor\|EventProcessor' $SE | grep -v _test…
+[20:35:46] [system: task_progress]
+[20:35:46] $ E=/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6; grep -rn --include='*.go' 'func AddDataToError\|func DataFromError\|type DataError\|func New(\|func Errorf(\|) Data()' $E | grep -v _test.go
+[20:35:46] [system: task_progress]
+[20:35:46] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; grep -rn --include='*.go' 'func AddGlobalEventProcessor\|type EventHint struct\|OriginalException\|type Event struct\|Fingerprint \[\]s…
+[20:35:46] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_run.go:18:func Run(ctx context.Context, funcs ...run.Func) error {
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:44:		s.sentryClient.CaptureException(
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:46:			&sentry.EventHint{
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:50:			sentry.NewScope(),
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main.go:35:func Main(
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main-cmd.go:22:func MainCmd(
+[20:35:46] ⚠ [bash output]
+=== NewClient ===
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:68:func NewClient(
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:77:	newClient.AddEventProcessor(enrichEventTags)
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:84:func enrichEventTags(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+=== ClientOptions ===
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/example/main.go:37:	client, err := libsentry.NewClient(ctx, sentry.ClientOptions{
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:16://	client, err := sentry.NewClient(ctx, sentry.ClientOptions{
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:62:// tag enrichment and error filtering. It accepts standard Sentry ClientOptions and optional
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:70:	clientOptions sentry.ClientOptions,
+[20:35:46] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go:13:func New(ctx context.Context, message string) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go:17:func Errorf(ctx context.Context, format string, args ...interface{}) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:20:type DataError interface {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:26:func AddDataToError(err error, data map[string]any) DataError {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:49:func (d *dataError) Data() map[string]any {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:66:func DataFromError(err error) map[string]any {
+[20:35:46] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:121:func AddGlobalEventProcessor(processor EventProcessor) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:272:	Tags map[string]string
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/integrations.go:225:	envTags map[string]string
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/hub.go:260:	eventID := client.CaptureException(exception, &EventHint{OriginalException: exception}, scope)
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:376:type Event struct {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:382:	Fingerprint []string           `json:"fingerprint,omitempty"`
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:727:type EventHint struct {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/interfaces.go:730:	OriginalException  error
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/_examples/feature-showcase/main.go:122:			if ex, ok := hint.OriginalException.(CustomComplexError); ok {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/_examples/with_extra/main.go:54:		if ex, ok := hint.OriginalException.(CustomComplexError); ok {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/_examples/with_extra/main.go:71:			if ex, ok := hint.OriginalException.(CustomComplexError); ok {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/_examples/with_extra/main.go:98:			if ex, ok := hint.OriginalException.(CustomComplexError); ok {
+[20:35:58] [system: task_progress]
+[20:35:58] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go
+[20:35:58] [system: task_progress]
+[20:35:58] [read] /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go
+[20:35:58] [system: task_progress]
+[20:35:58] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== AddGlobalEventProcessor + processEvent ==="; grep -n 'func AddGlobalEventProcessor\|func (client \*Client) processEvent\|glob…
+[20:35:58] [system: task_progress]
+[20:35:58] $ E=/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6; sed -n '1,90p' $E/errors_data-error.go
+[20:35:58]   → 56 lines read
+[20:35:58]   → 179 lines read
+[20:35:58] ⚠ [bash output]
+	StrictTraceContinuation bool
+	// OrgID configures the orgID used for trace propagation and features like StrictTraceContinuation.
+	//
+	// In most cases the orgID is already parsed from the DSN. This option should be used when non-standard Sentry DSNs
+	// are used, such as self-hosted or when using a local Relay.
+	OrgID uint64
+	// List of regexp strings that will be used to match against event's message
+	// and if applicable, caught errors type and value.
+	// If the match is found, then a whole event will be dropped.
+=== ClientOptions Transport/Dsn ===
+132:type ClientOptions struct {
+135:	Dsn string
+207:	Transport Transport
+250:	// An optional pointer to http.Transport that will be used with a default
+253:	HTTPTransport http.RoundTripper
+309:	// Transport is read-only. Replacing the transport of an existing client is
+311:	Transport          Transport
+357:	if options.Dsn == "" {
+358:		options.Dsn = os.Getenv("SENTRY_DSN")
+399:		options.HTTPTransport = &debug.Transport{
+[20:35:58] ⚠ [bash output]
+	}
+}
+
+func DataFromError(err error) map[string]any {
+	data := make(map[string]any)
+	for err != nil {
+		hasData, ok := err.(HasData)
+		if ok {
+			for k, v := range hasData.Data() {
+				data[k] = v
+			}
+		}
+		hasCause, ok := err.(HasCause)
+		if !ok {
+			break
+		}
+		err = hasCause.Cause()
+	}
+	return data
+}
+[20:36:39] [system: task_progress]
+[20:36:39] [read] /home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_main.go
+[20:36:39] [system: task_progress]
+[20:36:39] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; sed -n '967,1120p' $G/client.go
+[20:36:39] [system: task_progress]
+[20:36:39] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== exitErrorForStatus refs ==="; grep -rn 'exitErrorForStatus\|finishRun' --include='*.go' .; echo "==…
+[20:36:39] [system: task_progress]
+[20:36:39] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== Makefile.precommit ==="; cat Makefile.precommit; echo "=== Makefile ==="; cat Makefile
+[20:36:39]   → 106 lines read
+[20:36:39] ⚠ [bash output]
+	for _, processor := range globalEventProcessors {
+		id := event.EventID
+		category := event.toCategory()
+		spanCountBefore := event.GetSpanCount()
+		event = processor(event, hint)
+		if event == nil {
+			debuglog.Printf("Event dropped by one of the Global EventProcessors: %s\n", id)
+			client.reportRecorder.RecordOne(report.ReasonEventProcessor, category)
+			if category == ratelimit.CategoryTransaction {
+				client.reportRecorder.Record(report.ReasonEventProcessor, ratelimit.CategorySpan, int64(spanCountBefore))
+			}
+			return nil
+		}
+		// Track spans removed by the processor
+		if category == ratelimit.CategoryTransaction {
+			if droppedSpans := spanCountBefore - event.GetSpanCount(); droppedSpans > 0 {
+				client.reportRecorder.Record(report.ReasonEventProcessor, ratelimit.CategorySpan, int64(droppedSpans))
+			}
+		}
+	}
+[20:36:39] ⚠ [bash output]
+
+deps:
+	go install github.com/onsi/ginkgo/v2/ginkgo@v2.25.3
+	sudo port install trivy
+
+.PHONY: fix
+fix:
+	@for dir in $$(find `pwd` -type d -name vendor -prune -o -name go.mod -exec dirname "{}" \; | grep -v '^$$'); do \
+		cd $${dir}; \
+		echo "fix $${dir}"; \
+		go get \
+		github.com/bborbe/kv@latest \
+		github.com/bborbe/memorykv@latest \
+		github.com/bborbe/badgerkv@latest \
+		github.com/bborbe/boltkv@latest \
+		github.com/go-git/go-git/v5@latest \
+		github.com/containerd/containerd@latest \
+		golang.org/x/crypto@latest \
+		golang.org/x/net@latest; \
+	done
+[20:36:39] ⚠ [bash output]
+167:		return ""
+169:	return strings.TrimSpace(string(out))
+=== AddGlobalEventProcessor in repo ===
+=== golangci staticcheck ===
+7:linters:
+8:  enable:
+12:    - staticcheck
+49:              desc: "deprecated, use revive or staticcheck instead"
+51:              desc: "deprecated since Go 1.16, use io and os packages instead"
+99:      - linters:
+100:          - staticcheck
+101:        text: "SA1019"
+102:      - linters:
+106:      - linters:
+109:      - linters:
+112:      - linters:
+115:      - linters:
+118:      - linters:
+121:      - linters:
+126:  enable:
+[20:36:46] [system: task_progress]
+[20:36:46] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/.golangci.yml
+[20:36:46] [system: task_progress]
+[20:36:46] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== NewClient DSN validation ==="; grep -n 'func NewClient\|NewDsn\|invalid DSN\|options.Dsn' $G/client.go | head -20; echo "=== …
+[20:36:46] [system: task_progress]
+[20:36:46] $ echo "=== which dark-factory ==="; which dark-factory 2>/dev/null || echo none; echo "=== try config ==="; dark-factory config 2>&1 | head -60 || true; echo "=== coding docs: .claude ==="; ls /home/n…
+[20:36:46]   → 128 lines read
+[20:36:47] ⚠ [bash output]
+=== NewClient DSN validation ===
+326:func NewClient(options ClientOptions) (*Client, error) {
+357:	if options.Dsn == "" {
+358:		options.Dsn = os.Getenv("SENTRY_DSN")
+408:	if options.Dsn != "" {
+410:		dsn, err = protocol.NewDsn(options.Dsn)
+539:		Dsn:           client.options.Dsn,
+=== dsn.go parse ===
+21:func NewDsn(rawURL string) (*Dsn, error) {
+24:		return nil, err
+26:	return &Dsn{Dsn: *protocolDsn}, nil
+29:// RequestHeaders returns all the necessary headers that have to be used in the transport when sending events
+36:	return dsn.Dsn.RequestHeaders(SDKVersion)
+=== go.mod go version ===
+3:go 1.27.3
+[20:36:47] ⚠ [bash output]
+go-functional-options-pattern.md
+go-glog-guide.md
+go-http-handler-refactoring-guide.md
+go-http-service-guide.md
+go-json-error-handler-guide.md
+go-k8s-binary-conventions.md
+go-kubernetes-crd-controller-guide.md
+go-library-guide.md
+go-licensing-guide.md
+go-linting-guide.md
+go-logging-guide.md
+go-makefile-commands.md
+go-mocking-guide.md
+go-mod-dependency-fix-guide.md
+go-mod-replace-guide.md
+go-package-layout-guide.md
+go-parse-pattern.md
+go-patterns.md
+go-precommit.md
+=== coding docs: .claude-yolo ===
+[20:37:34] [system: task_progress]
+[20:37:34] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== telemetryProcessor init ==="; grep -n 'telemetryProcessor' $G/client.go | head; echo "=== NewClient 326-470 ==="; sed -n '326…
+[20:37:34] [system: task_progress]
+[20:37:34] $ for f in go-error-wrapping-guide.md go-testing-guide.md go-precommit.md go-glog-guide.md; do p="/home/node/.claude/plugins/marketplaces/coding/docs/$f"; if [ -f "$p" ]; then echo "EXISTS $p"; else ec…
+[20:37:34] [system: task_progress]
+[20:37:34] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== errors.Wrapf count ==="; grep -rc 'errors\.Wrapf' pkg/ | head; echo "=== total ==="; grep -rn 'erro…
+[20:37:34] ⚠ [bash output]
+18:	// the obvious NewClient name, or a new function as an alternative
+32:	if options.Dsn == "" {
+33:		options.Dsn = os.Getenv("SENTRY_DSN")
+67:	// dbgOpt returns true when the given debug option is enabled, for
+71:		return dbg[sort.SearchStrings(dbg, s)%len(dbg)] == s
+74:		options.HTTPTransport = &debug.Transport{
+75:			RoundTripper: http.DefaultTransport,
+82:	var dsn *protocol.Dsn
+83:	if options.Dsn != "" {
+85:		dsn, err = protocol.NewDsn(options.Dsn)
+87:			return nil, err
+106:	// We currently disallow using custom Transport with the new Telemetry Processor, due to the difference in transport signatures.
+107:	// The option should be enabled when the new Transport interface signature changes.
+108:	if !options.DisableTelemetryBuffer && client.options.Transport == nil {
+111:		if client.options.Transport != nil {
+112:			debuglog.Println("Cannot enable Telemetry Processor with custom Transport: fallback to old transport")
+114:		client.setupTransport()
+126:	return &client, nil
+139:	Transport:      new(noopTransport),
+144:// NewNoopClient returns the shared client that safely discards telemetry.
+[20:37:34] ⚠ [bash output]
+EXISTS /home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md
+EXISTS /home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md
+EXISTS /home/node/.claude/plugins/marketplaces/coding/docs/go-precommit.md
+EXISTS /home/node/.claude/plugins/marketplaces/coding/docs/go-glog-guide.md
+=== claude-yolo listing ===
+ls: cannot access '/home/node/.claude-yolo': No such file or directory
+=== is .claude a mount? ===
+TARGET SOURCE  FSTYPE  OPTIONS
+/      overlay overlay rw,relatime,lowerdir=/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216787/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216786/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216785/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216784/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216783/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216782/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216779/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216778/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216777/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216776/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216775/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216774/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216773/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216772/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216771/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216770/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216769/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216768/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216767/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216766/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216765/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216764/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216763/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216762/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216761/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216760/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216759/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216758/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216757/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216756/fs:/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/216753/fs,upperdir=/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/217905/fs,workdir=/var/lib/rancher/k3s/agent/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/217905/work,uuid=on,nouserxattr
+[20:37:34] ⚠ [bash output]
+pkg/timeout_test.go
+pkg/steps_planning_test.go
+pkg/steps_gh_token_test.go
+pkg/steps_claude_auth_test.go
+pkg/steps_misc_test.go
+pkg/githubauth/github_auth_tokenfile_test.go
+pkg/factory/factory_kafka_topic_test.go
+pkg/githubauth/github_auth_setup_test.go
+pkg/git/clone_url_test.go
+pkg/steps_ai_review_test.go
+=== counterfeiter ===
+pkg/github.go
+pkg/steps_execution.go
+pkg/steps_mocks.go
+pkg/githubauth/github_auth_setup.go
+pkg/claude_prober.go
+pkg/git/repo_manager.go
+=== ctx context.Context count ===
+24
+=== fmt.Errorf in repo ===
+[20:37:41] [system: task_progress]
+[20:37:41] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; sed -n '430,570p' $G/client.go
+[20:37:41] [system: task_progress]
+[20:37:41] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== protocol dsn parse ==="; grep -rn 'func NewDsn\|func (d \*Dsn)\|ProjectID\|PublicKey\|invalid' $G/protocol/dsn.go 2>/dev/null…
+[20:37:41] ⚠ [bash output]
+
+	buffers := map[ratelimit.Category]telemetry.Buffer[protocol.TelemetryItem]{
+		ratelimit.CategoryError:       telemetry.NewRingBuffer[protocol.TelemetryItem](ratelimit.CategoryError, 100, telemetry.OverflowPolicyDropOldest, 1, 0, client.reportRecorder),
+		ratelimit.CategoryTransaction: telemetry.NewRingBuffer[protocol.TelemetryItem](ratelimit.CategoryTransaction, 1000, telemetry.OverflowPolicyDropOldest, 1, 0, client.reportRecorder),
+		ratelimit.CategoryLog:         telemetry.NewRingBuffer[protocol.TelemetryItem](ratelimit.CategoryLog, 10*100, telemetry.OverflowPolicyDropOldest, 100, 5*time.Second, client.reportRecorder),
+		ratelimit.CategoryMonitor:     telemetry.NewRingBuffer[protocol.TelemetryItem](ratelimit.CategoryMonitor, 100, telemetry.OverflowPolicyDropOldest, 1, 0, client.reportRecorder),
+		ratelimit.CategoryTraceMetric: telemetry.NewRingBuffer[protocol.TelemetryItem](ratelimit.CategoryTraceMetric, 10*100, telemetry.OverflowPolicyDropOldest, 100, 5*time.Second, client.reportRecorder),
+	}
+
+	client.telemetryProcessor = telemetry.NewProcessor(buffers, transport, client.dsn, client.sdkInfo, client.reportRecorder)
+}
+
+func (client *Client) setupIntegrations() {
+	integrations := []Integration{
+		new(environmentIntegration),
+		new(modulesIntegration),
+		new(ignoreErrorsIntegration),
+		new(ignoreTransactionsIntegration),
+		new(globalTagsIntegration),
+	}
+[20:37:41] ⚠ [bash output]
+=== protocol dsn parse ===
+=== file? ===
+=== domain TaskPhase ===
+(eval):1: no matches found: /home/node/go/pkg/mod/github.com/bborbe/vault-cli*/pkg/domain/*.go
+=== agentlib PrintResult ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_print-result.go:19:func PrintResult(ctx context.Context, result *Result) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/delivery/print.go:16:func PrintResult(ctx context.Context, result any) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/pi/output.go:17:func PrintResult(ctx context.Context, result Result) error {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/claude/output.go:16:func PrintResult(ctx context.Context, result AgentResult) error {
+[20:37:48] [system: task_progress]
+[20:37:48] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; echo "=== find NewDsn ==="; grep -rn 'func NewDsn' $G | head; echo "=== dsn file ==="; find $G -name 'dsn*.go' | head; echo "=== vault-…
+[20:37:48] [system: task_progress]
+[20:37:48] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== TaskPhase via go doc-ish grep in module cache ==="; grep -rn 'TaskPhase ' /home/node/go/pkg/mod/git…
+[20:37:48] ⚠ [bash output]
+=== find NewDsn ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/dsn.go:21:func NewDsn(rawURL string) (*Dsn, error) {
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/internal/protocol/dsn.go:59:func NewDsn(rawURL string) (*Dsn, error) {
+=== dsn file ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/dsn.go
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/dsn_test.go
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/internal/protocol/dsn.go
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/internal/protocol/dsn_test.go
+=== vault-cli domain ===
+(eval):1: no matches found: /home/node/go/pkg/mod/github.com/bborbe/vault-cli*
+(eval):1: no matches found: /home/node/go/pkg/mod/github.com/bborbe/vault-cli*/pkg/domain/
+=== agent Result Message ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_step.go:45:type Result struct {
+[20:37:51] [system: task_progress]
+[20:37:51] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; grep -n 'vault-cli' go.mod; echo "=== find vault-cli dir ==="; find /home/node/go/pkg/mod/github.com/bborbe -…
+[20:37:51] [system: task_progress]
+[20:37:51] $ sed -n '1,120p' /home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/internal/protocol/dsn.go
+[20:37:51] ⚠ [bash output]
+	// reported — a zero or negative summary is treated as no measurement, and the turn
+	// entry is then omitted from the payload entirely.
+	AgentTurns *int64
+
+	// InteractionCount is the number of human-authored entries the run's own session
+	// transcript recorded. Nil means the evidence was unavailable — the interaction
+	// entry is omitted from the payload. A non-nil zero is an observation: the
+	// transcript was read and contained no human-authored entry. Absence is never
+	// substituted with a zero.
+=== AgentStatus constants ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_parser_test.go:45:			Expect(result.Status).To(Equal(lib.AgentStatusDone))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_parser_test.go:64:			Expect(result.Status).To(Equal(lib.AgentStatusNeedsInput))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:16:		It("AgentStatusDone has correct value", func() {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:17:			Expect(string(lib.AgentStatusDone)).To(Equal("done"))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:20:		It("AgentStatusInProgress has correct value", func() {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:21:			Expect(string(lib.AgentStatusInProgress)).To(Equal("in_progress"))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:24:		It("AgentStatusFailed has correct value", func() {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:25:			Expect(string(lib.AgentStatusFailed)).To(Equal("failed"))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:28:		It("AgentStatusNeedsInput has correct value", func() {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:29:			Expect(string(lib.AgentStatusNeedsInput)).To(Equal("needs_input"))
+[20:37:51] ⚠ [bash output]
+		if err == nil {
+			orgID = parsedOrgID
+		}
+	}
+
+	// Port
+	var port int
+	if p := parsedURL.Port(); p != "" {
+		port, err = strconv.Atoi(p)
+		if err != nil {
+			return nil, &DsnParseError{"invalid port"}
+		}
+	} else {
+		port = scheme.defaultPort()
+	}
+
+	// ProjectID
+	if parsedURL.Path == "" || parsedURL.Path == "/" {
+		return nil, &DsnParseError{"empty project id"}
+	}
+[20:37:56] [system: task_progress]
+[20:37:56] $ ls /home/node/go/pkg/mod/github.com/bborbe/ | grep -i vault; echo "---"; find /home/node/go/pkg/mod -maxdepth 4 -type d -iname 'vault-cli*' 2>/dev/null | head; echo "--- grep TaskPhase anywhere ---";…
+[20:38:26] [system: task_progress]
+[20:38:26] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== docs mention sentry/exit/phase ==="; grep -rniE 'sentry|exit code|exitErrorForStatus|fingerprint|es…
+[20:38:26] [system: task_progress]
+[20:38:26] $ cd /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735; echo "=== steps_gh_token failed/needsInput ==="; sed -n '140,170p' pkg/steps_gh_token.go; echo "=== ai_review…
+[20:38:26] ⚠ [bash output]
+docs/design.md:49:- **★ claude auth is HOME-sensitive (live-smoke finding 2026-07-13).** `backend: local` runs `claude` as a subprocess inheriting the pod's env. If `claude`'s login credential is not discoverable from the process's `HOME`, every prompt fails fast with `Not logged in · Please run /login` (observed: overriding `HOME` broke auth even with `CLAUDE_CONFIG_DIR` set). **Requirement:** the Job pod MUST provision claude's login where the agent process's `HOME` resolves it — bake/mount the credential into the runtime `HOME` (claude-yolo image convention), do NOT rely on `CLAUDE_CONFIG_DIR` alone. Add a startup precondition check: run a trivial `claude --print` (or reuse dark-factory's claude probe) and fail the task early with a clear escalation if unauthed, rather than failing every prompt.
+docs/design.md:64:1. **Prompt fails DoD / audit fail** — spec-078 fail-closed stops the spec; agent escalates (clear assignee, `previous_assignee`, phase unchanged). NO auto-fix loop.
+docs/design.md:71:The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+docs/creating-claude-agents.md:18:- [[agent-job-interface.md]] — Pattern B contract (env vars, Kafka, exit codes)
+docs/creating-claude-agents.md:110:func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+docs/creating-claude-agents.md:172:  SENTRY_DSN:          '{{ "SENTRY_DSN_KEY"         | env | teamvaultUrl      | base64 }}'
+README.md:41:| `SENTRY_DSN` | no | — | Error reporting |
+=== design.md headings ===
+1:# github-dark-factory-agent — design.md
+5:## Part 1 — Motivation
+11:## Part 2 — Identity
+18:## Part 3 — Integration
+24:## Part 4 — Behavior (phases)
+34:## Part 4.2 — ✅ Execution engine dependency (RESOLVED — shipped + live-validated)
+46:## Part 5 — Data contract & invariants
+56:## Part 6 — Operations
+62:## Part 7 — Safety / failure modes
+69:### Auto-approve blast radius (accepted)
+73:## Part 8 — Acceptance (per goal SCs)
+77:## Open decisions
+[20:38:26] ⚠ [bash output]
+128:		return failed("ai_review: read " + resultSectionHeading + ": " + err.Error()), nil
+133:		return needsInput("ai_review: required frontmatter field missing: " + missing), nil
+138:			"ai_review: frontmatter pr_number is not a valid integer: " + fields["pr_number"],
+144:			`ai_review: frontmatter "repo" must be "owner/name"; got ` + fields["repo"],
+167:			fmt.Sprintf("ai_review: fetch PR %s/%s#%d: %v", owner, name, prNumber, err),
+172:			"ai_review: PR #%d is no longer a draft (human already flipped it)", prNumber,
+184:			"ai_review: %s was adopted from pushed head %s — skipping worktree post-conditions",
+198:				"ai_review: clone failed (authentication required — set GH_TOKEN and re-trigger)",
+201:		return failed("ai_review: ensure worktree: " + err.Error()), nil
+208:			"ai_review: spec %s is not completed (execution did not finish)", incomplete,
+215:			"ai_review: prompts still in prompts/in-progress (execution did not drain the queue)",
+241:		glog.Warningf("ai_review: claude review call failed: %v", err)
+249:		glog.Warningf("ai_review: parse review verdict failed: %v", err)
+287:		glog.V(2).Infof("ai_review: PASS for %s#%d — routing to human_review", repo, prNumber)
+293:	glog.V(2).Infof("ai_review: CONCERNS for %s#%d — escalating: %s", repo, prNumber, verdict.Notes)
+294:	return failed("ai_review: review surfaced blocking concerns: " + verdict.Notes), nil
+306:		return failed("ai_review: read recorded " + reviewSectionHeading + ": " + err.Error()), nil
+310:			Infof("ai_review: %s already present (pass) — routing to human_review", reviewSectionHeading)
+=== domain TaskPhase usage confirm ===
+main_internal_test.go:34:	phase := domain.TaskPhase("execution")
+[20:39:04] [system: task_progress]
+[20:39:04] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; sed -n '376,400p' $G/interfaces.go; echo "=== EventProcessor type ==="; grep -n 'type EventProcessor' $G/interfaces.go; echo "=== exist…
+[20:39:21] [system: task_progress]
+[20:39:21] $ D=/home/node/.claude/plugins/marketplaces/coding/docs; echo "=== go-testing-guide headings ==="; grep -n '^#\|Ginkgo\|testing\.T\|table' $D/go-testing-guide.md | head -40; echo "=== go-error-wrapping…
+[20:39:21] [system: task_progress]
+[20:39:21] $ D=/home/node/.claude/plugins/marketplaces/coding/docs; echo "=== go-composition global state ==="; grep -n 'package-level\|mutable\|SetX\|global\|Anti-Pattern' $D/go-composition.md | head -20; echo "…
+[20:39:21] ⚠ [bash output]
+104:6. **Remove unused imports** — after replacing `fmt.Errorf`, remove `"fmt"` if unused
+107:## Where context.Background() Is Allowed
+119:## Examples
+121:### Fix: Function Missing ctx
+126:    return errors.Errorf(context.Background(), "invalid: %s", input)
+131:    return errors.Errorf(ctx, "invalid: %s", input)
+135:### Fix: Replace fmt.Errorf
+139:return fmt.Errorf("fetch failed: %w", err)
+142:return errors.Wrapf(ctx, err, "fetch failed")
+145:### Fix: New Error Without Cause
+149:return fmt.Errorf("unknown type: %s", t)
+152:return errors.Errorf(ctx, "unknown type: %s", t)
+155:### Inner Closures — Do Not Double-Wrap
+162:        // The outer Wrapf below will add context
+166:        return errors.Wrapf(ctx, err, "save data %s", data.ID)
+172:## Anti-Patterns
+181:**fmt.Errorf**
+183:return fmt.Errorf("failed: %w", err) // No context data, no stack trace
+188:return errors.Wrapf(context.Background(), err, "failed")
+196:        return errors.Wrapf(ctx, err, "put") // Redundant — outer wraps too
+[20:39:21] ⚠ [bash output]
+62:Every `.go` file needs BSD header. Auto-added by `make precommit` but write it yourself on new files:
+69:## Mock Generation
+71:`make precommit` deletes and regenerates `mocks/`. Never hand-write mocks.
+73:## Checklist (before running make precommit)
+=== go-glog headings ===
+1:# Go glog Logging Levels
+3:> **New projects should use `log/slog`** (stdlib, Go 1.21+) with `cobra` for CLI flag parsing. slog avoids glog's global `flag` pollution and integrates cleanly with structured logging. This guide is for **existing projects that already use glog extensively** — do not introduce glog into new codebases.
+5:Google's [glog](https://github.com/golang/glog) provides more granular logging levels than standard Go logging. This guide explains when to use each level for consistent logging across Go services.
+7:### RULE go-glog/use-v-for-debug-not-info (MUST)
+10:**Applies when**: a Go file calls `glog.Info` / `glog.Infof` for debug, trace, internal-state, or developer-troubleshooting log lines that should be filtered out in production — instead of `glog.V(N).Info...` / `glog.V(N).Infof...` with an appropriate verbosity level (1 for sysop debug, 2 for dev default, 3+ for deep debug). Scope: applies across ALL V levels — V0 is reserved for production-default operator info; everything debug-shaped goes through `V(N)`.
+11:**Enforcement**: `rules/go/glog-info-needs-v.yml` flags every `glog.Info(...)` / `glog.Infof(...)` call. The agent decides per-finding whether the call is V0-worthy production-operator info (startup, shutdown, health change, recovered panic) or debug-shaped content that should be gated behind `V(N)` — that distinction needs reading the log message intent, which ast-grep can't do.
+12:**Why**: V0 (bare `glog.Info`) is the *always-on* production logging level. Every line at V0 ships to log aggregators, gets indexed, and burns CPU on every request whether anyone reads it or not. Using V0 for debug-style logs ("Cache miss for key %s", "Internal state: %+v") produces gigabytes of noise in production, drowns operators in irrelevant detail, and inflates log-storage cost. The `glog.V(N)` mechanism exists exactly to gate verbosity at runtime: V0 stays operator-readable (startup, shutdown, health changes), V1+ stays off by default and turns on for troubleshooting. Inverting the levels means production logs are useless and dev debugging requires a deploy.
+14:#### Bad
+18:glog.Infof("Cache miss for key %s, fetching from database", key)
+19:glog.Infof("Processing batch of %d items", len(batch))
+20:glog.Infof("Internal state: %+v", internalStruct)
+23:#### Good
+27:glog.Info("Service started successfully on port 8080")
+28:glog.Infof("Recovered from panic: %v", recovered)
+31:glog.V(2).Infof("Cache miss for key %s, fetching from database", key)
+[20:39:25] [system: task_progress]
+[20:39:25] [read] /home/node/.claude/plugins/marketplaces/coding/docs/go-testing-guide.md (offset=108, limit=110)
+[20:39:25] [system: task_progress]
+[20:39:25] $ D=/home/node/.claude/plugins/marketplaces/coding/docs; sed -n '1,45p' $D/go-precommit.md; echo "=== composition 335-380 ==="; sed -n '335,380p' $D/go-composition.md
+[20:39:25]   → 109 lines read
+[20:39:25] ⚠ [bash output]
+func getSweepInterval() time.Duration { ... }   // mutex-guarded
+func SetSweepInterval(d time.Duration) (restore func()) { ... }  // _test.go
+```
+
+```go
+// ✅ GOOD: constructor parameter; tests just pass a small value
+func NewProcessor(..., sweepInterval time.Duration) Processor { ... }
+```
+
+Rule: configurable values that vary between production and tests are **constructor parameters**, not package vars. The default lives in `main.go` / the factory, not at package scope.
+
+(See `go-time-injection.md` for the canonical exception: `libtime.Now` is intentionally a package var because `libtime.ParseTime("NOW-7d")` cannot accept an injected getter — that's a documented carve-out, not the default.)
+
+## Checklist
+
+- Every external dependency is an injected interface
+- No `pkg.Function()` calls from business logic methods
+- Constructor parameter list shows ALL dependencies
+- Each interface has 1-2 methods (rarely 3+)
+- Factory function wires all deps together
+[20:39:54] [system: task_progress]
+[20:39:54] $ G=/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0; grep -rn 'type EventProcessor' $G | head; echo "=== scope NewScope ==="; grep -rn 'func NewScope' $G | head; echo "=== errors guide dat…
+[20:39:54] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/client.go:97:type EventProcessor func(event *Event, hint *EventHint) *Event
+=== scope NewScope ===
+/home/node/go/pkg/mod/github.com/getsentry/sentry-go@v0.50.0/scope.go:66:func NewScope() *Scope {
+=== errors guide data enrichment ===
+### Enriching Context with Data
+
+```go
+func (s *svc) Process(ctx context.Context, accountID string) error {
+    ctx = errors.AddToContext(ctx, "accountID", accountID)
+    // Any error wrapped from here on carries accountID
+    result, err := s.dep.Do(ctx)
+    if err != nil {
+        return errors.Wrapf(ctx, err, "process account")
+    }
+    return nil
+}
+```
+
+## Key Rules
+[20:40:25] [system: task_updated]
+[20:40:25] [system: task_notification]
+[20:40:25]   ← agent reply: # Prompt Audit Report: Sentry Phase Fingerprint (bug-nuke-dev-g9)
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:26] [system: thinking_tokens]
+[20:40:27] [system: thinking_tokens]
+[20:40:27] [system: thinking_tokens]
+[20:40:27] [system: thinking_tokens]
+[20:40:27] [system: thinking_tokens]
+[20:40:27] 💭 CLAUDE.md doesn't exist at repo root. Let me look for project gate docs. The command says read project CLAUDE.md for "Release Checklist" or "before dark-factory prompt approve". Let me search.
+
+Also note the prompt-auditor agent already did the audit. I need to check the gate. Let me look for CLAUDE.md files, .dark-factory.yaml, docs.
+[20:40:28] $ ls -la && echo "--- CLAUDE files ---" && find . -name 'CLAUDE.md' -not -path './node_modules/*' -not -path './.git/*' 2>/dev/null && echo "--- dark-factory config ---" && cat .dark-factory.yaml 2>/de…
+[20:40:28] $ grep -rn -i -E "release checklist|before .*prompt approve|autoRelease|pre-approve|approve" --include='*.md' --include='*.yaml' --include='*.yml' . 2>/dev/null | grep -v node_modules | head -60
+[20:40:28] ⚠ [bash output]
+CHANGELOG.md:54:- fix: fail a lifecycle run that is stranded in **any** non-terminal spec status, not only `prompted`. `drained()` accepts only `verifying`/`completed`, but the stall detector compared against `prompted` alone, so a spec left at `draft` or `approved` kept `drained()` false forever while nothing could advance it — the daemon logged `nothing to do, waiting for changes` and the run held its only agent slot until `activeDeadlineSeconds: 5400`. Measured 2026-10-22 17:28Z→18:34Z: spec `063-a2a-default-cluster` sat at `verifying` while a sibling spec never advanced, **45 idle iterations over ~66 min**, on v0.5.5 — a build that already contained every earlier guard, which is why the previous grace-window fix did not cover it. The detector now skips only `verifying`/`completed`/**`generating`** and reports any other status with no prompt in flight. `generating` stays excluded deliberately: dark-factory drives it and `runner/lifecycle.go` resumes or resets it after a restart, so aborting there would kill healthy work — and while **any** spec under `specs/in-progress` is `generating`, nothing is reported at all, because dark-factory generates prompts one spec at a time (`specWatcher` mutex + sequential startup scan), so a sibling legitimately waits at `approved` for the whole generation (~7 min). Flagging that sibling would abort a healthy multi-spec run 30 s in. `stallGracePolls` 3 → 10 (30 s at the 3 s poll) because `draft`/`approved` have no prompt to watch, so the grace must outlast the daemon's own pickup tick as well as the `prompted` flicker — still turning a 90-minute slot-hold into 30 seconds. The error now names the spec's real status instead of hard-coding `prompted`.
+CHANGELOG.md:74:- fix: **`waitForDrain` fails fast when a requested spec is stranded at `prompted` with no prompt referencing it**, instead of holding the Job's only agent slot until the lifecycle deadline. ⚠️ dark-factory advances a spec out of `prompted` only through its spec-link scan (`CheckAndComplete`), which no-ops when no prompt carries `spec:` — so a prompt authored without the link leaves the spec unreachable and every later daemon tick a no-op. `drained()` cannot see this: it counts in-flight prompts, and a stranded run has none. Observed 2026-10-20 on nuke dev: a fallback hand-authored prompt with `spec: ""` executed to `exit_code=0`, the spec stayed `prompted`, and the run burned the whole deadline before reporting `lifecycle did not drain before deadline` over work that had actually succeeded. The new `findStalledSpec` requires three consecutive polls (9s at the 3s interval) so a healthy run — whose spec is momentarily `prompted` while its prompt is auto-approved — is never mistaken for a stalled one.
+CHANGELOG.md:78:- chore: bump the baked `DARK_FACTORY_VERSION` v0.192.4 → v0.198.9 (CLI + plugin, one pinned clone). v0.198.9 makes the `spec:` link mandatory for spec-derived prompts and enforces it in the generator's `finalizePrompted`: an empty link is backfilled with an ERROR naming the file, and a batch in which no prompt links the spec now fails so the spec resets to `approved` instead of being marked `prompted`. Without it the cluster route stalls silently — the generated prompt carried no link, `CheckAndComplete` found none and no-oped, the spec sat at `prompted` forever, and the lifecycle drain burned to its deadline (nuke-dev, `bborbe/go-skeleton` PR #128, 2026-10-20). ⚠️ The jump spans six minor versions, so the CLI surface this agent drives was re-checked at the new tag: `daemon` with `--set backend=local`, `--set hideGit=true`, `--set autoGeneratePrompts=true`, `--auto-approve-prompts`, `--skip-preflight`, `--skip-healthcheck`, `--set model=…`, plus `spec complete <id>` — all present.
+CHANGELOG.md:125:- fix: fail-fast on a permanently-failed prompt instead of hanging to the lifecycle deadline. When a dark-factory prompt exhausts its retries the failure handler leaves it in `prompts/in-progress` with `status: failed` and the scanner skips it forever ("queue blocked until manual retry"), so its spec can never reach `verifying`. `drained()` could not distinguish that dead prompt from a slow one, so `waitForDrain` spun until the 30-minute `lifecycleTimeout` — and in-cluster the overall-run budget hard-killed the Job with `context canceled` at ~30 min BEFORE the step could escalate, so no `## Failure` was ever written and the task was not cleanly parked. `waitForDrain` now scans `prompts/in-progress` each tick via new `findFailedPrompt` and returns a lifecycle error the moment a prompt reaches terminal `status: failed`, surfacing its `lastFailReason`. The execution step then escalates cleanly (`Status: failed`) within seconds while the context is still alive — PR stays draft, spec stays incomplete, task parks. Approved/executing/unparseable prompts are ignored (only terminal `failed` counts). Unit tests cover the detector's discrimination + the RunLifecycle fast-path timing.
+CHANGELOG.md:129:- fix: commit the spec-completion move before pushing, so completed specs actually reach the PR branch. `dark-factory spec complete` (which the execution step drives after the daemon stops) rewrites the working tree — moving the spec `specs/in-progress → specs/completed` — but does NOT git-commit it (nothing commits it once the daemon is gone, unlike the daemon's per-prompt `workflow:direct` commits). `PushBranch` is a bare `git push HEAD`, so the completion was silently dropped: the PR kept an approved-not-completed spec, the watcher re-emitted the task on the agent's own push, and runs overlapped indefinitely (self-trigger loop). New `ExecutionRunner.CommitSpecChanges` stages `specs/` and commits after `completeSpecs` and before `PushBranch` (no-op when nothing is staged). Now the completed spec lands on the branch → the watcher stops re-triggering → clean multi-spec drain to `human_review`. Unit tests cover the commit + the no-op path and assert the execution step calls it before pushing.
+CHANGELOG.md:133:- fix: `RunLifecycle` no longer stops the dark-factory daemon while a generated prompt is still awaiting auto-approval. The drain check (`drained()`) only looked at `prompts/in-progress`, ignoring the generation **inbox** (`prompts/*.md` at the repo root, where a freshly generated prompt waits for the daemon's auto-approve audit). Because the daemon flips the spec to `verifying` while that audit runs, `drained()` returned true mid-audit, `stopDaemon` SIGKILLed the in-flight audit subprocess (`auto-approve: audit FAILED ... signal: killed`), the prompt was never approved/executed, and the implementation file (e.g. the `HELLO_DARK_FACTORY.md` marker) was never created — ai_review then correctly escalated on the absent file. New `hasInboxPrompts` gates the drain on the inbox too, so the lifecycle waits for the prompt to be approved → executed → completed. Surfaced on go-skeleton PR #40 (master `.dark-factory.yaml` sets `validationPrompt: docs/dod.md`, making the audit slow enough to lose the race). Unit test drives a stub daemon that leaves a prompt in the inbox and asserts the lifecycle does not drain.
+CHANGELOG.md:155:- fix: bake the `coding` plugin into the runtime image (Dockerfile), alongside the existing `dark-factory` plugin. dark-factory's generation step invokes the prompt-creator agent, which uses the `coding` plugin's Go guides to write prompt files; without it the fleet's MiniMax model (`MiniMax-M2.7-highspeed`) produced no prompt file ("generation produced no prompt files") and the spec never left `approved`. Local runs generate fine because the operator's `~/.claude` already has `coding`; the cluster image did not. Mirrors github-pr-review-agent's build-time `coding` install.
+CHANGELOG.md:171:- fix: install the dark-factory Claude PLUGIN in the runtime image (Dockerfile), not just the CLI binary. The backend:local lifecycle runs `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude; with only the CLI installed, claude reports `Unknown command` → zero prompts generated → the spec silently resets to `approved` and the daemon idles (the E2E root cause, 2026-07-13). Mirrors github-pr-review-agent's build-time `coding` plugin install. **Pinned** to the same `${DARK_FACTORY_VERSION}` tag as the CLI (clone that tag + add as a local marketplace, not marketplace HEAD) so the plugin minor cannot drift from the CLI minor. Confirmed locally: with the plugin installed, generation produces a valid prompt.
+CHANGELOG.md:176:- feat: implement Increment 1 of the three-phase implementer — wire planning/execution/ai_review as distinct phases (domain.TaskPhase constants), route the `dark-factory-implement` task type; add RepoManager (bare-clone cache + per-task worktree), claude-auth + gh-token preflight steps, and the pure-Go planning step (clone + precondition scan: ref==PR head, PR draft, `.dark-factory.yaml` present, approved-not-completed spec in the PR diff → writes `## Plan`, routes execution; escalates without mutating assignee/status); wire `cmd/run-task` as a local per-phase harness. Execution/ai_review are stubs (Increments 2/3).
+CHANGELOG.md:177:- feat: implement Increment 2 — the execution step drives the dark-factory backend:local lifecycle. Live investigation established the correct one-worktree invocation: `dark-factory daemon --set backend=local --set autoGeneratePrompts=true --auto-approve-prompts --skip-preflight --skip-healthcheck` (backgrounded → poll-until-drained → kill; one-shot `run` does NOT generate — generation is daemon-only), then `dark-factory spec complete <id>` (no auto-complete), then `git push`. Adds `pkg/dark_factory_runner.go` (`ExecutionRunner` seam over daemon/spec-complete/push) and replaces the execution stub: idempotent (`## Result` present → route ai_review), config via `--set`/flags never committed to the branch, fail-closed when a spec never reaches `verifying`/`completed` (prompt failed DoD/audit), writes typed `## Result`, routes ai_review — all without mutating assignee/status.
+.dark-factory.yaml:4:autoRelease: false
+docs/design.md:9:- **This agent:** the cluster implementer. A human drafts + approves a spec on a draft-PR branch and walks away; this agent implements it and lands the task at `human_review`; the human verifies + flips the PR to ready; the existing `github-pr-review-agent` reviews + merges. Two human bookends, autonomous middle.
+docs/design.md:20:- **Trigger:** `github-dark-factory-watcher` (Phase-1: `/github-dark-factory-watcher` slash command; Phase-3: Go watcher). Emits when a draft PR has `.dark-factory.yaml` + ≥1 `approved`-not-`completed` spec **that appears in the PR's own diff** (diff-scoping — validated fix; "spec exists on branch" alone false-triggers on repos that persist specs).
+docs/design.md:28:| planning | pure-Go spec scan (`agent/code` shape) | frontmatter (`clone_url`,`ref`,`branch`,`pr_number`) | clone branch, precondition checks (ref==HEAD, `.dark-factory.yaml`, approved-not-completed spec, PR draft) | `## Plan` |
+docs/design.md:29:| execution | custom step (dark-factory lifecycle + git) | `## Plan` | generate prompts → audit+approve → execute → verify → `spec complete`; commit + push per prompt | `## Result` |
+docs/design.md:41:- **Happy path:** a real approved prompt → claude ran **in-process (~11s), zero docker containers** → produced the change → `git commit` → prompt `completed`. This is the exact loop the execution step drives.
+docs/design.md:50:- **★ the dark-factory Claude PLUGIN must be installed, not just the CLI (E2E root cause 2026-07-13).** backend:local's generation and prompt-audit steps run the slash commands `/dark-factory:generate-prompts-for-spec` and `/dark-factory:audit-prompt` *inside* claude. If the runtime `CLAUDE_CONFIG_DIR` has the CLI binary but not the plugin, claude reports `Unknown command: /dark-factory:generate-prompts-for-spec` → **zero prompts generated → the spec resets to `approved` and the daemon idles at "nothing to do"** (silent — no error surfaces to the agent; looks like a generation-trigger bug but is really a provisioning gap). **Requirement:** the Dockerfile installs the plugin at build time (`claude plugin marketplace add bborbe/dark-factory && claude plugin install dark-factory@dark-factory`, verified with `claude plugin list | grep -q dark-factory`), mirroring github-pr-review-agent's build-time `coding` install. Keep the plugin's minor aligned with `DARK_FACTORY_VERSION`.
+docs/design.md:52:- Agent MUST drive `dark-factory spec complete` (else spec stays `verifying` = approved-not-completed → watcher re-emits).
+docs/design.md:69:### Auto-approve blast radius (accepted)
+docs/design.md:71:The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:29] [system: thinking_tokens]
+[20:40:30] 💭 There's no root CLAUDE.md; only agent/.claude/CLAUDE.md. Let me read it and docs/dod.md to find the pre-approve gate. The command asks to check the project's declared pre-approve gate: read project CLAUDE.md for "Release Checklist" section or any "before dark-factory prompt approve" instruction, plus any doc it links.
+
+Let me read agent/.claude/CLAUDE.md and docs/dod.md.
+[20:40:30] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/agent/.claude/CLAUDE.md
+[20:40:30] [read] /home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/docs/dod.md
+[20:40:30]   → 11 lines read
+[20:40:30]   → 36 lines read
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] [system: thinking_tokens]
+[20:40:31] 💭 There is no root CLAUDE.md. There's agent/.claude/CLAUDE.md which is a runtime guardrail, not a release checklist. Let me search for any "Release Checklist" or "before dark-factory prompt approve" instruction across the repo docs more specifically. The grep above didn't show a Release Checklist. Let me check README, docs/design.md for a release checklist. Also check .github. Let me grep for "Release Checklist".
+[20:40:33] $ grep -rn -i "release checklist" . --include='*.md' --include='*.yaml' --include='*.yml' --include='*.toml' 2>/dev/null | grep -v node_modules; echo "exit=$?"
+[20:40:33] $ grep -rn -i -E "prompt approve|before approving|pre-approve gate|gate before" README.md docs/ .github/ .maintainer.yaml Makefile* 2>/dev/null | head -40; echo "---"; cat .maintainer.yaml
+[20:40:33] [system: thinking_tokens]
+[20:40:33] [system: thinking_tokens]
+[20:40:33] [system: thinking_tokens]
+[20:40:33] [system: thinking_tokens]
+[20:40:33] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:34] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:35] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:36] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:37] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] [system: thinking_tokens]
+[20:40:38] 💭 No "Release Checklist" section anywhere, no "before dark-factory prompt approve" instruction. The only project instruction file is agent/.claude/CLAUDE.md (runtime guardrails for the agent, not a release checklist). So gate status: none declared.
+
+But wait — the command mentions `.dark-factory.yaml` has autoRelease: false. The instruction says "On autoRelease: true projects approval ships the change with no second checkpoint". Here .dark-factory.yaml has autoRelease: false (this is the dark-fact…
+[20:40:47] ## Prompt Audit — `prompts/bug-nuke-dev-g9-sentry-phase-fingerprint.md`
+
+**Verdict:** Good · **Score:** 8/10 · **Critical issues:** none
+
+### Code reference verification — all verified
+Every file/symbol/line reference in the prompt checks out, including the subtle library behavior:
+- `main.go` — `main`, `application.Run`, `finishRun`, `exitErrorForStatus` (`:47,120,210,235`)
+- `main_internal_test.go:32`, `main_test.go:31-40` (single `RunSpecs` in `package main_test`, justifying plain `testing` in `package main`)
+- `pkg/steps_gh_token.go:143,150` (`failed`/`needsInput`), `pkg/steps_ai_review.go:153,227,261,294,300`
+- `cmd/run-task/main.go` — confirmed it does **not** call `exitErrorForStatus` (correctly scoped out)
+- `service_service.go:42-53` (`CaptureException(err, &EventHint{…, OriginalException: err}, NewScope())`)
+- `sentry_client.go:68-110` (`enrichEventTags` client processor)
+- `sentry-go client.go:97,121,1080-1101` (global processors run **after** scope + client processors), `interfaces.go:382,393,730`, `transport.go:30-36` (the `recordingTransport` matches the 5-method interface exactly)
+- `errors_data-error.go:26,66,20`, `errors_new.go:13,17`; `libsentry.NewClient/CaptureException/Close` (`:68,149,176`)
+- All four coding-guide paths under `/home/node/.claude/plugins/marketplaces/coding/docs/` exist
+
+The architectural rationale (fresh framework scope ⇒ global event processor is the only application-controlled hook; custom `Transport` ⇒ synchronous `SendEvent` ⇒ deterministic test) is factually correct.
+
+### Recommendations by severity
+
+**Major**
+1. **DoD/Ginkgo mismatch.** `docs/dod.md:7` requires "new/changed behavior has Ginkgo coverage" and `go-testing-guide.md` has MUST rules `no-stdlib-table-tests` / `no-testing-t-direct`. Requirements 4–6 add `t.Run` table cases and two `func TestXxx(t *testing.T)` in `package main`. The prompt's rationale is correct, but add an explicit accepted-deviation bullet to `<constraints>` (or extract the processor into `pkg/` with a Ginkgo suite).
+2. **Untested new branches.** Req 1 adds the `msg == ""` fallback + `strings.TrimSpace`; Req 3 adds the `event/hint/OriginalException == nil` and `!ok || phase == ""` guards. Req 4–5 don't exercise them. Add an empty/whitespace-message case and processor cases for nil event/hint/OriginalException and `phase: ""`.
+
+**Minor**
+3. `<summary>` bullet 6 leaks `service.Main` — reword to "the existing framework error-capture path".
+4. `<objective>` is implementation-level (`Result.Message`, `exitErrorForStatus`) — restate as end state.
+5. Changelog says `github-dark-factory-agent/phase/<phase>` but the code sets a 3-element array (`["github-dark-factory-agent","phase",<phase>]`). Align the wording.
+6. `docs/` not updated despite `docs/dod.md:11` requiring `docs/` **and** CHANGELOG — either add a note to `docs/design.md` or state in `<constraints>` why `docs/` is N/A.
+
+**Info**
+7. Req 6 calls `client.CaptureException` directly rather than driving `service.NewService(...).Run(ctx)`, so it doesn't exercise the actual `service.Main` seam the summary claims.
+8. Summary overstates coverage: `application.Run` errors (`main.go:201` and auth/provider paths) carry no phase data and won't be fingerprinted — scope the wording.
+9. The trailing HTML "OPEN QUESTIONS" block is resolved; consider trimming to a short `<notes>` section.
+
+### Strengths
+Verified references throughout; a genuine boundary-crossing e2e contract test (real client + recording transport asserting the exact fingerprint array and `phase`/`status` tags); correct custom-transport determinism analysis; sibling entry point explicitly scoped out; YAGNI-clean (no knobs/flags/tunables); container-autonomous (no git/docker/kubectl/operator hand-off).
+
+### Pre-approve gate status: **none declared**
+
+- **No project `CLAUDE.md` at the repo root.** The only `CLAUDE.md` is `agent/.claude/CLAUDE.md`, which holds container runtime guardrails (scope, forbidden network/installs, output JSON) — it declares **no** Release Checklist and no "before `dark-factory prompt approve`" instruction.
+- No "Release Checklist" section exists anywhere in the repo (`README.md`, `docs/`, `.github/`, Makefiles all checked).
+- `docs/dod.md` is the `validationPrompt` (the post-execution gate), not a pre-approve gate.
+- `.dark-factory.yaml` has `autoRelease: false`, so approval here does **not** ship with zero checkpoints. (`.maintainer.yaml` has `release.autoRelease: true`, but that belongs to the separate maintainer/release tooling, not dark-factory prompt approval.)
+
+Because no gate is declared, the clean 8/10 audit verdict stands on its own — but note that **Recommendation 1 is a real DoD conflict** (`docs/dod.md:7`), so the executing prompt should still carry the accepted-deviation note before approval.
+[20:40:47] result: ## Prompt Audit — `prompts/bug-nuke-dev-g9-sentry-phase-fingerprint.md`
+
+**Verdict:** Good · **Score:** 8/10 · **Critical issues:** none
+
+### Code reference verification — all verified
+Every file/symbol/line reference in the prompt checks out, including the subtle library behavior:
+- `main.go` — `main`, `application.Run`, `finishRun`, `exitErrorForStatus` (`:47,120,210,235`)
+- `main_internal_test.go:32`, `main_test.go:31-40` (single `RunSpecs` in `package main_test`, justifying plain `testing` in `package main`)
+- `pkg/steps_gh_token.go:143,150` (`failed`/`needsInput`), `pkg/steps_ai_review.go:153,227,261,294,300`
+- `cmd/run-task/main.go` — confirmed it does **not** call `exitErrorForStatus` (correctly scoped out)
+- `service_service.go:42-53` (`CaptureException(err, &EventHint{…, OriginalException: err}, NewScope())`)
+- `sentry_client.go:68-110` (`enrichEventTags` client processor)
+- `sentry-go client.go:97,121,1080-1101` (global processors run **after** scope + client processors), `interfaces.go:382,393,730`, `transport.go:30-36` (the `recordingTransport` matches the 5-method interface exactly)
+- `errors_data-error.go:26,66,20`, `errors_new.go:13,17`; `libsentry.NewClient/CaptureException/Close` (`:68,149,176`)
+- All four coding-guide paths under `/home/node/.claude/plugins/marketplaces/coding/docs/` exist
+
+The architectural rationale (fresh framework scope ⇒ global event processor is the only application-controlled hook; custom `Transport` ⇒ synchronous `SendEvent` ⇒ deterministic test) is factually correct.
+
+### Recommendations by severity
+
+**Major**
+1. **DoD/Ginkgo mismatch.** `docs/dod.md:7` requires "new/changed behavior has Ginkgo coverage" and `go-testing-guide.md` has MUST rules `no-stdlib-table-tests` / `no-testing-t-direct`. Requirements 4–6 add `t.Run` table cases and two `func TestXxx(t *testing.T)` in `package main`. The prompt's rationale is correct, but add an explicit accepted-deviation bullet to `<constraints>` (or extract the processor into `pkg/` with a Ginkgo suite).
+2. **Untested new branches.** Req 1 adds the `msg == ""` fallback + `strings.TrimSpace`; Req 3 adds the `event/hint/OriginalException == nil` and `!ok || phase == ""` guards. Req 4–5 don't exercise them. Add an empty/whitespace-message case and processor cases for nil event/hint/OriginalException and `phase: ""`.
+
+**Minor**
+3. `<summary>` bullet 6 leaks `service.Main` — reword to "the existing framework error-capture path".
+4. `<objective>` is implementation-level (`Result.Message`, `exitErrorForStatus`) — restate as end state.
+5. Changelog says `github-dark-factory-agent/phase/<phase>` but the code sets a 3-element array (`["github-dark-factory-agent","phase",<phase>]`). Align the wording.
+6. `docs/` not updated despite `docs/dod.md:11` requiring `docs/` **and** CHANGELOG — either add a note to `docs/design.md` or state in `<constraints>` why `docs/` is N/A.
+
+**Info**
+7. Req 6 calls `client.CaptureException` directly rather than driving `service.NewService(...).Run(ctx)`, so it doesn't exercise the actual `service.Main` seam the summary claims.
+8. Summary overstates coverage: `application.Run` errors (`main.go:201` and auth/provider paths) carry no phase data and won't be fingerprinted — scope the wording.
+9. The trailing HTML "OPEN QUESTIONS" block is resolved; consider trimming to a short `<notes>` section.
+
+### Strengths
+Verified references throughout; a genuine boundary-crossing e2e contract test (real client + recording transport asserting the exact fingerprint array and `phase`/`status` tags); correct custom-transport determinism analysis; sibling entry point explicitly scoped out; YAGNI-clean (no knobs/flags/tunables); container-autonomous (no git/docker/kubectl/operator hand-off).
+
+### Pre-approve gate status: **none declared**
+
+- **No project `CLAUDE.md` at the repo root.** The only `CLAUDE.md` is `agent/.claude/CLAUDE.md`, which holds container runtime guardrails (scope, forbidden network/installs, output JSON) — it declares **no** Release Checklist and no "before `dark-factory prompt approve`" instruction.
+- No "Release Checklist" section exists anywhere in the repo (`README.md`, `docs/`, `.github/`, Makefiles all checked).
+- `docs/dod.md` is the `validationPrompt` (the post-execution gate), not a pre-approve gate.
+- `.dark-factory.yaml` has `autoRelease: false`, so approval here does **not** ship with zero checkpoints. (`.maintainer.yaml` has `release.autoRelease: true`, but that belongs to the separate maintainer/release tooling, not dark-factory prompt approval.)
+
+Because no gate is declared, the clean 8/10 audit verdict stands on its own — but note that **Recommendation 1 is a real DoD conflict** (`docs/dod.md:7`), so the executing prompt should still carry the accepted-deviation note before approval. | duration: 322183ms | cost: $2.3064 | tokens: 360 in / 3386 out

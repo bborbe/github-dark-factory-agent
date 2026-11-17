@@ -1,0 +1,42 @@
+time=2026-11-11T20:22:10.511+01:00 level=INFO msg="effective config" maxContainers=3 maxContainersSource=default containerImage=docker.io/bborbe/claude-yolo:v0.16.4 model=deepseek-v4-flash-max[1m] modelSource=arg workflow=direct workflowSource=project pr=false prSource=project autoRelease=false autoReleaseSource=project autoMerge=false autoMergeSource=project verificationGate=false validationCommand="make precommit" testCommand="make test" debounceMs=500 hideGit=true hideGitSource=arg autoApprovePrompts=true autoApprovePromptsSource=arg autoGeneratePrompts=true autoGeneratePromptsSource=arg dirtyFileThreshold=0 dirtyFileThresholdSource=default promptsInboxDir=prompts promptsInProgressDir=prompts/in-progress promptsCompletedDir=prompts/completed promptsLogDir=prompts/log preflightCommand="make precommit" preflightInterval=8h healthcheckEnabled=true healthcheckEnabledSource=default healthcheckInterval=8h healthcheckIntervalSource=default backend=local backendSource=arg envFromGlobal=[] envProjectOverrides=[] envProjectOnly=[]
+time=2026-11-11T20:22:10.512+01:00 level=INFO msg="watching for queued prompts" dir=prompts/in-progress
+time=2026-11-11T20:22:10.512+01:00 level=INFO msg="healthcheck gate disabled"
+time=2026-11-11T20:22:10.513+01:00 level=INFO msg="pipeline gate disabled"
+time=2026-11-11T20:22:10.513+01:00 level=INFO msg="processor started"
+time=2026-11-11T20:22:10.513+01:00 level=INFO msg="spec watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/specs/in-progress
+time=2026-11-11T20:22:10.513+01:00 level=INFO msg="spec file created in in-progress, triggering generation" path=/home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/specs/in-progress/bug-nuke-dev-g9.md
+time=2026-11-11T20:22:10.513+01:00 level=INFO msg="watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/34cfba53-59ac-5b92-a6ed-3cb63eab9735/prompts/in-progress
+time=2026-11-11T20:22:15.514+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:23:15.515+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:24:20.514+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:25:20.519+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:26:25.517+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:27:30.516+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:28:35.515+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:29:35.518+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:30:40.513+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:31:40.516+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:32:45.515+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:33:45.520+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:34:50.518+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:35:10.514+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:35:24.762+01:00 level=INFO msg="auto-approve: auditing generated prompt" prompt=bug-nuke-dev-g9-sentry-phase-fingerprint.md
+time=2026-11-11T20:35:55.518+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:36:10.514+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:36:55.519+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:37:10.514+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:38:00.516+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:38:10.514+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:39:00.518+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:39:10.515+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:40:00.522+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-11T20:40:10.514+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-11T20:40:48.257+01:00 level=INFO msg="auto-approve: approved generated prompt" prompt=bug-nuke-dev-g9-sentry-phase-fingerprint.md
+time=2026-11-11T20:40:48.848+01:00 level=INFO msg="lock acquired" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint.md
+time=2026-11-11T20:40:48.849+01:00 level=INFO msg="found queued prompt" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint.md
+time=2026-11-11T20:40:48.850+01:00 level=INFO msg="executing prompt" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint spec_id=bug-nuke-dev-g9 container="" workflow_type=direct title=001-bug-nuke-dev-g9-sentry-phase-fingerprint
+time=2026-11-11T20:40:48.850+01:00 level=INFO msg="syncing with remote default branch" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint spec_id=bug-nuke-dev-g9 container="" workflow_type=direct
+time=2026-11-11T20:40:49.846+01:00 level=INFO msg="container assigned" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint spec_id=bug-nuke-dev-g9 container="" workflow_type=direct container_old="" container=34cfba53-59ac-5b92-a6ed-3cb63eab9735-exec-001-bug-nuke-dev-g9-sentry-phase-fingerprint workflow_step=acquire_container
+time=2026-11-11T21:03:30.860+01:00 level=INFO msg="docker container exited" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint spec_id=bug-nuke-dev-g9 container="" workflow_type=direct container=34cfba53-59ac-5b92-a6ed-3cb63eab9735-exec-001-bug-nuke-dev-g9-sentry-phase-fingerprint exit_code=0 workflow_step=run_claude
+time=2026-11-11T21:03:30.860+01:00 level=INFO msg="completion report" status=success summary="exitErrorForStatus now includes Result.Message and phase/status error data, a global per-phase Sentry fingerprint processor is registered in main, and unit plus end-to-end capture tests and a CHANGELOG entry cover the change."
+time=2026-11-11T21:03:30.901+01:00 level=INFO msg="moved to completed" prompt_id=001-bug-nuke-dev-g9-sentry-phase-fingerprint spec_id=bug-nuke-dev-g9 container="" workflow_type=direct container=34cfba53-59ac-5b92-a6ed-3cb63eab9735-exec-001-bug-nuke-dev-g9-sentry-phase-fingerprint
