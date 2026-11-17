@@ -1,8 +1,10 @@
 ---
-status: prompted
+status: completed
 approved: "true"
 generating: "2026-11-17T12:33:06Z"
 prompted: "2026-11-17T12:37:45Z"
+verifying: "2026-11-17T12:50:46Z"
+completed: "2026-11-17T12:50:53Z"
 ---
 
 # Stale-Ref Probe
