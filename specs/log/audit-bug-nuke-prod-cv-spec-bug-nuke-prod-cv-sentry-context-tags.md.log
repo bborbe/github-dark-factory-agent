@@ -1,0 +1,735 @@
+[14:46:40] [init] session=12de845c model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548 tools=25
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:42] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] [system: thinking_tokens]
+[14:46:43] 💭 Let me start by reading the prompt file and the project CLAUDE.md, and invoke the prompt-auditor agent.
+
+I should do the audit via the Task tool (Agent tool) with subagent_type prompt-auditor. Let me also read CLAUDE.md for the release gate.
+
+Let me first read the prompt file myself? The instructions say invoke the agent. But I also need to check project's declared pre-approve gate by reading CLAUDE.md. Let me do both in parallel: invoke agent and read CLAUDE.md.
+
+Actually the agent will read th…
+[14:46:46] [agent:dark-factory:prompt-auditor] Audit dark-factory prompt
+    prompt: Audit the dark-factory prompt file at prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md (absolute: /home/node/.cache/github-dark-factory-agent/work/30fa0379…
+[14:46:46] [system: task_started]
+[14:46:46] $ ls /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/CLAUDE.md /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/.dark-factory.…
+[14:46:48] [system: task_progress]
+[14:46:48] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md
+[14:46:48] [system: task_progress]
+[14:46:48] $ ls -la && echo "---CONFIG---" && cat .dark-factory.yaml 2>/dev/null && echo "---REMOTE---" && git remote get-url origin 2>/dev/null
+[14:46:48]   → 244 lines read
+[14:46:51] [system: task_progress]
+[14:46:51] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main.go
+[14:46:51] [system: task_progress]
+[14:46:51] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_internal_test.go
+[14:46:51] [system: task_progress]
+[14:46:51] $ find /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs -iname '*nuke*' -o -iname '*bug*' | head -50; echo "---"; ls -R /home/node/.cache/github-dark-factory-…
+[14:46:51]   → 453 lines read
+[14:46:51]   → 232 lines read
+[14:46:51] ⚠ [bash output]
+/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs:
+completed
+in-progress
+log
+
+/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/completed:
+bug-nuke-prod-cv.md
+
+/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/in-progress:
+bug-nuke-prod-cv.md
+
+/home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/log:
+audit-bug-nuke-prod-cv-1-spec-bug-nuke-prod-cv-exit-error-message.md.jsonl
+audit-bug-nuke-prod-cv-1-spec-bug-nuke-prod-cv-exit-error-message.md.log
+audit-bug-nuke-prod-cv-fix-nuke-prod-cv-exit-error-fingerprint.md.jsonl
+audit-bug-nuke-prod-cv-fix-nuke-prod-cv-exit-error-fingerprint.md.log
+audit-bug-nuke-prod-cv-spec-bug-nuke-prod-cv-sentry-context-tags.md.jsonl
+audit-bug-nuke-prod-cv-spec-bug-nuke-prod-cv-sentry-context-tags.md.log
+gen-bug-nuke-prod-cv.jsonl
+gen-bug-nuke-prod-cv.log
+[14:46:56] [system: task_progress]
+[14:46:56] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/specs/in-progress/bug-nuke-prod-cv.md
+[14:46:56] [system: task_progress]
+[14:46:56] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/cmd/run-task/main.go
+[14:46:56] [system: task_progress]
+[14:46:56] $ echo "===CHANGELOG head===" && sed -n '1,40p' CHANGELOG.md && echo "===design.md exists?===" && ls -la docs/ && echo "===go.mod errors/sentry/service===" && grep -nE 'bborbe/(errors|sentry|service|ag…
+[14:46:56]   → 170 lines read
+[14:46:56]   → 23 lines read
+[14:46:56] ⚠ [bash output]
+
+- fix: **install a file-backed git credential helper so a long lifecycle run never uses an expired token.** The GitHub App installation token lives 60 minutes and is minted once at startup; `gh auth setup-git` binds it into a helper that resolves `GH_TOKEN` from the environment of whatever runs git, and the dark-factory daemon captured that environment when it was started — so no refresh in the parent process can reach it. A token file has no such lifetime: git re-reads it at every credential lookup. Observed 2026-11-03 on `bborbe/trading#433`: token minted 18:10Z, the daemon's own `git fetch origin` refused at 19:15Z with `Invalid username or token. Password authentication is not supported`
+
+## v0.5.11
+
+- fix: **exit non-zero when the agent publishes `Status: failed`.** The result was still published to the task, but the process returned nil, so the Job completed and the executor — which records a phase success on exit 0 alone (`IsJobSucceeded` in `agent-task-executor`'s `job_watcher`) and never reads the published Status — wrote a *phase success* for a run that had failed. Once the success grace expired the task was parked at `human_review` as though a human had parked it deliberately. Observed 2026-11-03 on task `ceb79961`: a Job that published `Status: failed` for `git clone --bare: Failed to connect to github.com port 443` exited 0 and parked the task. `needs_input` is deliberately unchanged — parking for a human answer is that status's intent
+
+===design.md exists?===
+total 40
+drwxr-xr-x  2 node node  4096 Nov 12 14:35 .
+drwxr-xr-x 11 node node  4096 Nov 12 14:35 ..
+-rw-r--r--  1 node node  2446 Nov 12 14:35 claude-oauth-setup.md
+-rw-r--r--  1 node node  9946 Nov 12 14:35 creating-claude-agents.md
+-rw-r--r--  1 node node 10481 Nov 12 14:35 design.md
+-rw-r--r--  1 node node   827 Nov 12 14:35 dod.md
+===go.mod errors/sentry/service===
+6:	github.com/bborbe/agent v0.138.0
+9:	github.com/bborbe/errors v1.6.6
+12:	github.com/bborbe/sentry v1.10.7
+13:	github.com/bborbe/service v1.11.2
+[14:47:00] [system: task_progress]
+[14:47:00] $ go env GOMODCACHE 2>/dev/null; echo "---find errors pkg---"; find $(go env GOMODCACHE 2>/dev/null)/github.com/bborbe -maxdepth 1 -type d 2>/dev/null | grep -E 'errors|sentry|service' 
+[14:47:00] ⚠ [bash output]
+/home/node/go/pkg/mod
+---find errors pkg---
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.5.15
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6
+[14:47:03] [system: task_progress]
+[14:47:03] $ echo "=== errors v1.6.6 AddToContext ==="; grep -rn "func AddToContext" /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/; echo "=== DataFromError ==="; grep -rn "func DataFromError\|func DataFr…
+[14:47:03] ⚠ [bash output]
+=== DataFromError ===
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-error.go:66:func DataFromError(err error) map[string]any {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:15:func AddContextDataToError(ctx context.Context, err error) error {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data-context.go:31:func DataFromContext(ctx context.Context) map[string]any {
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:120:func DataFromError(err error) map[string]string
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:123:func DataFromError(err error) map[string]any
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:136:func DataFromContext(ctx context.Context) map[string]string
+/home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/docs/prd/2025-12-09-map-string-any-support.md:139:func DataFromContext(ctx context.Context) map[string]any
+=== sentry v1.10.7 addErrorTags ===
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_skip-error-and-report.go:23:			data := errors.DataFromError(err)
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:89:	addErrorTags(event, hint)
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:103:func addErrorTags(event *sentry.Event, hint *sentry.EventHint) {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go:107:	for k, v := range errors.DataFromError(hint.OriginalException) {
+=== sentry v1.9.20 addErrorTags ===
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20/sentry_client.go:89:	addErrorTags(event, hint)
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20/sentry_client.go:103:func addErrorTags(event *sentry.Event, hint *sentry.EventHint) {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20/sentry_client.go:107:	for k, v := range errors.DataFromError(hint.OriginalException) {
+/home/node/go/pkg/mod/github.com/bborbe/sentry@v1.9.20/sentry_skip-error-and-report.go:23:			data := errors.DataFromError(err)
+=== service Run EventHint ===
+/home/node/go/pkg/mod/github.com/bborbe/service@v1.11.2/service_service.go:46:			&sentry.EventHint{
+[14:47:08] [system: task_progress]
+[14:47:08] $ echo "=== sentry_client.go 80-125 v1.10.7 ==="; sed -n '80,125p' /home/node/go/pkg/mod/github.com/bborbe/sentry@v1.10.7/sentry_client.go; echo "=== errors_data-context.go ==="; cat /home/node/go/pkg/…
+[14:47:08] ⚠ [bash output]
+type service struct {
+	sentryClient libsentry.Client
+	app          Application
+}
+
+func (s *service) Run(ctx context.Context) error {
+	if err := s.app.Run(ctx, s.sentryClient); err != nil {
+		s.sentryClient.CaptureException(
+			err,
+			&sentry.EventHint{
+				Context:           ctx,
+				OriginalException: err,
+			},
+			sentry.NewScope(),
+		)
+		return errors.Wrap(ctx, err, "application failed")
+	}
+	glog.V(4).Infof("run finished without error")
+	return nil
+}
+[14:47:09] [system: task_progress]
+[14:47:09] $ sed -n '1,40p' /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_new.go; echo "=== DataFromError impl ==="; sed -n '1,90p' /home/node/go/pkg/mod/github.com/bborbe/errors@v1.6.6/errors_data…
+[14:47:09] ⚠ [bash output]
+	}
+}
+
+func DataFromError(err error) map[string]any {
+	data := make(map[string]any)
+	for err != nil {
+		hasData, ok := err.(HasData)
+		if ok {
+			for k, v := range hasData.Data() {
+				data[k] = v
+			}
+		}
+		hasCause, ok := err.(HasCause)
+		if !ok {
+			break
+		}
+		err = hasCause.Cause()
+	}
+	return data
+}
+[14:47:15] [system: task_progress]
+[14:47:15] $ find /home/node/go/pkg/mod -maxdepth 3 -type d -path '*vault-cli*' 2>/dev/null; echo "---"; grep -rn "TaskPhasePlanning\|TaskPhaseAIReview\|func (t TaskPhase) String\|type TaskPhase" $(find /home/nod…
+[14:47:19] [system: task_progress]
+[14:47:19] $ AGENT=$(find /home/node/go/pkg/mod/github.com/bborbe -maxdepth 1 -type d -name 'agent@v0.138.0'); echo "$AGENT"; echo "=== Result fields ==="; grep -rn "type Result struct" -A 25 "$AGENT" | head -40;…
+[14:47:19] ⚠ [bash output]
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md-68-    ContinueToNext bool
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md-69-}
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md-70-```
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md-71-
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/prompts/completed/120-spec-031-lib-healthcheck-package.md-72-**Inline reference — ClaudeRunner.Run return type:**
+=== TaskIdentifier ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_task-identifier.go:17:type TaskIdentifierGenerator base.IdentifierGenerator[TaskIdentifier]
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_task-identifier.go:20:type TaskIdentifiers []TaskIdentifier
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_task-identifier.go:28:type TaskIdentifier string
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_task-identifier.go:30:func (t TaskIdentifier) String() string {
+=== PrintResult ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_print-result.go:19:func PrintResult(ctx context.Context, result *Result) error {
+=== AgentStatusFailed ===
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_runner.go:99:	case AgentStatusFailed, AgentStatusNeedsInput:
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status.go:22:	// AgentStatusFailed indicates a transient infrastructure failure.
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status.go:24:	AgentStatusFailed AgentStatus = "failed"
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:24:		It("AgentStatusFailed has correct value", func() {
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_status_test.go:25:			Expect(string(lib.AgentStatusFailed)).To(Equal("failed"))
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_agent_test.go:239:			stepA.RunReturns(&lib.Result{Status: lib.AgentStatusFailed, NextPhase: ""}, nil)
+/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0/agent_agent_test.go:254:			Expect(result.Status).To(Equal(lib.AgentStatusFailed))
+[14:47:30] [system: task_progress]
+[14:47:30] $ echo "=== ~/.claude plugins ==="; ls -d /home/node/.claude/plugins/marketplaces/coding/docs 2>&1; ls /home/node/.claude/plugins/marketplaces/coding/docs 2>/dev/null | head; echo "=== ~/.claude-yolo p…
+[14:47:33] [system: task_progress]
+[14:47:33] $ cd /home/node/.claude/plugins/marketplaces/coding/docs && for f in go-error-wrapping-guide.md go-testing-guide.md changelog-guide.md definition-of-done.md; do if [ -f "$f" ]; then echo "EXISTS: $f"; …
+[14:47:33] ⚠ [bash output]
+EXISTS: go-error-wrapping-guide.md
+EXISTS: go-testing-guide.md
+EXISTS: changelog-guide.md
+EXISTS: definition-of-done.md
+--- actual names matching error/testing ---
+definition-of-done.md
+go-error-wrapping-guide.md
+go-json-error-handler-guide.md
+go-testing-guide.md
+[14:47:49] [system: task_progress]
+[14:47:49] $ echo "=== Makefile.precommit ==="; cat /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/Makefile.precommit; echo "=== Makefile ==="; cat /home/node/.cache/github-…
+[14:47:49] ⚠ [bash output]
+
+deps:
+	go install github.com/onsi/ginkgo/v2/ginkgo@v2.25.3
+	sudo port install trivy
+
+.PHONY: fix
+fix:
+	@for dir in $$(find `pwd` -type d -name vendor -prune -o -name go.mod -exec dirname "{}" \; | grep -v '^$$'); do \
+		cd $${dir}; \
+		echo "fix $${dir}"; \
+		go get \
+		github.com/bborbe/kv@latest \
+		github.com/bborbe/memorykv@latest \
+		github.com/bborbe/badgerkv@latest \
+		github.com/bborbe/boltkv@latest \
+		github.com/go-git/go-git/v5@latest \
+		github.com/containerd/containerd@latest \
+		golang.org/x/crypto@latest \
+		golang.org/x/net@latest; \
+	done
+[14:47:55] [system: task_progress]
+[14:47:55] $ cd /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548; echo "=== prompts tree ==="; find prompts -maxdepth 2 -type f | sort; echo "=== design.md exit/phase ==="; gr…
+[14:47:55] ⚠ [bash output]
+prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md
+prompts/completed/002-spec-bug-nuke-prod-cv-exit-error-message.md
+prompts/log/001-fix-nuke-prod-cv-exit-error-fingerprint.jsonl
+prompts/log/001-fix-nuke-prod-cv-exit-error-fingerprint.log
+prompts/log/002-spec-bug-nuke-prod-cv-exit-error-message.jsonl
+prompts/log/002-spec-bug-nuke-prod-cv-exit-error-message.log
+prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md
+=== design.md exit/phase ===
+3:Design artifact for the Phase-2 gate of [[Lift Dark-Factory Daemon into Agent Framework]]. Produced via `/agent:launch-agent` (which walks the [[Agent Design Guide]] interview) on 2026-07-12, drawing on the Phase-1 prototype E2E (both slash-command prototypes validated on `bborbe/go-skeleton` PR #37 through merge).
+20:- **Trigger:** `github-dark-factory-watcher` (Phase-1: `/github-dark-factory-watcher` slash command; Phase-3: Go watcher). Emits when a draft PR has `.dark-factory.yaml` + ≥1 `approved`-not-`completed` spec **that appears in the PR's own diff** (diff-scoping — validated fix; "spec exists on branch" alone false-triggers on repos that persist specs).
+22:- **Downstream:** lands task at `phase: human_review` (never flips the PR). Human flips draft→ready → `github-pr-watcher` → `github-pr-review-agent`.
+24:## Part 4 — Behavior (phases)
+26:| Phase | Impl shape | Reads | Side effects | Writes |
+30:| ai_review | `claudelib.NewAgentStep` (read-only) | `## Plan`+`## Result` | remote checks: all specs `completed`, no prompts in-flight, PR still draft, diff-vs-spec sanity | `## Review`; `phase: human_review`, clear assignee |
+36:The Phase-1 E2E surfaced a hard requirement: **dark-factory spawned nested claude-yolo containers** for the LLM steps. Since this agent's Job pod is *already* a claude-yolo container, that is DinD — disallowed (goal Non-goal).
+53:- Idempotency: `AgentStep.ShouldRun` checks if the phase's `##` section exists; per-prompt commits make execution crash-resumable.
+60:- Observability: phase-transition logs + metrics; per-prompt execution visible.
+64:1. **Prompt fails DoD / audit fail** — spec-078 fail-closed stops the spec; agent escalates (clear assignee, `previous_assignee`, phase unchanged). NO auto-fix loop.
+71:The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+75:Deployed in dev, consumes a real watcher task, walks planning→execution→ai_review in one pod, lands at `human_review` without flipping the PR; output parity with the Phase-1 prototype; idempotent under replay; per-repo concurrency 1. ✅ Prerequisite (dark-factory `backend: local`) shipped v0.192.0 and live-validated — the build is unblocked.
+[14:48:15] [system: task_progress]
+[14:48:15] $ cd /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548; echo "=== errors.Wrapf count in pkg/ internal/ ==="; grep -rc 'errors\.Wrapf' pkg/ 2>/dev/null | grep -v ':0'…
+[14:48:15] ⚠ [bash output]
+---
+status: completed
+spec: [bug-nuke-prod-cv]
+summary: Verified the predecessor NUKE-PROD-CV fix is fully present in main.go, main_internal_test.go, and CHANGELOG.md (message forwarding, bounded 500-rune inclusion, nil for done/in_progress/needs_input, fingerprint processor, and failed-message test); made no code changes to avoid duplicating an existing fix, and make precommit passed.
+execution_id: 7511383e-a694-5f95-ae19-740904509a5c-exec-002-spec-bug-nuke-prod-cv-exit-error-message
+dark-factory-version: dev
+created: "2026-11-12T12:20:00Z"
+queued: "2026-11-12T12:23:53Z"
+started: "2026-11-12T12:23:54Z"
+completed: "2026-11-12T12:34:26Z"
+---
+
+<summary>
+- A failed agent run must fail the Job with an error that names *why* it failed, not just that it failed.
+- The prior fix for this bug already lives in this repo: the non-zero-exit error now carries the failed result's human-readable message.
+- This prompt first checks whether that fix is still present, and if it is, makes no code change at all — it will not add a second copy of the same helpers.
+- If any part of the fix is somehow missing (for example after a revert), it adds only the missing piece.
+- The exit-code contract is preserved: `failed` still exits non-zero; `done`, `in_progress`, and `needs_input` still exit 0.
+- A test must prove the failed run's error contains the result message.
+- Long messages stay bounded so a long rationale cannot flood the pod log.
+[14:48:30] [system: task_progress]
+[14:48:30] $ AGENT=/home/node/go/pkg/mod/github.com/bborbe/agent@v0.138.0; sed -n '1,60p' $AGENT/agent_print-result.go; echo "=== TaskIdentifier String ==="; sed -n '25,40p' $AGENT/agent_task-identifier.go; echo …
+[14:48:30] ⚠ [bash output]
+}
+
+func (t TaskIdentifier) Validate(ctx context.Context) error {
+	if t == "" {
+		return errors.Wrap(ctx, validation.Error, "identifier missing")
+=== Result counters ===
+
+	// AgentTurns is the number of conversation turns the session that produced this
+	// result took, from the CLI's own end-of-run summary. Nil means no measurement was
+	// reported — a zero or negative summary is treated as no measurement, and the turn
+	// entry is then omitted from the payload entirely.
+	AgentTurns *int64
+
+	// InteractionCount is the number of human-authored entries the run's own session
+	// transcript recorded. Nil means the evidence was unavailable — the interaction
+	// entry is omitted from the payload. A non-nil zero is an observation: the
+	// transcript was read and contained no human-authored entry. Absence is never
+	// substituted with a zero.
+	InteractionCount *int64
+}
+[14:48:46] [system: task_progress]
+[14:48:46] $ cd /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548; echo "=== finishRun refs ==="; grep -rn 'finishRun' --include='*.go' .; echo "=== exitErrorForStatus refs ===…
+[14:48:46] ⚠ [bash output]
+=== finishRun refs ===
+main.go:248:	return finishRun(ctx, result, a.Phase)
+main.go:251:// finishRun publishes the agent's result and then decides the Job's exit code.
+main.go:253:func finishRun(
+=== exitErrorForStatus refs ===
+main_internal_test.go:72:			err := exitErrorForStatus(ctx, c.status, phase, c.message)
+main_internal_test.go:97:	err := exitErrorForStatus(
+main_internal_test.go:121:	err := exitErrorForStatus(
+main_internal_test.go:149:		err := exitErrorForStatus(
+main.go:261:	return exitErrorForStatus(ctx, result.Status, phase, result.Message)
+main.go:264:// exitErrorForStatus returns a non-nil error when the agent's published status
+main.go:278:func exitErrorForStatus(
+=== status->exit mapping in cmd/run-task ===
+[14:48:51] [system: task_progress]
+[14:48:51] $ echo "=== go-error-wrapping-guide.md ==="; cat /home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md; echo; echo "=== go-testing-guide.md (first 80) ==="; sed -n '1,80p' /hom…
+[14:48:51] ⚠ [bash output]
+func TestUserService(t *testing.T) { // direct testing.T in a Ginkgo-suite package
+	t.Run("Create", func(t *testing.T) {
+		// ...
+	})
+}
+```
+
+#### Good
+
+```go
+var _ = Describe("UserService", func() {
+	Context("Create", func() {
+		It("creates a user with valid data", func() {
+			// ...
+		})
+	})
+})
+```
+
+### RULE go-testing/no-bare-error-call (MUST)
+[14:48:58] [system: task_progress]
+[14:48:58] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/main_test.go
+[14:48:58]   → 32 lines read
+[14:49:52] [system: task_progress]
+[14:49:52] $ cd /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548; echo "=== CLAUDE.md ==="; ls CLAUDE.md agent/CLAUDE.md 2>&1; echo "=== docs/dod.md ==="; cat docs/dod.md; ech…
+[14:49:52] ⚠ [bash output]
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+=== predecessor 001 objective/summary ===
+4:summary: exitErrorForStatus now carries a 500-rune-bounded Result.Message and a phase + cause-prefix Sentry fingerprint via a global event processor, while failed still exits non-zero and needs_input still exits 0
+13:<summary>
+24:<objective>
+26:</objective>
+=== prompt status/frontmatter lines ===
+---
+spec: ["bug-nuke-prod-cv"]
+status: draft
+created: "2026-11-12T13:39:43Z"
+---
+[14:50:22] [system: task_progress]
+[14:50:22] $ cd /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548; echo "=== sentry in docs/ ==="; grep -rni 'sentry' docs/ || echo "none"; echo "=== README sentry ==="; grep -…
+[14:50:22] ⚠ [bash output]
+=== sentry in docs/ ===
+docs/creating-claude-agents.md:110:func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+docs/creating-claude-agents.md:172:  SENTRY_DSN:          '{{ "SENTRY_DSN_KEY"         | env | teamvaultUrl      | base64 }}'
+=== README sentry ===
+41:| `SENTRY_DSN` | no | — | Error reporting |
+=== go.mod go version ===
+3:go 1.27.4
+=== errors imported in main.go ===
+30:	"github.com/bborbe/errors"
+[14:51:20] [system: task_updated]
+[14:51:20] [system: task_notification]
+[14:51:20]   ← agent reply: # Prompt Audit Report: spec-bug-nuke-prod-cv-sentry-context-tags
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:21] [system: thinking_tokens]
+[14:51:22] [system: thinking_tokens]
+[14:51:22] [system: thinking_tokens]
+[14:51:22] [system: thinking_tokens]
+[14:51:22] [system: thinking_tokens]
+[14:51:22] 💭 No CLAUDE.md. The gate: check for "Release Checklist" section in project CLAUDE.md — no CLAUDE.md. But validationPrompt: docs/dod.md exists. The instructions say: Read the project `CLAUDE.md` for a "Release Checklist" section or any "before `dark-factory prompt approve`" instruction, plus any doc it links. No CLAUDE.md. But there's docs/dod.md referenced as validationPrompt. Let me check docs/dod.md and whether there's a release checklist elsewhere (maybe README, docs/). Let me grep.
+
+Also autoR…
+[14:51:23] $ echo "=== files ===" && ls -a && echo "=== docs ===" && ls docs 2>/dev/null && echo "=== grep release checklist / prompt approve ===" && grep -rniE "release checklist|before .*prompt approve|prompt a…
+[14:51:23] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/docs/dod.md
+[14:51:23]   → 11 lines read
+[14:51:23] [system: thinking_tokens]
+[14:51:23] [system: thinking_tokens]
+[14:51:23] [system: thinking_tokens]
+[14:51:23] [system: thinking_tokens]
+[14:51:23] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:24] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:25] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] [system: thinking_tokens]
+[14:51:26] 💭 No CLAUDE.md, no "Release Checklist" section, no "before dark-factory prompt approve" instruction. However, there is docs/dod.md which is the validation prompt. Is that a "declared pre-approve gate"? The instructions: "Check the project's declared pre-approve gate — Read the project CLAUDE.md for a 'Release Checklist' section or any 'before dark-factory prompt approve' instruction, plus any doc it links". There is no CLAUDE.md, no Release Checklist, no prompt-approve instruction. So gate status:…
+[14:51:27] [read] /home/node/.cache/github-dark-factory-agent/work/30fa0379-21ca-5a81-a728-0f468982b548/prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md
+[14:51:27] $ echo "=== go.mod sentry pin ===" && grep -n "bborbe/sentry\|bborbe/errors" go.mod && echo "=== design.md exit mentions ===" && grep -ni "exit" docs/design.md | head && echo "(exit count: $(grep -ci e…
+[14:51:27]   → 244 lines read
+[14:51:27] ⚠ [bash output]
+	phase domain.TaskPhase,
+	message string,
+) error {
+	if status != agentlib.AgentStatusFailed {
+		return nil
+	}
+	displayMessage := truncateRunes(message, statusMessageMaxRunes)
+	if displayMessage == "" {
+		displayMessage = "(no message)"
+	}
+	err := errors.Errorf(
+		ctx,
+		"agent reported status %q for phase %q: %s",
+		status,
+		phase,
+		displayMessage,
+	)
+	return &statusError{
+		err: err,
+		fingerprint: []string{
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:28] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:29] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:30] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:31] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:32] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] [system: thinking_tokens]
+[14:51:33] 💭 All the key findings are verified. Now check gate: no CLAUDE.md, no Release Checklist, no "before dark-factory prompt approve" instruction. docs/dod.md is the validation prompt (post-execution), not a pre-approve gate. autoRelease: false. So gate status: none declared. I should note docs/dod.md exists and is run by dark-factory as validation, but it's not a pre-approve gate. Actually, hmm — the instructions say "Read the project CLAUDE.md for a 'Release Checklist' section or any 'before dark-fac…
+[14:51:41] ## Prompt Audit: `prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md`
+
+**Verdict: 8/10 — Good. No blockers, no majors.** Six minor issues, several of which are worth fixing before approval because they can pull the executing agent in two directions.
+
+### Scores
+
+| Dimension | Score |
+|---|---|
+| Structure | 9/10 |
+| Code references | 8/10 |
+| Quality | 8/10 |
+| Scope / YAGNI | 9/10 |
+| Test coverage | 8/10 |
+
+All six DoD sections present and ordered; verification is container-safe (`make precommit`, focused `go test`, `grep`); filename/status/inbox conventions correct. The scope is excellent — it implements only the genuinely-new tag enrichment, rejects the optional `ExcludeErrors` clause with a concrete observability rationale, and explicitly rules out the sibling entry point `cmd/run-task/main.go`.
+
+### Findings (all minor)
+
+1. **Stale Sentry version** — line 46 says `bborbe/sentry` v1.9.20; `go.mod:12` pins **v1.10.7**. I verified this. `addErrorTags` behavior is identical, so no behavioral impact, but the "read from the pinned modules" claim is false. Fix: change the version string.
+
+2. **`docs/design.md` over-claim** — line 29 tells the agent design.md holds "the phase and exit-code contract". I verified `grep -ci exit docs/design.md` → **0**. It documents phases only; the exit-code contract lives in `exitErrorForStatus`'s doc comment and `main_internal_test.go`. Reword to point at the real location.
+
+3. **`go-testing-guide.md` mischaracterized** — line 34 says plain table-driven tests "are the correct form here"; the guide actually makes Ginkgo the default and stdlib table tests a MUST-NOT. The plain-testing choice is still right, but for a different reason: `main_test.go` already owns the single `RunSpecs` for this binary, so a second suite fails. Restate the reason.
+
+4. **Contradiction: "no bare `return err`"** — constraint line 210 forbids it, but requirement 1's inlined `finishRun` (lines 84–86) preserves the pre-existing bare `return err` for `PrintResult` (I confirmed this in `main.go`). The agent could satisfy one instruction and violate the other. Fix: scope the constraint to *new* errors and explicitly bless the preserved pre-existing return.
+
+5. **Project DoD not referenced** — the project's real validation gate is `docs/dod.md`, which requires "new/changed behavior has Ginkgo coverage" and docs/CHANGELOG updates. The prompt cites only the generic plugin DoD. Add `docs/dod.md` to `<context>` and note that `package main` is the sanctioned plain-`testing` exception, plus why no `docs/` edit is needed (observability-only).
+
+6. **500-rune `message` tag exceeds Sentry's cap** — Sentry truncates tag values well below 500 chars and flattens multi-line values; the local test only asserts the `DataFromError` value. The prompt's own open-question #3 flags this and offers `causePrefix` (first line, 100 runes). Either switch to `causePrefix(result.Message)` or document the server-side truncation in the requirement.
+
+### Recommendations / nits
+- Add a non-failed `finishRun` case (e.g. `AgentStatusDone`) — both new tests only cover `failed`, so the "non-failed still returns nil" contract isn't proven *through the edited function*.
+- Consider a Sentry-level integration test (fake transport asserting `event.Tags`) to close the level-2 gap; the current `DataFromError` test is a faithful level-1 proxy.
+- The human-reviewer Q&A block (lines 54–66) is embedded in the agent-facing prompt and says "adjust at audit time" / "Change it if you prefer" — retitle it `AUTHOR NOTES (not instructions)` to avoid the agent thinking it should decide.
+- `<objective>` names `errors.AddToContext`/`exitErrorForStatus` (mildly implementation-level; acceptable for a narrow fix).
+- Hardcoded `/home/node/...` container paths — acceptable, no portable form exists.
+
+### Pre-approve gate status: **none declared**
+
+- **No `CLAUDE.md`** exists at the repo root, so there is no "Release Checklist" section and no "before `dark-factory prompt approve`" instruction anywhere I could find.
+- `docs/dod.md` exists and is wired as `.dark-factory.yaml`'s `validationPrompt`, but that is dark-factory's **post-execution** validation prompt — not a human pre-approve gate.
+- `.dark-factory.yaml` sets `autoRelease: false`, so the auto-release caveat (approval shipping with no second checkpoint) **does not apply** here. Approval will still be followed by the normal release path.
+
+Bottom line: a clean, well-scoped prompt, but fix findings **1, 2, 4** at minimum before approving — #4 is the one that can produce a contradictory instruction the executing agent must guess its way out of.
+[14:51:41] result: ## Prompt Audit: `prompts/spec-bug-nuke-prod-cv-sentry-context-tags.md`
+
+**Verdict: 8/10 — Good. No blockers, no majors.** Six minor issues, several of which are worth fixing before approval because they can pull the executing agent in two directions.
+
+### Scores
+
+| Dimension | Score |
+|---|---|
+| Structure | 9/10 |
+| Code references | 8/10 |
+| Quality | 8/10 |
+| Scope / YAGNI | 9/10 |
+| Test coverage | 8/10 |
+
+All six DoD sections present and ordered; verification is container-safe (`make precommit`, focused `go test`, `grep`); filename/status/inbox conventions correct. The scope is excellent — it implements only the genuinely-new tag enrichment, rejects the optional `ExcludeErrors` clause with a concrete observability rationale, and explicitly rules out the sibling entry point `cmd/run-task/main.go`.
+
+### Findings (all minor)
+
+1. **Stale Sentry version** — line 46 says `bborbe/sentry` v1.9.20; `go.mod:12` pins **v1.10.7**. I verified this. `addErrorTags` behavior is identical, so no behavioral impact, but the "read from the pinned modules" claim is false. Fix: change the version string.
+
+2. **`docs/design.md` over-claim** — line 29 tells the agent design.md holds "the phase and exit-code contract". I verified `grep -ci exit docs/design.md` → **0**. It documents phases only; the exit-code contract lives in `exitErrorForStatus`'s doc comment and `main_internal_test.go`. Reword to point at the real location.
+
+3. **`go-testing-guide.md` mischaracterized** — line 34 says plain table-driven tests "are the correct form here"; the guide actually makes Ginkgo the default and stdlib table tests a MUST-NOT. The plain-testing choice is still right, but for a different reason: `main_test.go` already owns the single `RunSpecs` for this binary, so a second suite fails. Restate the reason.
+
+4. **Contradiction: "no bare `return err`"** — constraint line 210 forbids it, but requirement 1's inlined `finishRun` (lines 84–86) preserves the pre-existing bare `return err` for `PrintResult` (I confirmed this in `main.go`). The agent could satisfy one instruction and violate the other. Fix: scope the constraint to *new* errors and explicitly bless the preserved pre-existing return.
+
+5. **Project DoD not referenced** — the project's real validation gate is `docs/dod.md`, which requires "new/changed behavior has Ginkgo coverage" and docs/CHANGELOG updates. The prompt cites only the generic plugin DoD. Add `docs/dod.md` to `<context>` and note that `package main` is the sanctioned plain-`testing` exception, plus why no `docs/` edit is needed (observability-only).
+
+6. **500-rune `message` tag exceeds Sentry's cap** — Sentry truncates tag values well below 500 chars and flattens multi-line values; the local test only asserts the `DataFromError` value. The prompt's own open-question #3 flags this and offers `causePrefix` (first line, 100 runes). Either switch to `causePrefix(result.Message)` or document the server-side truncation in the requirement.
+
+### Recommendations / nits
+- Add a non-failed `finishRun` case (e.g. `AgentStatusDone`) — both new tests only cover `failed`, so the "non-failed still returns nil" contract isn't proven *through the edited function*.
+- Consider a Sentry-level integration test (fake transport asserting `event.Tags`) to close the level-2 gap; the current `DataFromError` test is a faithful level-1 proxy.
+- The human-reviewer Q&A block (lines 54–66) is embedded in the agent-facing prompt and says "adjust at audit time" / "Change it if you prefer" — retitle it `AUTHOR NOTES (not instructions)` to avoid the agent thinking it should decide.
+- `<objective>` names `errors.AddToContext`/`exitErrorForStatus` (mildly implementation-level; acceptable for a narrow fix).
+- Hardcoded `/home/node/...` container paths — acceptable, no portable form exists.
+
+### Pre-approve gate status: **none declared**
+
+- **No `CLAUDE.md`** exists at the repo root, so there is no "Release Checklist" section and no "before `dark-factory prompt approve`" instruction anywhere I could find.
+- `docs/dod.md` exists and is wired as `.dark-factory.yaml`'s `validationPrompt`, but that is dark-factory's **post-execution** validation prompt — not a human pre-approve gate.
+- `.dark-factory.yaml` sets `autoRelease: false`, so the auto-release caveat (approval shipping with no second checkpoint) **does not apply** here. Approval will still be followed by the normal release path.
+
+Bottom line: a clean, well-scoped prompt, but fix findings **1, 2, 4** at minimum before approving — #4 is the one that can produce a contradictory instruction the executing agent must guess its way out of. | duration: 301145ms | cost: $1.8372 | tokens: 190 in / 3117 out

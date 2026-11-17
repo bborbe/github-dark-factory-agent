@@ -1,0 +1,439 @@
+[13:23:55] [init] session=d8acb93c model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c tools=25
+[13:23:56] [system: thinking_tokens]
+[13:23:56] [system: thinking_tokens]
+[13:23:56] [system: thinking_tokens]
+[13:23:56] [system: thinking_tokens]
+[13:23:56] [system: thinking_tokens]
+[13:23:56] [system: thinking_tokens]
+[13:23:57] [system: thinking_tokens]
+[13:23:57] [system: thinking_tokens]
+[13:23:57] 💭 Let me start by reading the required files. The task says the fix is likely already present, and I need to verify and make no changes if so. But I also need to update CHANGELOG.md following the guide — actually, the requirements say do not rewrite CHANGELOG if already correct.
+
+Let me read the files in full first.
+[13:23:57] I'll start by reading the required files to establish the current state.
+
+
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/main.go
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/main_internal_test.go
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/CHANGELOG.md
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/specs/completed/bug-nuke-prod-cv.md
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/prompts/completed/001-fix-nuke-prod-cv-exit-error-fingerprint.md
+[13:23:59] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/cmd/run-task/main.go
+[13:23:59]   → 453 lines read
+[13:23:59]   → 232 lines read
+[13:23:59]   → 170 lines read
+[13:23:59]   → 459 lines read
+[13:23:59]   → 24 lines read
+[13:23:59]   → 200 lines read
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:00] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:01] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] [system: thinking_tokens]
+[13:24:02] 💭 All five facts from step 1 hold:
+
+1. `finishRun` passes `result.Message` as fourth arg — line 261. ✓
+2. `exitErrorForStatus` accepts `message string` and includes bounded message in `errors.Errorf` format string — lines 278-297. ✓
+3. Returns nil for every status other than failed — lines 284-286. ✓
+4. `TestExitErrorForStatus` passes non-empty message and asserts `strings.Contains(err.Error(), c.message)` — lines 48, 82-88. ✓
+5. `CHANGELOG.md` has `## Unreleased` entry — line 8-10. ✓
+
+So no funct…
+[13:24:02] All five facts hold. The fix is already present. I'll run the verification greps and focused tests before the required final gate.
+
+
+[13:24:04] $ echo "=== helper definitions ===" && grep -n 'func truncateRunes\|func causePrefix\|func exitErrorForStatus\|type statusError\|func sentryFingerprintProcessor' main.go && echo "=== message forwarded …
+[13:24:04] $ go test -run 'TestExitErrorForStatus|TestExitErrorForStatusTruncatesLongMessage|TestStatusErrorFingerprint|TestSentryFingerprintProcessor' . 2>&1
+[13:24:04] ⚠ [bash output]
+=== helper definitions ===
+63:func truncateRunes(s string, max int) string {
+77:func causePrefix(message string) string {
+278:func exitErrorForStatus(
+318:type statusError struct {
+338:func sentryFingerprintProcessor(
+=== message forwarded ===
+261:	return exitErrorForStatus(ctx, result.Status, phase, result.Message)
+=== format string ===
+293:		"agent reported status %q for phase %q: %s",
+=== test assertion ===
+84:					"failed error must include Result.Message %q, got %q",
+=== changelog unreleased ===
+8:## Unreleased
+[13:24:07] [system: task_started]
+[13:26:04] [system: task_updated]
+[13:26:04] [system: task_updated]
+[13:26:04] [system: thinking_tokens]
+[13:26:04] [system: thinking_tokens]
+[13:26:04] [system: thinking_tokens]
+[13:26:04] 💭 The test command ran in background. Let me wait for it.
+[13:26:05] $ sleep 5; cat /tmp/claude-1000/-home-node--cache-github-dark-factory-agent-work-7511383e-a694-5f95-ae19-740904509a5c/d8acb93c-3c9a-40aa-a52d-f3d97900d2c5/tasks/bzrbosoyk.output
+[13:26:08] [system: task_started]
+[13:26:10] [system: task_notification]
+[13:26:10] ⚠ [bash output]
+go: downloading github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2
+go: downloading golang.org/x/crypto v0.58.0
+go: downloading github.com/jcmturner/rpc/v2 v2.0.3
+go: downloading golang.org/x/sync v0.24.0
+go: downloading go.yaml.in/yaml/v2 v2.4.5
+go: downloading k8s.io/kube-openapi v0.0.0-20261014044854-ca3452a79603
+go: downloading github.com/fxamacker/cbor/v2 v2.10.0
+go: downloading golang.org/x/oauth2 v0.37.0
+go: downloading github.com/jcmturner/aescts/v2 v2.0.0
+go: downloading golang.org/x/mod v0.42.0
+go: downloading gopkg.in/evanphx/json-patch.v4 v4.13.0
+go: downloading sigs.k8s.io/yaml v1.6.0
+go: downloading github.com/go-openapi/jsonreference v1.0.3
+go: downloading github.com/go-openapi/swag/jsonutils v0.29.2
+go: downloading github.com/x448/float16 v0.8.4
+go: downloading github.com/go-openapi/jsonpointer v1.0.2
+go: downloading github.com/go-openapi/swag/typeutils v0.29.2
+go: downloading github.com/go-openapi/swag/conv v0.29.2
+go: downloading github.com/go-openapi/swag/pools v0.29.2
+ok  	github.com/bborbe/github-dark-factory-agent	0.015s
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] [system: thinking_tokens]
+[13:26:11] 💭 Focused tests pass (exit 0). No code changes needed. Now run the required final validation `make precommit` exactly once.
+
+Also the prompt asks to update CHANGELOG.md following the guide. The entry already exists and is correct, so no change. Requirements explicitly say do not rewrite it. Good.
+
+Let me run `make precommit` once.
+[13:26:11] Focused tests pass (exit 0). No code changes are needed — the fix is fully present. Running the required final validation gate once.
+
+
+[13:26:11] $ make precommit 2>&1 | tail -60
+[13:26:14] [system: task_started]
+[13:34:14] [system: task_notification]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:15] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:16] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:17] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:18] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:19] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:20] [system: thinking_tokens]
+[13:34:21] [system: thinking_tokens]
+[13:34:21] [system: thinking_tokens]
+[13:34:21] 💭 The output ends with "ready to commit" — but I need the exit code. The pipe to tail may mask the exit code. Let me check the exit code of the make precommit command properly. The command `make precommit 2>&1 | tail -60` returns the exit code of tail, not make (without pipefail). Let me re-run just to check status? The prompt says run once. But I need to know the exit code. I can check with `set -o pipefail`. However re-running make precommit is allowed? The prompt says run exactly once. Hmm. But…
+[13:34:21] $ grep -n -A20 '^precommit:' Makefile; echo "---"; grep -rn 'ready to commit' Makefile* 2>/dev/null
+[13:34:22] [read] /home/node/.cache/github-dark-factory-agent/work/7511383e-a694-5f95-ae19-740904509a5c/Makefile.precommit
+[13:34:22]   → 117 lines read
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:23] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] [system: thinking_tokens]
+[13:34:24] 💭 `precommit` depends on `ensure format generate shellcheck test check addlicense`, then echoes "ready to commit". Reaching "ready to commit" means every prerequisite succeeded (make stops on first failure). So `make precommit` exited 0. 
+
+All criteria met. No changes made. Now write the mandatory completion report.
+
+Let me double-check the definition-of-done criteria:
+- Builds: precommit exits 0 — yes.
+- Tests: new/changed behavior has Ginkgo coverage — no changed behavior; existing plain tests c…
+[13:34:26] All five step-1 facts hold, the focused tests pass, and `make precommit` reached its final `ready to commit` echo (its last prerequisite — `ensure format generate shellcheck test check addlicense` — must all succeed first). No functional change was needed; the predecessor fix is intact and unduplicated.
+
+<!-- DARK-FACTORY-REPORT
+{"status":"success","summary":"Verified the predecessor NUKE-PROD-CV fix is fully present in main.go, main_internal_test.go, and CHANGELOG.md (message forwarding, bounded 500-rune inclusion, nil for done/in_progress/needs_input, fingerprint processor, and failed-message test); made no code changes to avoid duplicating an existing fix, and make precommit passed.","blockers":[],"verification":{"command":"make precommit","exitCode":0}}
+DARK-FACTORY-REPORT -->
+[13:34:26] result: All five step-1 facts hold, the focused tests pass, and `make precommit` reached its final `ready to commit` echo (its last prerequisite — `ensure format generate shellcheck test check addlicense` — must all succeed first). No functional change was needed; the predecessor fix is intact and unduplicated.
+
+<!-- DARK-FACTORY-REPORT
+{"status":"success","summary":"Verified the predecessor NUKE-PROD-CV fix is fully present in main.go, main_internal_test.go, and CHANGELOG.md (message forwarding, bounded 500-rune inclusion, nil for done/in_progress/needs_input, fingerprint processor, and failed-message test); made no code changes to avoid duplicating an existing fix, and make precommit passed.","blockers":[],"verification":{"command":"make precommit","exitCode":0}}
+DARK-FACTORY-REPORT --> | duration: 630904ms | cost: $0.6866 | tokens: 553 in / 2725 out
