@@ -1,0 +1,636 @@
+[13:33:07] [init] session=b2ecfe71 model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930 tools=25
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:08] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] [system: thinking_tokens]
+[13:33:09] 💭 The user invoked the slash command `/dark-factory:generate-prompts-for-spec` with the spec path. I need to:
+
+1. Invoke the `prompt-creator` agent with the spec path.
+2. Then invoke `prompt-auditor` for each generated prompt.
+3. Then possibly mark spec prompted if not daemon-managed.
+
+Let me start by reading the spec and checking environment. Actually, per instructions, pass the spec to the agent. But I should check whether DARK_FACTORY_MANAGED is set. Let me do a quick check and read the spec fo…
+[13:33:10] $ echo "DARK_FACTORY_MANAGED=${DARK_FACTORY_MANAGED:-<unset>}"; pwd; ls prompts 2>/dev/null | head -50
+[13:33:10] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md
+[13:33:10]   → 25 lines read
+[13:33:10] [system: thinking_tokens]
+[13:33:10] [system: thinking_tokens]
+[13:33:10] [system: thinking_tokens]
+[13:33:10] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:12] [system: thinking_tokens]
+[13:33:12] [system: thinking_tokens]
+[13:33:12] 💭 Mode 2 — host, no container: DARK_FACTORY_MANAGED unset, so I need to run mark-prompted after audit.
+
+Note the spec status is `generating`. It says approved: true. The command says transition to prompted via `dark-factory spec mark-prompted <basename>`. Let's check whether dark-factory CLI exists later.
+
+Now invoke prompt-creator agent. Use Agent tool with subagent_type "dark-factory:prompt-creator".
+
+I need to pass context: spec path relative to repo root (cwd) = `specs/in-progress/stale-ref-pr…
+[13:33:13] [agent:dark-factory:prompt-creator] Generate prompts from spec
+    prompt: Generate dark-factory prompt files from the approved spec at `specs/in-progress/stale-ref-probe.md` (path relative to the repo root, which is the current worki…
+[13:33:13] [system: task_started]
+[13:33:15] [system: task_progress]
+[13:33:15] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md
+[13:33:15] [system: task_progress]
+[13:33:15] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/ && echo "---" && ls /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930…
+[13:33:15]   → 25 lines read
+[13:33:17] [system: task_progress]
+[13:33:17] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/README.md
+[13:33:17] [system: task_progress]
+[13:33:17] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/.dark-factory.yaml
+[13:33:17] [system: task_progress]
+[13:33:17] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/completed/ | tail -20; echo "---IN-PROGRESS---"; ls -la /home/node/.cache/github-dark-factory-agen…
+[13:33:17]   → 7 lines read
+[13:33:17]   → 110 lines read
+[13:33:19] [system: task_progress]
+[13:33:19] $ ls ~/.claude/plugins/marketplaces/dark-factory/docs/rules/ 2>/dev/null; echo "---"; ls ~/.claude/plugins/marketplaces/coding/docs/*.md 2>/dev/null | head -40; echo "---PROJECT DOCS---"; ls /home/node…
+[13:33:19] ⚠ [bash output]
+/home/node/.claude/plugins/marketplaces/coding/docs/go-efficient-service-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-enum-type-pattern.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-error-wrapping-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-factory-pattern.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-filter-pattern.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-functional-composition-pattern.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-functional-options-pattern.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-glog-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-http-handler-refactoring-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-http-service-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-json-error-handler-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-k8s-binary-conventions.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-kubernetes-crd-controller-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-library-guide.md
+/home/node/.claude/plugins/marketplaces/coding/docs/go-licensing-guide.md
+---PROJECT DOCS---
+claude-oauth-setup.md
+creating-claude-agents.md
+design.md
+dod.md
+[13:33:21] [system: task_progress]
+[13:33:21] [read] /home/node/.claude/plugins/marketplaces/dark-factory/docs/rules/prompt-writing.md
+[13:33:21] [system: task_progress]
+[13:33:21] $ grep -rn "probe" /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/README.md || echo "no probe line yet"; echo "---"; cat /home/node/.cache/github-dark-factory-age…
+[13:33:21] ⚠ [bash output]
+no probe line yet
+---
+# Definition of Done
+
+The validation prompt dark-factory runs against each executed prompt before it
+marks the prompt complete. A change is Done only when every box holds.
+
+- [ ] Builds: `make precommit` exits 0 (generate + format + test + lint + vet + gosec + coverage).
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+[13:33:21]   → 634 lines read
+[13:33:29] [system: task_progress]
+[13:33:29] $ sed -n '1,80p' Makefile.precommit; echo "===MAKEFILE==="; sed -n '1,40p' Makefile; echo "===VARS==="; cat Makefile.variables
+[13:33:29] ⚠ [bash output]
+	go install github.com/onsi/ginkgo/v2/ginkgo@v2.25.3
+	sudo port install trivy
+
+.PHONY: fix
+fix:
+	@for dir in $$(find `pwd` -type d -name vendor -prune -o -name go.mod -exec dirname "{}" \; | grep -v '^$$'); do \
+		cd $${dir}; \
+		echo "fix $${dir}"; \
+		go get \
+		github.com/bborbe/kv@latest \
+		github.com/bborbe/memorykv@latest \
+		github.com/bborbe/badgerkv@latest \
+		github.com/bborbe/boltkv@latest \
+		github.com/go-git/go-git/v5@latest \
+		github.com/containerd/containerd@latest \
+		golang.org/x/crypto@latest \
+		golang.org/x/net@latest; \
+	done
+===VARS===
+ROOTDIR ?= $(shell git rev-parse --show-toplevel)
+[13:33:44] [system: task_progress]
+[13:33:44] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/CLAUDE.md /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/agent/.cla…
+[13:33:49] [system: task_progress]
+[13:33:49] $ cat /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/.gitignore; echo "---TRIVY/OSV in precommit---"; sed -n '80,160p' /home/node/.cache/github-dark-factory-agent…
+[13:33:49] ⚠ [bash output]
+# gosec is no longer run standalone, for the same reason as errcheck above: `gosec@$(GOSEC_VERSION)`
+# also builds in its own module context and dies at Go 1.27.2 with `internal error: package
+# "X" without types was imported`. It is embedded in golangci-lint instead (see .golangci.yml →
+# settings.gosec, which carries the equivalent `excludes: [G104]` for the old `-exclude=G104`).
+
+.PHONY: trivy
+trivy:
+	trivy fs \
+	--db-repository ghcr.io/aquasecurity/trivy-db \
+	$(if $(wildcard .trivyignore),--ignorefile .trivyignore,$(if $(wildcard $(ROOTDIR)/.trivyignore),--ignorefile $(ROOTDIR)/.trivyignore,)) \
+	$(if $(wildcard .trivy-secret.yaml),--secret-config .trivy-secret.yaml,$(if $(wildcard $(ROOTDIR)/.trivy-secret.yaml),--secret-config $(ROOTDIR)/.trivy-secret.yaml,)) \
+	--scanners vuln,secret \
+	--skip-dirs vendor \
+	--quiet \
+	--no-progress \
+	--disable-telemetry \
+	--exit-code 1 .
+
+addlicense:
+	go run github.com/google/addlicense@$(ADDLICENSE_VERSION) -c "Benjamin Borbe" -y $$(date +'%Y') -l bsd $$(find . -name "*.go" -not -path './vendor/*')
+[13:34:12] [system: task_progress]
+[13:34:12] $ date -u +%Y-%m-%dT%H:%M:%SZ
+[13:34:23] [system: task_progress]
+[13:34:23] [write] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md (4780 chars)
+[13:34:23]   → File created successfully at: /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/pro…
+[13:34:26] [system: task_progress]
+[13:34:26] [edit] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md
+    - 1. The spec says "add a single line" without naming its wor…
+    + 1. The spec says "add a single line" without naming its wor…
+[13:34:26] ⚠ [Edit] error: <tool_use_error>Error: No such tool available: Edit. Edit exists but is not enabled in this context. Use one of the available tools instead.</tool_use_error>
+[13:34:33] [system: task_progress]
+[13:34:33] [write] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md (4748 chars)
+[13:34:33]   → The file /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-p…
+[13:34:36] [system: task_progress]
+[13:34:36] $ cp README.md /tmp/README.sim && awk 'NR==1{print; print "Stale-ref probe: ran."; next} {print}' README.md > /tmp/README.sim && echo "--- simulated line 2 ---" && sed -n '2p' /tmp/README.sim && echo "…
+[13:34:38] [system: task_progress]
+[13:34:38] $ grep -n -- '-->' prompts/spec-stale-ref-probe-add-probe-line.md; echo "---frontmatter---"; sed -n '1,5p' prompts/spec-stale-ref-probe-add-probe-line.md; echo "---prompt dir---"; ls -la prompts/
+[13:34:46] [system: task_updated]
+[13:34:46] [system: task_notification]
+[13:34:46]   ← agent reply: Done. I generated a single prompt — the spec is intentionally one-line-scale, so a single prompt is correct per the Sizing Guide (config/doc change = 1).
+[13:34:46] [system: thinking_tokens]
+[13:34:46] [system: thinking_tokens]
+[13:34:46] [system: thinking_tokens]
+[13:34:46] [system: thinking_tokens]
+[13:34:46] 💭 Now invoke prompt-auditor agent on that file.
+[13:34:47] [agent:dark-factory:prompt-auditor] Audit generated prompt
+    prompt: Audit the dark-factory prompt file at `prompts/spec-stale-ref-probe-add-probe-line.md` (path relative to the repo root, current working directory) against the …
+[13:34:47] [system: task_started]
+[13:34:49] [system: task_progress]
+[13:34:49] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md
+[13:34:49] [system: task_progress]
+[13:34:49] $ dark-factory config 2>&1 | head -100
+[13:34:49] [system: task_progress]
+[13:34:49] $ ls -la && cat .dark-factory.yaml 2>/dev/null
+[13:34:49]   → 68 lines read
+[13:34:53] [system: task_progress]
+[13:34:53] $ dark-factory config 2>&1 | tail -60
+[13:34:53] [system: task_progress]
+[13:34:53] $ cat /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md
+[13:34:53] [system: task_progress]
+[13:34:53] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/README.md (offset=, limit=15)
+[13:34:53] [system: task_progress]
+[13:34:53] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs
+[13:34:53]   → 14 lines read
+[13:35:26] [system: task_progress]
+[13:35:26] $ echo "=== docs listing ==="; ls -la docs; echo "=== dod.md ==="; cat docs/dod.md; echo "=== README tail ==="; tail -8 README.md | cat -A; echo "=== README lines ==="; sed -n '1,5p' README.md | cat -A
+[13:35:26] [system: task_progress]
+[13:35:26] $ echo "=== Makefile ==="; cat Makefile; echo "=== Makefile.precommit ==="; cat Makefile.precommit
+[13:35:26] [system: task_progress]
+[13:35:26] $ grep -rn "stale-ref-probe\|Stale-ref probe" --include="*" . 2>/dev/null | grep -v '^./.git' | head -30; echo "=== prompts/specs all ==="; find prompts specs -type f | sort
+[13:35:26] ⚠ [bash output]
+# gosec is no longer run standalone, for the same reason as errcheck above: `gosec@$(GOSEC_VERSION)`
+# also builds in its own module context and dies at Go 1.27.2 with `internal error: package
+# "X" without types was imported`. It is embedded in golangci-lint instead (see .golangci.yml →
+# settings.gosec, which carries the equivalent `excludes: [G104]` for the old `-exclude=G104`).
+
+.PHONY: trivy
+trivy:
+	trivy fs \
+	--db-repository ghcr.io/aquasecurity/trivy-db \
+	$(if $(wildcard .trivyignore),--ignorefile .trivyignore,$(if $(wildcard $(ROOTDIR)/.trivyignore),--ignorefile $(ROOTDIR)/.trivyignore,)) \
+	$(if $(wildcard .trivy-secret.yaml),--secret-config .trivy-secret.yaml,$(if $(wildcard $(ROOTDIR)/.trivy-secret.yaml),--secret-config $(ROOTDIR)/.trivy-secret.yaml,)) \
+	--scanners vuln,secret \
+	--skip-dirs vendor \
+	--quiet \
+	--no-progress \
+	--disable-telemetry \
+	--exit-code 1 .
+
+addlicense:
+	go run github.com/google/addlicense@$(ADDLICENSE_VERSION) -c "Benjamin Borbe" -y $$(date +'%Y') -l bsd $$(find . -name "*.go" -not -path './vendor/*')
+[13:35:26] ⚠ [bash output]
+- [ ] Tests: new/changed behavior has Ginkgo coverage; boundaries are mocked (counterfeiter), the framework Agent is not.
+- [ ] Scope: the diff touches only what the spec asked for; no unrelated files.
+- [ ] Errors: wrapped via `github.com/bborbe/errors`; no bare `return err`, no `fmt.Errorf`.
+- [ ] Escalation doctrine: failure paths return `Status: failed`/`needs_input` without mutating `assignee`/`status` or writing a `## Failure` section.
+- [ ] Docs: user-facing behavior changes are reflected in `docs/` and the CHANGELOG `## Unreleased` section.
+=== README tail ===
+$
+- `pkg/prompts/` M-bM-^@M-^T embedded prompts (`workflow.md`, `output-format.md`)$
+- `agent/.claude/CLAUDE.md` M-bM-^@M-^T default agent guardrails$
+- `docs/claude-oauth-setup.md` M-bM-^@M-^T seed PVC with Claude Code OAuth credentials$
+- `lib/claude/` M-bM-^@M-^T shared prompt assembly + Claude CLI invocation$
+- `lib/delivery/` M-bM-^@M-^T shared Kafka result publishing$
+- `task/controller/` M-bM-^@M-^T ObsidianM-bM-^FM-^RKafka event source$
+- `task/executor/` M-bM-^@M-^T KafkaM-bM-^FM-^RK8s Job spawner$
+=== README lines ===
+# github-dark-factory-agent$
+$
+The cluster **dark-factory implementer**. A human drafts + approves a spec on a$
+draft-PR branch and walks away; this agent clones the branch and walks the$
+dark-factory lifecycle (planning M-bM-^FM-^R execution M-bM-^FM-^R ai_review), landing the task at$
+[13:35:26] ⚠ [bash output]
+prompts/spec-stale-ref-probe-add-probe-line.md:32:2. Insert one new line containing exactly the text `Stale-ref probe: ran.` as the second line of the file — directly after the `# github-dark-factory-agent` heading on line 1 and immediately before the existing blank line.
+prompts/spec-stale-ref-probe-add-probe-line.md:45:- Do NOT modify the spec file `specs/in-progress/stale-ref-probe.md`.
+prompts/spec-stale-ref-probe-add-probe-line.md:54:grep -Fqx 'Stale-ref probe: ran.' README.md
+prompts/spec-stale-ref-probe-add-probe-line.md:55:[ "$(sed -n '2p' README.md)" = "Stale-ref probe: ran." ]
+prompts/spec-stale-ref-probe-add-probe-line.md:56:[ "$(grep -Fxc 'Stale-ref probe: ran.' README.md || true)" = "1" ]
+prompts/spec-stale-ref-probe-add-probe-line.md:66:1. The spec says "add a single line" without naming its wording or placement. This prompt chooses the visible plain-text line "Stale-ref probe: ran." placed as line 2 (immediately under the H1), because appending at end-of-file would either join the final markdown list item as a lazy continuation or require a second (blank separator) line, violating "single line". If a hidden HTML comment marker or a different placement is preferred, adjust requirement 2 and the three verification checks together.
+specs/log/gen-stale-ref-probe.jsonl:35:{"type":"assistant","message":{"id":"msg_23f43aa0b6a14a7bb5b11c2c","type":"message","role":"assistant","content":[{"type":"tool_use","id":"chatcmpl-tool-a61f90ce8f52862f","name":"Read","input":{"file_path":"/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md"}}],"model":"deepseek-v4-flash-max","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":0,"output_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0},"context_management":null},"parent_tool_use_id":null,"session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"9a655185-fdb3-4ce2-a4df-776fc8eb1241"}
+specs/log/gen-stale-ref-probe.jsonl:37:{"type":"user","message":{"role":"user","content":[{"tool_use_id":"chatcmpl-tool-a61f90ce8f52862f","type":"tool_result","content":"1\t---\n2\tstatus: generating\n3\tapproved: \"true\"\n4\tgenerating: \"2026-11-17T12:33:06Z\"\n5\t---\n6\t\n7\t# Stale-Ref Probe\n8\t\n9\tThrowaway spec used to exercise the planning step's ref/head-sha guard end to end.\n10\t\n11\t## Problem\n12\t\n13\tA record emitted at one PR head SHA is re-attempted after the branch advances, so the planning step's guard fires on every attempt. This spec exists only so the guard has an approved-not-completed spec to find in the PR diff; no implementation is wanted.\n14\t\n15\t## Scope\n16\t\n17\tAdd a single line to `README.md` recording that this probe ran. Nothing else.\n18\t\n19\t## Success Criteria\n20\t\n21\t- [ ] `README.md` carries the probe line.\n22\t\n23\t## Out of Scope\n24\t\n25\tEverything else.\n26\t"}]},"parent_tool_use_id":null,"session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"121cf1c7-a6d2-4fc9-bf89-69d929444b3d","timestamp":"2026-11-17T12:33:10.148Z","tool_use_result":{"type":"text","file":{"filePath":"/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md","content":"---\nstatus: generating\napproved: \"true\"\ngenerating: \"2026-11-17T12:33:06Z\"\n---\n\n# Stale-Ref Probe\n\nThrowaway spec used to exercise the planning step's ref/head-sha guard end to end.\n\n## Problem\n\nA record emitted at one PR head SHA is re-attempted after the branch advances, so the planning step's guard fires on every attempt. This spec exists only so the guard has an approved-not-completed spec to find in the PR diff; no implementation is wanted.\n\n## Scope\n\nAdd a single line to `README.md` recording that this probe ran. Nothing else.\n\n## Success Criteria\n\n- [ ] `README.md` carries the probe line.\n\n## Out of Scope\n\nEverything else.\n","numLines":26,"startLine":1,"totalLines":26}}}
+specs/log/gen-stale-ref-probe.jsonl:90:{"type":"assistant","message":{"id":"msg_13d0321cd22c41d28e93b4d7","type":"message","role":"assistant","content":[{"type":"thinking","thinking":"Mode 2 — host, no container: DARK_FACTORY_MANAGED unset, so I need to run mark-prompted after audit.\n\nNote the spec status is `generating`. It says approved: true. The command says transition to prompted via `dark-factory spec mark-prompted <basename>`. Let's check whether dark-factory CLI exists later.\n\nNow invoke prompt-creator agent. Use Agent tool with subagent_type \"dark-factory:prompt-creator\".\n\nI need to pass context: spec path relative to repo root (cwd) = `specs/in-progress/stale-ref-probe.md`? The command says spec file path: `/home/node/.../specs/in-progress/stale-ref-probe.md` — a path relative to repo root... confusing but they want relative. The repo root is cwd. Use `specs/in-progress/stale-ref-probe.md`.\n\nOutput dir `prompts/`. Mode non-interactive, no AskUserQuestion. Full repo access.\n\nLet me invoke.","signature":"llm-proxy"}],"model":"deepseek-v4-flash-max","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":0,"output_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0},"context_management":null},"parent_tool_use_id":null,"session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"54b573a4-0789-4038-8752-903a8ce7403c"}
+specs/log/gen-stale-ref-probe.jsonl:91:{"type":"assistant","message":{"id":"msg_13d0321cd22c41d28e93b4d7","type":"message","role":"assistant","content":[{"type":"tool_use","id":"chatcmpl-tool-af791ec1839c5296","name":"Agent","input":{"description":"Generate prompts from spec","subagent_type":"dark-factory:prompt-creator","prompt":"Generate dark-factory prompt files from the approved spec at `specs/in-progress/stale-ref-probe.md` (path relative to the repo root, which is the current working directory).\n\nContext and constraints:\n- Output directory: `prompts/` (the inbox, relative to repo root/cwd — NOT `prompts/in-progress/`; dark-factory moves files on approve).\n- Mode: NON-INTERACTIVE (daemon-triggered). You MUST NOT call AskUserQuestion. Resolve any ambiguity from the spec content alone. If the spec is genuinely under-specified, still produce the best-effort decomposition and surface open questions as comments inside the generated prompts so a human reviewer catches them at audit time.\n- You have full access to the repo (current working directory) for reading source files to verify signatures, look up library APIs, and discover existing patterns. Do so before writing requirements.\n- Read the spec file itself first. Note its scope is intentionally tiny: add a single line to README.md recording that the probe ran; nothing else.\n- Decide how many prompts to produce based on the spec (see your workflow steps 7-10 and Sizing Guide). Multi-prompt outputs use `1-`, `2-`, `3-` filename prefixes for execution order.\n- Do not modify the spec.\n- When done, report: files created, key decisions, and any open questions."}}],"model":"deepseek-v4-flash-max","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":0,"output_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0},"context_management":null},"parent_tool_use_id":null,"session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"217c0a39-fdb7-4cbb-8854-8fd88f949908"}
+specs/log/gen-stale-ref-probe.jsonl:92:{"type":"system","subtype":"task_started","task_id":"a344758be4f1c217f","tool_use_id":"chatcmpl-tool-af791ec1839c5296","description":"Generate prompts from spec","subagent_type":"dark-factory:prompt-creator","task_type":"local_agent","prompt":"Generate dark-factory prompt files from the approved spec at `specs/in-progress/stale-ref-probe.md` (path relative to the repo root, which is the current working directory).\n\nContext and constraints:\n- Output directory: `prompts/` (the inbox, relative to repo root/cwd — NOT `prompts/in-progress/`; dark-factory moves files on approve).\n- Mode: NON-INTERACTIVE (daemon-triggered). You MUST NOT call AskUserQuestion. Resolve any ambiguity from the spec content alone. If the spec is genuinely under-specified, still produce the best-effort decomposition and surface open questions as comments inside the generated prompts so a human reviewer catches them at audit time.\n- You have full access to the repo (current working directory) for reading source files to verify signatures, look up library APIs, and discover existing patterns. Do so before writing requirements.\n- Read the spec file itself first. Note its scope is intentionally tiny: add a single line to README.md recording that the probe ran; nothing else.\n- Decide how many prompts to produce based on the spec (see your workflow steps 7-10 and Sizing Guide). Multi-prompt outputs use `1-`, `2-`, `3-` filename prefixes for execution order.\n- Do not modify the spec.\n- When done, report: files created, key decisions, and any open questions.","uuid":"ca9bda50-ebf0-4ee0-a3a7-68de5d9e72d7","session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af"}
+specs/log/gen-stale-ref-probe.jsonl:93:{"type":"user","message":{"role":"user","content":[{"type":"text","text":"Generate dark-factory prompt files from the approved spec at `specs/in-progress/stale-ref-probe.md` (path relative to the repo root, which is the current working directory).\n\nContext and constraints:\n- Output directory: `prompts/` (the inbox, relative to repo root/cwd — NOT `prompts/in-progress/`; dark-factory moves files on approve).\n- Mode: NON-INTERACTIVE (daemon-triggered). You MUST NOT call AskUserQuestion. Resolve any ambiguity from the spec content alone. If the spec is genuinely under-specified, still produce the best-effort decomposition and surface open questions as comments inside the generated prompts so a human reviewer catches them at audit time.\n- You have full access to the repo (current working directory) for reading source files to verify signatures, look up library APIs, and discover existing patterns. Do so before writing requirements.\n- Read the spec file itself first. Note its scope is intentionally tiny: add a single line to README.md recording that the probe ran; nothing else.\n- Decide how many prompts to produce based on the spec (see your workflow steps 7-10 and Sizing Guide). Multi-prompt outputs use `1-`, `2-`, `3-` filename prefixes for execution order.\n- Do not modify the spec.\n- When done, report: files created, key decisions, and any open questions."}]},"parent_tool_use_id":"chatcmpl-tool-af791ec1839c5296","session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"dda086d1-563f-4080-a583-9d054dab2585","timestamp":"2026-11-17T12:33:13.879Z","subagent_type":"dark-factory:prompt-creator","task_description":"Generate prompts from spec"}
+specs/log/gen-stale-ref-probe.jsonl:94:{"type":"system","subtype":"task_progress","task_id":"a344758be4f1c217f","tool_use_id":"chatcmpl-tool-af791ec1839c5296","description":"Reading specs/in-progress/stale-ref-probe.md","subagent_type":"dark-factory:prompt-creator","usage":{"total_tokens":0,"tool_uses":1,"duration_ms":1396},"last_tool_name":"Read","uuid":"8aaa794f-f7de-4617-8140-b84f072fa34c","session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af"}
+specs/log/gen-stale-ref-probe.jsonl:95:{"type":"assistant","message":{"id":"msg_5e090ed998ed4268bcea4b72","type":"message","role":"assistant","content":[{"type":"tool_use","id":"chatcmpl-tool-991dddea4fdcb41f","name":"Read","input":{"file_path":"/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md"}}],"model":"deepseek-v4-flash-max","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":0,"output_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0},"context_management":null},"parent_tool_use_id":"chatcmpl-tool-af791ec1839c5296","session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"45f3b0a8-4ad6-45c1-8409-d3548fa4a096","subagent_type":"dark-factory:prompt-creator","task_description":"Generate prompts from spec"}
+specs/log/gen-stale-ref-probe.jsonl:123:{"type":"user","message":{"role":"user","content":[{"tool_use_id":"chatcmpl-tool-b1d4287b4e77c626","type":"tool_result","content":"ls: cannot access '/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/CLAUDE.md': No such file or directory\n-rw-r--r-- 1 node node 1413 Nov 17 13:33 /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/agent/.claude/CLAUDE.md\n---README TAIL BYTES---\n0000100   t       s   o   u   r   c   e  \\n   -       `   t   a   s   k\n0000120   /   e   x   e   c   u   t   o   r   /   `     342 200 224    \n0000140   K   a   f   k   a 342 206 222   K   8   s       J   o   b    \n0000160   s   p   a   w   n   e   r  \\n\n0000170\n---SPECS---\n/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs:\ncompleted\nin-progress\nlog\n\n/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/completed:\n\n/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress:\nstale-ref-probe.md\n\n/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/log:\ngen-stale-ref-probe.jsonl\ngen-stale-ref-probe.log","is_error":false}]},"parent_tool_use_id":"chatcmpl-tool-af791ec1839c5296","session_id":"b2ecfe71-766a-47c9-821a-993ac7c9c4af","uuid":"be3701f2-7077-4566-a87a-e461f3116b0c","timestamp":"2026-11-17T12:33:44.666Z","subagent_type":"dark-factory:prompt-creator","task_description":"Generate prompts from spec"}
+=== prompts/specs all ===
+prompts/spec-stale-ref-probe-add-probe-line.md
+specs/in-progress/stale-ref-probe.md
+specs/log/gen-stale-ref-probe.jsonl
+specs/log/gen-stale-ref-probe.log
+[13:35:55] [system: task_progress]
+[13:35:55] $ echo "=== slugmigrator ==="; rg -n "slugmigrator|func .*Slug|spec.*slug" --glob '*.go' . | head -30; echo "=== dirs ==="; ls pkg; echo "=== git remote ==="; git remote get-url origin 2>&1; echo "=== …
+[13:35:55] [system: task_progress]
+[13:35:55] $ cd /tmp && printf '# github-dark-factory-agent\n\nprose\n' > probe.md && echo "=== before (expect fail) ==="; grep -Fqx 'Stale-ref probe: ran.' probe.md; echo "rc=$?"; [ "$(sed -n '2p' probe.md)" = "…
+[13:37:42] [system: task_updated]
+[13:37:42] [system: task_notification]
+[13:37:42]   ← agent reply: # Prompt Audit Report: Record that the stale-ref probe ran
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:43] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] [system: thinking_tokens]
+[13:37:44] 💭 Now, since DARK_FACTORY_MANAGED is unset (Mode 2), run `dark-factory spec mark-prompted stale-ref-probe` unless skip conditions: creator didn't fail, wrote 1 file. So run it. Check if dark-factory CLI available.
+
+The spec basename is `stale-ref-probe` (filename without .md).
+
+Let me run. If CLI not present, report. Use bash.
+[13:37:45] $ command -v dark-factory && dark-factory spec mark-prompted stale-ref-probe; echo "exit=$?"
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:45] [system: thinking_tokens]
+[13:37:46] 💭 Now produce the output in the required format: creator's summary, then per-prompt audit report verbatim.
+
+Note: the command said return creator's summary followed by per-prompt audit reports verbatim. I'll format as specified.
+[13:38:00] ## Generated Prompts
+
+The `prompt-creator` agent produced **1 prompt**.
+
+**File created**
+- `prompts/spec-stale-ref-probe-add-probe-line.md`
+
+**Execution order:** single prompt; no ordering prefix needed.
+
+**Key decisions**
+- **One prompt only** — the spec's entire scope is "add a single line to `README.md`; nothing else." Splitting it would create artificial prompts.
+- **Concrete line wording and placement** — the spec doesn't specify text or location, so the prompt chooses `Stale-ref probe: ran.` inserted as line 2, immediately under the `# github-dark-factory-agent` H1. Appending at EOF would either merge into the final markdown list item as a lazy continuation or require a second blank separator line, both violating "single line." A simulated insertion confirmed `diff` shows exactly one added line (`1a2`).
+- **No CHANGELOG / docs updates** despite `docs/dod.md` asking for them — the spec's Scope and Out of Scope ("Everything else") override the general DoD. This is called out in the prompt's `<context>` and `<constraints>`.
+- **Verification is targeted, not `make precommit`** — the change is markdown-only, so the full suite (including `trivy`/`osv-scanner`) cannot be broken by it and risks environmental false positives. Verification uses three container-safe checks: exact line present, line is line 2, and line appears exactly once. The daemon's separate `validationPrompt: docs/dod.md` still covers the full build gate.
+- **`spec: ["stale-ref-probe"]`** uses the full slug (basename), per the required linking format.
+- The spec file was not modified.
+
+**Open questions** (also embedded as HTML comments in the prompt for the auditor)
+1. Exact probe-line wording/placement was unspecified. The prompt picks visible plain text on line 2; if a hidden HTML-comment marker or different placement is preferred, requirement 2 and the three verification checks must be changed together.
+2. Confirm that overriding the general DoD's CHANGELOG/docs requirements is the intended reading of the spec's "Everything else" out-of-scope clause.
+
+**Docs referenced in `<context>`**
+- `README.md` (project)
+- `docs/dod.md` (project)
+- `specs/in-progress/stale-ref-probe.md` (spec, read-only)
+
+**Spec transition:** `DARK_FACTORY_MANAGED` was unset (host mode), so `dark-factory spec mark-prompted stale-ref-probe` was run and returned `prompted: stale-ref-probe.md` (exit 0).
+
+## Audit Findings
+
+### prompts/spec-stale-ref-probe-add-probe-line.md
+
+# Prompt Audit Report: Record that the stale-ref probe ran
+
+**File**: `/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md`
+**Score**: 8/10
+**Status**: Good
+
+## DoD Checklist
+- [x] `<summary>` present and plain-language (6 bullets, no paths/signatures)
+- [x] `<objective>` states end state (adds one README line; why: exercises the planning guard)
+- [x] `<context>` present (README, `docs/dod.md`, linked spec)
+- [x] `<requirements>` numbered and specific (1-6, exact text + placement)
+- [x] `<constraints>` present
+- [x] `<verification>` present with runnable commands
+- [x] All paths repo-relative (`README.md`, `docs/dod.md`, `specs/in-progress/stale-ref-probe.md`)
+- [x] No bare `git ` commands in `<verification>` (and config is `workflow: direct`, no `hideGit: true`)
+- [x] No operator-only commands in `<verification>` (only `grep`, `sed`, `[ ]`)
+- [x] File in `prompts/` inbox (not `prompts/in-progress/`)
+- [x] Filename not prefixed with dark-factory global number (`spec-stale-ref-probe-add-probe-line.md`)
+- [x] Filename reflects primary change (adding the probe line)
+- [x] Status is `draft` (valid inbox status)
+
+## Failure Mode Coverage
+- [x] Spec failure modes: N/A — `specs/in-progress/stale-ref-probe.md` has no Failure Modes table
+- [x] Security concerns: N/A — spec has no Security section
+- [x] External calls: N/A — no exec/HTTP/Docker in requirements
+- [x] New constants/strings crossing library validators: N/A — no Go code
+- [x] No `go mod vendor` in `<requirements>` or `<verification>`
+- [x] No cross-repo writes — no clone, no push, no `gh pr create`
+- [x] Container-autonomous — all steps are file edits + shell checks; no kubectl/deploy/PR/runtime observation, no operator/agent split
+- [x] Sibling entry points: N/A — documentation-only change, no setup/gate/validation function
+
+## Documentation Placement
+- [x] No inlined reusable pattern (>10 lines)
+- [x] Existing project docs referenced: `docs/dod.md` and the linked spec are named in `<context>`
+- [x] Coding plugin docs: N/A (no Go code)
+- [x] No durable domain knowledge inlined that belongs in `project/docs/`
+
+## Code Reference Verification
+| Reference | File | Status |
+|-----------|------|--------|
+| Line 1 is `# github-dark-factory-agent` | `README.md` | Correct |
+| Line 2 is blank | `README.md` | Correct |
+| Line 3 begins the prose paragraph | `README.md` | Correct |
+| File ends with trailing newline after the final `task/executor/` bullet | `README.md` | Correct |
+| DoD mentions CHANGELOG `## Unreleased` and `docs/` updates | `docs/dod.md` | Correct |
+| Spec exists and Scope is "Add a single line to `README.md`" | `specs/in-progress/stale-ref-probe.md` | Correct |
+| `spec: ["stale-ref-probe"]` resolves to the unnumbered spec basename | `specs/in-progress/stale-ref-probe.md` | Correct (repo has no numeric spec prefix; full slug is the basename) |
+
+## Coding Guidelines Compliance
+| Guideline | File | Status |
+|-----------|------|--------|
+| Go handler/error/factory/time-injection guidelines | N/A | N/A — prompt contains no Go code |
+| Test-only package-level mutable state | N/A | N/A — no code |
+
+## YAGNI Pass (scope-creep detector)
+- [x] No opt-out flag for the behavior being shipped
+- [x] No config fields, tunables, or branches beyond the spec's Scope
+- [x] No "future-proofing" knobs without a named consumer
+- No findings.
+
+## Critical Issues
+None. The prompt is container-autonomous, has no masked-git or operator-only commands, makes no cross-repo writes, and its verification commands were exercised: they fail before the edit and pass after (I simulated the three checks in `/tmp`; the count check correctly rejects a duplicate line).
+
+## Recommendations
+
+1. **Verification does not cover requirements 4 and 5** (prompt lines 50-62 vs. requirements at lines 34-35). Requirements 4/5 demand the rest of the README be byte-for-byte unchanged and no other file be touched, but the three checks only prove the probe line is line 2 and appears once. An edit that also deleted the original blank line would still pass. Add content anchors:
+   ```bash
+   [ "$(sed -n '1p' README.md)" = "# github-dark-factory-agent" ]
+   [ -z "$(sed -n '3p' README.md)" ]
+   ```
+   The "no other file" check is already covered by `docs/dod.md`'s Scope bullet and the daemon's diff, so relying on the validator there is reasonable.
+
+2. **Add `set -e` to the verification block** (line 53, immediately after ```` ```bash ````). As written, if the agent runs the block as one script the exit status is only the last command's; a failure in `grep -Fqx` or the `sed` check would not change the block's exit code. Suggested:
+   ```bash
+   set -e
+   grep -Fqx 'Stale-ref probe: ran.' README.md
+   ```
+   (The third line's `|| true` still works correctly under `set -e`.)
+
+3. **Resolve the unresolved open questions** (lines 64-68). The block ships inside the prompt and asks the human to "Confirm" the DoD override and the chosen marker/placement. Convert question 2 into a decision statement attributed to the spec (see item 4) and remove the block, or move it to a PR description. Leaving open questions in a `draft` prompt blocks a clean approval.
+
+4. **The prompt claims authority it does not have** (line 25): `This prompt overrides the general DoD on that point.` The daemon applies `docs/dod.md` as `validationPrompt` independently; prompt text cannot override it. Attribute the exception to the spec instead. Suggested find/replace:
+   - Old: `Its requirements for CHANGELOG entries and `docs/` updates do NOT apply to this change: the spec's Scope is exactly one added README line and its Out of Scope says "Everything else." This prompt overrides the general DoD on that point.`
+   - New: `Per the spec's Scope (one added README line) and Out of Scope ("Everything else."), the DoD's CHANGELOG and docs bullets do not apply to this change.`
+
+5. **Absolute line-number anchoring** (lines 23, 32, 34). The placement is also described by content (the `# github-dark-factory-agent` heading and the blank line), which is good, but the requirements lean on "line 1/line 2/line 3." Prefer leading with the content anchors and treating line numbers as hints, per the anchoring guideline. Minor; the README is tiny and the verification pins line 2 anyway.
+
+6. **Minor: `spec` slug is non-numeric** (line 2). `spec: ["stale-ref-probe"]` is not the `020-foo-bar` or `020` forms named in the DoD, but it matches the actual unnumbered spec file `specs/in-progress/stale-ref-probe.md`, so it is correct for this repo. No action unless the daemon's `slugmigrator` requires a numeric prefix — in that case the spec filename itself, not the prompt, must change.
+
+## Strengths
+- Every required XML section is present and the `<summary>` is genuinely plain-language for a human reviewer.
+- Requirements give exact text (`Stale-ref probe: ran.`), exact placement, and an explicit "add exactly one line" guard against blank-line/heading creep.
+- The verification is deterministic and was empirically confirmed to fail before and pass after the edit, including a duplicate-line rejection via `grep -Fxc`.
+- `<context>` accurately describes the current README layout (heading on 1, blank on 2, prose on 3, trailing newline) — verified against the file.
+- Constraints correctly copy the spec's Scope/Out of Scope and include "do NOT commit."
+- Explicitly notes the change is markdown-only and that `make precommit` is unaffected; that claim checks out against `Makefile.precommit` (all targets operate on `.go`/`hack/*.sh`, none on `README.md`).
+
+## Summary
+A clean, well-scoped prompt for a throwaway probe: all DoD sections are present, all referenced files/lines were verified, and the verification works. No critical issues. The main improvement is to close the verification gap for "rest of README unchanged / no other files touched" and to resolve the two open-question comments before approval; reword the DoD-override sentence so the spec, not the prompt, is the stated authority.
+[13:38:00] result: ## Generated Prompts
+
+The `prompt-creator` agent produced **1 prompt**.
+
+**File created**
+- `prompts/spec-stale-ref-probe-add-probe-line.md`
+
+**Execution order:** single prompt; no ordering prefix needed.
+
+**Key decisions**
+- **One prompt only** — the spec's entire scope is "add a single line to `README.md`; nothing else." Splitting it would create artificial prompts.
+- **Concrete line wording and placement** — the spec doesn't specify text or location, so the prompt chooses `Stale-ref probe: ran.` inserted as line 2, immediately under the `# github-dark-factory-agent` H1. Appending at EOF would either merge into the final markdown list item as a lazy continuation or require a second blank separator line, both violating "single line." A simulated insertion confirmed `diff` shows exactly one added line (`1a2`).
+- **No CHANGELOG / docs updates** despite `docs/dod.md` asking for them — the spec's Scope and Out of Scope ("Everything else") override the general DoD. This is called out in the prompt's `<context>` and `<constraints>`.
+- **Verification is targeted, not `make precommit`** — the change is markdown-only, so the full suite (including `trivy`/`osv-scanner`) cannot be broken by it and risks environmental false positives. Verification uses three container-safe checks: exact line present, line is line 2, and line appears exactly once. The daemon's separate `validationPrompt: docs/dod.md` still covers the full build gate.
+- **`spec: ["stale-ref-probe"]`** uses the full slug (basename), per the required linking format.
+- The spec file was not modified.
+
+**Open questions** (also embedded as HTML comments in the prompt for the auditor)
+1. Exact probe-line wording/placement was unspecified. The prompt picks visible plain text on line 2; if a hidden HTML-comment marker or different placement is preferred, requirement 2 and the three verification checks must be changed together.
+2. Confirm that overriding the general DoD's CHANGELOG/docs requirements is the intended reading of the spec's "Everything else" out-of-scope clause.
+
+**Docs referenced in `<context>`**
+- `README.md` (project)
+- `docs/dod.md` (project)
+- `specs/in-progress/stale-ref-probe.md` (spec, read-only)
+
+**Spec transition:** `DARK_FACTORY_MANAGED` was unset (host mode), so `dark-factory spec mark-prompted stale-ref-probe` was run and returned `prompted: stale-ref-probe.md` (exit 0).
+
+## Audit Findings
+
+### prompts/spec-stale-ref-probe-add-probe-line.md
+
+# Prompt Audit Report: Record that the stale-ref probe ran
+
+**File**: `/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md`
+**Score**: 8/10
+**Status**: Good
+
+## DoD Checklist
+- [x] `<summary>` present and plain-language (6 bullets, no paths/signatures)
+- [x] `<objective>` states end state (adds one README line; why: exercises the planning guard)
+- [x] `<context>` present (README, `docs/dod.md`, linked spec)
+- [x] `<requirements>` numbered and specific (1-6, exact text + placement)
+- [x] `<constraints>` present
+- [x] `<verification>` present with runnable commands
+- [x] All paths repo-relative (`README.md`, `docs/dod.md`, `specs/in-progress/stale-ref-probe.md`)
+- [x] No bare `git ` commands in `<verification>` (and config is `workflow: direct`, no `hideGit: true`)
+- [x] No operator-only commands in `<verification>` (only `grep`, `sed`, `[ ]`)
+- [x] File in `prompts/` inbox (not `prompts/in-progress/`)
+- [x] Filename not prefixed with dark-factory global number (`spec-stale-ref-probe-add-probe-line.md`)
+- [x] Filename reflects primary change (adding the probe line)
+- [x] Status is `draft` (valid inbox status)
+
+## Failure Mode Coverage
+- [x] Spec failure modes: N/A — `specs/in-progress/stale-ref-probe.md` has no Failure Modes table
+- [x] Security concerns: N/A — spec has no Security section
+- [x] External calls: N/A — no exec/HTTP/Docker in requirements
+- [x] New constants/strings crossing library validators: N/A — no Go code
+- [x] No `go mod vendor` in `<requirements>` or `<verification>`
+- [x] No cross-repo writes — no clone, no push, no `gh pr create`
+- [x] Container-autonomous — all steps are file edits + shell checks; no kubectl/deploy/PR/runtime observation, no operator/agent split
+- [x] Sibling entry points: N/A — documentation-only change, no setup/gate/validation function
+
+## Documentation Placement
+- [x] No inlined reusable pattern (>10 lines)
+- [x] Existing project docs referenced: `docs/dod.md` and the linked spec are named in `<context>`
+- [x] Coding plugin docs: N/A (no Go code)
+- [x] No durable domain knowledge inlined that belongs in `project/docs/`
+
+## Code Reference Verification
+| Reference | File | Status |
+|-----------|------|--------|
+| Line 1 is `# github-dark-factory-agent` | `README.md` | Correct |
+| Line 2 is blank | `README.md` | Correct |
+| Line 3 begins the prose paragraph | `README.md` | Correct |
+| File ends with trailing newline after the final `task/executor/` bullet | `README.md` | Correct |
+| DoD mentions CHANGELOG `## Unreleased` and `docs/` updates | `docs/dod.md` | Correct |
+| Spec exists and Scope is "Add a single line to `README.md`" | `specs/in-progress/stale-ref-probe.md` | Correct |
+| `spec: ["stale-ref-probe"]` resolves to the unnumbered spec basename | `specs/in-progress/stale-ref-probe.md` | Correct (repo has no numeric spec prefix; full slug is the basename) |
+
+## Coding Guidelines Compliance
+| Guideline | File | Status |
+|-----------|------|--------|
+| Go handler/error/factory/time-injection guidelines | N/A | N/A — prompt contains no Go code |
+| Test-only package-level mutable state | N/A | N/A — no code |
+
+## YAGNI Pass (scope-creep detector)
+- [x] No opt-out flag for the behavior being shipped
+- [x] No config fields, tunables, or branches beyond the spec's Scope
+- [x] No "future-proofing" knobs without a named consumer
+- No findings.
+
+## Critical Issues
+None. The prompt is container-autonomous, has no masked-git or operator-only commands, makes no cross-repo writes, and its verification commands were exercised: they fail before the edit and pass after (I simulated the three checks in `/tmp`; the count check correctly rejects a duplicate line).
+
+## Recommendations
+
+1. **Verification does not cover requirements 4 and 5** (prompt lines 50-62 vs. requirements at lines 34-35). Requirements 4/5 demand the rest of the README be byte-for-byte unchanged and no other file be touched, but the three checks only prove the probe line is line 2 and appears once. An edit that also deleted the original blank line would still pass. Add content anchors:
+   ```bash
+   [ "$(sed -n '1p' README.md)" = "# github-dark-factory-agent" ]
+   [ -z "$(sed -n '3p' README.md)" ]
+   ```
+   The "no other file" check is already covered by `docs/dod.md`'s Scope bullet and the daemon's diff, so relying on the validator there is reasonable.
+
+2. **Add `set -e` to the verification block** (line 53, immediately after ```` ```bash ````). As written, if the agent runs the block as one script the exit status is only the last command's; a failure in `grep -Fqx` or the `sed` check would not change the block's exit code. Suggested:
+   ```bash
+   set -e
+   grep -Fqx 'Stale-ref probe: ran.' README.md
+   ```
+   (The third line's `|| true` still works correctly under `set -e`.)
+
+3. **Resolve the unresolved open questions** (lines 64-68). The block ships inside the prompt and asks the human to "Confirm" the DoD override and the chosen marker/placement. Convert question 2 into a decision statement attributed to the spec (see item 4) and remove the block, or move it to a PR description. Leaving open questions in a `draft` prompt blocks a clean approval.
+
+4. **The prompt claims authority it does not have** (line 25): `This prompt overrides the general DoD on that point.` The daemon applies `docs/dod.md` as `validationPrompt` independently; prompt text cannot override it. Attribute the exception to the spec instead. Suggested find/replace:
+   - Old: `Its requirements for CHANGELOG entries and `docs/` updates do NOT apply to this change: the spec's Scope is exactly one added README line and its Out of Scope says "Everything else." This prompt overrides the general DoD on that point.`
+   - New: `Per the spec's Scope (one added README line) and Out of Scope ("Everything else."), the DoD's CHANGELOG and docs bullets do not apply to this change.`
+
+5. **Absolute line-number anchoring** (lines 23, 32, 34). The placement is also described by content (the `# github-dark-factory-agent` heading and the blank line), which is good, but the requirements lean on "line 1/line 2/line 3." Prefer leading with the content anchors and treating line numbers as hints, per the anchoring guideline. Minor; the README is tiny and the verification pins line 2 anyway.
+
+6. **Minor: `spec` slug is non-numeric** (line 2). `spec: ["stale-ref-probe"]` is not the `020-foo-bar` or `020` forms named in the DoD, but it matches the actual unnumbered spec file `specs/in-progress/stale-ref-probe.md`, so it is correct for this repo. No action unless the daemon's `slugmigrator` requires a numeric prefix — in that case the spec filename itself, not the prompt, must change.
+
+## Strengths
+- Every required XML section is present and the `<summary>` is genuinely plain-language for a human reviewer.
+- Requirements give exact text (`Stale-ref probe: ran.`), exact placement, and an explicit "add exactly one line" guard against blank-line/heading creep.
+- The verification is deterministic and was empirically confirmed to fail before and pass after the edit, including a duplicate-line rejection via `grep -Fxc`.
+- `<context>` accurately describes the current README layout (heading on 1, blank on 2, prose on 3, trailing newline) — verified against the file.
+- Constraints correctly copy the spec's Scope/Out of Scope and include "do NOT commit."
+- Explicitly notes the change is markdown-only and that `make precommit` is unaffected; that claim checks out against `Makefile.precommit` (all targets operate on `.go`/`hack/*.sh`, none on `README.md`).
+
+## Summary
+A clean, well-scoped prompt for a throwaway probe: all DoD sections are present, all referenced files/lines were verified, and the verification works. No critical issues. The main improvement is to close the verification gap for "rest of README unchanged / no other files touched" and to resolve the two open-question comments before approval; reword the DoD-override sentence so the spec, not the prompt, is the stated authority. | duration: 293846ms | cost: $1.6150 | tokens: 300 in / 4045 out

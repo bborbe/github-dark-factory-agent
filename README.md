@@ -1,4 +1,5 @@
 # github-dark-factory-agent
+Stale-ref probe: ran.
 
 The cluster **dark-factory implementer**. A human drafts + approves a spec on a
 draft-PR branch and walks away; this agent clones the branch and walks the

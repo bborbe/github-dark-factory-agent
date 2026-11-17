@@ -1,6 +1,8 @@
 ---
-approved: true
-status: approved
+status: prompted
+approved: "true"
+generating: "2026-11-17T12:33:06Z"
+prompted: "2026-11-17T12:37:45Z"
 ---
 
 # Stale-Ref Probe

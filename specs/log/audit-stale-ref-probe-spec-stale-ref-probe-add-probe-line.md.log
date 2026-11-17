@@ -1,0 +1,308 @@
+[13:38:01] [init] session=920fc911 model=deepseek-v4-flash-max[1m] cwd=/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930 tools=25
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:03] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] [system: thinking_tokens]
+[13:38:04] 💭 The user wants me to invoke the prompt-auditor agent through the Task tool (Agent tool here) with subagent_type: prompt-auditor. Let me parse the prompt path: `prompts/spec-stale-ref-probe-add-probe-line.md` — already has prompts/ prefix and .md extension.
+
+Let me invoke the agent. Also I need to check the project's CLAUDE.md for release checklist. Let me do both in parallel — invoke agent and read CLAUDE.md.
+
+Actually let me first check if the prompt file exists. But the agent will do that. Let…
+[13:38:04] I'll audit the prompt and check the project's pre-approve gate in parallel.
+
+
+[13:38:06] [agent:prompt-auditor] Audit dark-factory prompt
+    prompt: Audit the dark-factory prompt file at `prompts/spec-stale-ref-probe-add-probe-line.md` (resolve relative to the repository root). Evaluate it against the Promp…
+[13:38:06] ⚠ [Agent] error: Agent type 'prompt-auditor' not found. Available agents: claude, coding:agent-auditor, coding:architecture-dimensions-assistant, coding:ast-grep-runner, coding:coding-guidelines-finder, coding:context7-library-checker, coding:go-architecture-assistant, coding:go-context-assistant, coding:go-error-assistant, coding:go-factory-pattern-assistant, coding:go-http-handler-assistant, coding:go-metrics-a…
+[13:38:06] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/CLAUDE.md 2>&1; echo "---"; ls /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b…
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] [system: thinking_tokens]
+[13:38:07] 💭 The agent name is `dark-factory:prompt-auditor` (fully qualified). Let me retry. Also no CLAUDE.md at root. Let me look for CLAUDE.md elsewhere, and read the prompt file.
+[13:38:07] Agent name needs the `dark-factory:` prefix. Retrying, and looking for the project's gate docs.
+
+
+[13:38:10] [agent:dark-factory:prompt-auditor] Audit dark-factory prompt
+    prompt: Audit the dark-factory prompt file at `prompts/spec-stale-ref-probe-add-probe-line.md` (resolve relative to the repository root, cwd is the repo root). Evaluat…
+[13:38:10] [system: task_started]
+[13:38:10] $ cd /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930; echo "=== find CLAUDE.md ==="; find . -maxdepth 3 -iname 'CLAUDE.md' -not -path './node_modules/*' 2>/dev/nul…
+[13:38:10] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md
+[13:38:10]   → 68 lines read
+[13:38:12] [system: task_progress]
+[13:38:12] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/spec-stale-ref-probe-add-probe-line.md
+[13:38:12] [system: task_progress]
+[13:38:12] $ ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/ && echo "---" && ls -la /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b9861…
+[13:38:12]   → 68 lines read
+[13:38:16] [system: task_progress]
+[13:38:16] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/README.md
+[13:38:16] [system: task_progress]
+[13:38:16] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md
+[13:38:16] [system: task_progress]
+[13:38:16] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/docs/dod.md
+[13:38:16] [system: task_progress]
+[13:38:16] $ cat .git; echo "---config---"; command -v dark-factory || echo "no dark-factory binary"; dark-factory config 2>&1 | head -50
+[13:38:16]   → 11 lines read
+[13:38:16]   → 110 lines read
+[13:38:16]   → 26 lines read
+[13:38:40] [system: task_progress]
+[13:38:40] $ echo "== specs tree ==" && find specs -maxdepth 2 -type f | sort && echo "== docs ==" && ls docs && echo "== trailing newline ==" && tail -c 20 README.md | od -c | tail -3 && echo "== wc ==" && wc -l…
+[13:38:40] [system: task_progress]
+[13:38:40] $ echo "== all prompts ==" && find prompts -type f | sort && echo "== existing prompt frontmatter samples ==" && for f in $(find prompts -type f -name '*.md' | head -5); do echo "--- $f"; head -10 "$f"…
+[13:38:48] [system: task_progress]
+[13:38:48] $ echo "== audit log ==" && cat specs/log/audit-stale-ref-probe-spec-stale-ref-probe-add-probe-line.md.log 2>/dev/null | head -100; echo; echo "== audit jsonl (first lines) ==" && head -5 specs/log/aud…
+[13:38:48] ⚠ [bash output]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+[13:33:11] [system: thinking_tokens]
+== df log ==
+time=2026-11-17T13:33:06.340+01:00 level=INFO msg="effective config" maxContainers=3 maxContainersSource=default containerImage=docker.io/bborbe/claude-yolo:v0.16.4 model=deepseek-v4-flash-max[1m] modelSource=arg workflow=direct workflowSource=project pr=false prSource=project autoRelease=false autoReleaseSource=project autoMerge=false autoMergeSource=project verificationGate=false validationCommand="make precommit" testCommand="make test" debounceMs=500 hideGit=true hideGitSource=arg autoApprovePrompts=true autoApprovePromptsSource=arg autoGeneratePrompts=true autoGeneratePromptsSource=arg dirtyFileThreshold=0 dirtyFileThresholdSource=default promptsInboxDir=prompts promptsInProgressDir=prompts/in-progress promptsCompletedDir=prompts/completed promptsLogDir=prompts/log preflightCommand="make precommit" preflightInterval=8h healthcheckEnabled=true healthcheckEnabledSource=default healthcheckInterval=8h healthcheckIntervalSource=default backend=local backendSource=arg envFromGlobal=[] envProjectOverrides=[] envProjectOnly=[]
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="watching for queued prompts" dir=prompts/in-progress
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="healthcheck gate disabled"
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="pipeline gate disabled"
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/prompts/in-progress
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="spec watcher started" dir=/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="processor started"
+time=2026-11-17T13:33:06.341+01:00 level=INFO msg="spec file created in in-progress, triggering generation" path=/home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/specs/in-progress/stale-ref-probe.md
+time=2026-11-17T13:33:11.343+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-17T13:34:11.346+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-17T13:35:16.346+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-17T13:36:21.346+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-17T13:37:26.342+01:00 level=INFO msg="nothing to do, waiting for changes"
+time=2026-11-17T13:38:01.137+01:00 level=INFO msg="auto-approve: auditing generated prompt" prompt=spec-stale-ref-probe-add-probe-line.md
+time=2026-11-17T13:38:06.343+01:00 level=INFO msg="swept prompted specs to verifying" transitioned=1
+time=2026-11-17T13:38:26.346+01:00 level=INFO msg="nothing to do, waiting for changes"
+[13:39:26] [system: task_progress]
+[13:39:26] $ cd /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930\necho "== simulate verification block as written =="\nbash -c '\ngrep -Fqx "Stale-ref probe: ran." README.md\n…
+[13:39:26] [system: task_progress]
+[13:39:26] $ cd /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930\necho "== find CLAUDE.md =="; find . -maxdepth 3 -iname 'CLAUDE.md' -not -path './.git/*' 2>/dev/null\necho "=…
+[13:41:16] [system: task_updated]
+[13:41:16] [system: task_notification]
+[13:41:16]   ← agent reply: # Prompt Audit Report: Record that the stale-ref probe ran
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:17] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] [system: thinking_tokens]
+[13:41:18] 💭 Now I need to check the gate. The CLAUDE.md is at ./agent/.claude/CLAUDE.md. But the audit instruction says "Read the project CLAUDE.md for a 'Release Checklist' section or any 'before dark-factory prompt approve' instruction, plus any doc it links." Let me read agent/.claude/CLAUDE.md and docs/dod.md, and check for release checklist.
+
+Note: autoRelease: false in this repo. The command says "On autoRelease: true projects approval ships the change..." Here it's false, but still report gate status…
+[13:41:18] Now let me check the declared pre-approve gate.
+
+
+[13:41:19] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/agent/.claude/CLAUDE.md
+[13:41:19] [read] /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930/docs/dod.md
+[13:41:19] $ cd /home/node/.cache/github-dark-factory-agent/work/feb73ade-db68-55b3-91b3-8b7b98619930; echo "=== grep release checklist / prompt approve across repo ==="; grep -rniE "release checklist|prompt appr…
+[13:41:19]   → 11 lines read
+[13:41:19]   → 36 lines read
+[13:41:19] ⚠ [bash output]
+=== grep release checklist / prompt approve across repo ===
+CHANGELOG.md:90:- fix: **`waitForDrain` fails fast when a requested spec is stranded at `prompted` with no prompt referencing it**, instead of holding the Job's only agent slot until the lifecycle deadline. ⚠️ dark-factory advances a spec out of `prompted` only through its spec-link scan (`CheckAndComplete`), which no-ops when no prompt carries `spec:` — so a prompt authored without the link leaves the spec unreachable and every later daemon tick a no-op. `drained()` cannot see this: it counts in-flight prompts, and a stranded run has none. Observed 2026-10-20 on nuke dev: a fallback hand-authored prompt with `spec: ""` executed to `exit_code=0`, the spec stayed `prompted`, and the run burned the whole deadline before reporting `lifecycle did not drain before deadline` over work that had actually succeeded. The new `findStalledSpec` requires three consecutive polls (9s at the 3s interval) so a healthy run — whose spec is momentarily `prompted` while its prompt is auto-approved — is never mistaken for a stalled one.
+CHANGELOG.md:141:- fix: fail-fast on a permanently-failed prompt instead of hanging to the lifecycle deadline. When a dark-factory prompt exhausts its retries the failure handler leaves it in `prompts/in-progress` with `status: failed` and the scanner skips it forever ("queue blocked until manual retry"), so its spec can never reach `verifying`. `drained()` could not distinguish that dead prompt from a slow one, so `waitForDrain` spun until the 30-minute `lifecycleTimeout` — and in-cluster the overall-run budget hard-killed the Job with `context canceled` at ~30 min BEFORE the step could escalate, so no `## Failure` was ever written and the task was not cleanly parked. `waitForDrain` now scans `prompts/in-progress` each tick via new `findFailedPrompt` and returns a lifecycle error the moment a prompt reaches terminal `status: failed`, surfacing its `lastFailReason`. The execution step then escalates cleanly (`Status: failed`) within seconds while the context is still alive — PR stays draft, spec stays incomplete, task parks. Approved/executing/unparseable prompts are ignored (only terminal `failed` counts). Unit tests cover the detector's discrimination + the RunLifecycle fast-path timing.
+CHANGELOG.md:145:- fix: commit the spec-completion move before pushing, so completed specs actually reach the PR branch. `dark-factory spec complete` (which the execution step drives after the daemon stops) rewrites the working tree — moving the spec `specs/in-progress → specs/completed` — but does NOT git-commit it (nothing commits it once the daemon is gone, unlike the daemon's per-prompt `workflow:direct` commits). `PushBranch` is a bare `git push HEAD`, so the completion was silently dropped: the PR kept an approved-not-completed spec, the watcher re-emitted the task on the agent's own push, and runs overlapped indefinitely (self-trigger loop). New `ExecutionRunner.CommitSpecChanges` stages `specs/` and commits after `completeSpecs` and before `PushBranch` (no-op when nothing is staged). Now the completed spec lands on the branch → the watcher stops re-triggering → clean multi-spec drain to `human_review`. Unit tests cover the commit + the no-op path and assert the execution step calls it before pushing.
+docs/design.md:72:The execution phase runs dark-factory with `--auto-approve-prompts`. This is the intended bookend design, not a blind approval. The flag triggers dark-factory's spec-078 audit-then-approve: each auto-generated prompt is AUDITED headlessly and approved only if the audit passes (fail-closed — a failing audit stops the spec and the agent escalates). The blast radius is bounded by four independent gates: (a) the human pre-approves the SPEC on the draft PR before the agent runs (first bookend); (b) the spec-078 fail-closed audit gate on every generated prompt; (c) this agent's ai_review diff-vs-spec sanity check before `human_review`; (d) the human's draft→ready flip on the PR (final bookend). The execution pod is single-tenant and ephemeral, so a rogue prompt cannot reach beyond the one PR branch. dark-factory has no per-prompt-id allowlist (`--auto-approve-prompt-ids` does not exist) — the audit gate IS the allowlist.
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:20] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:21] [system: thinking_tokens]
+[13:41:22] [system: thinking_tokens]
+[13:41:22] 💭 No CLAUDE.md at project root. The only CLAUDE.md is `agent/.claude/CLAUDE.md` which is agent guardrails, not a release checklist. No "Release Checklist" section, no "before dark-factory prompt approve" instruction. So the gate is "none declared".
+
+Let me double-check there isn't a docs/ file with a release checklist. The grep across .md didn't find "release checklist" except CHANGELOG entries unrelated. So none declared.
+
+Also note autoRelease: false, so the approval doesn't ship automatically.
+…
+[13:41:27] ## Prompt Audit — `prompts/spec-stale-ref-probe-add-probe-line.md`
+
+**Verdict: Good — 7/10. One Critical fix required before approval.**
+
+### Critical
+
+**1. Verification can pass on a partial failure (false-positive pass)** — `<verification>` lines 53–57
+The three checks are independent shell commands, so the block returns only the *last* command's exit status. If the probe line exists exactly once but is **not on line 2**, checks 1–2 fail and check 3 passes → exit 0. That contradicts the prompt's own "All three commands must succeed." It also misses requirement 4 (a file where the blank line 2 was *replaced* rather than preceded passes every check).
+
+Fix — one fail-closed conjunction, plus line-count/blank-line assertions:
+```bash
+grep -Fqx 'Stale-ref probe: ran.' README.md \
+  && [ "$(sed -n '2p' README.md)" = "Stale-ref probe: ran." ] \
+  && [ -z "$(sed -n '3p' README.md)" ] \
+  && [ "$(wc -l < README.md)" = "111" ] \
+  && [ "$(grep -Fxc 'Stale-ref probe: ran.' README.md || true)" = "1" ]
+```
+
+### Recommendations
+1. **Remove the OPEN QUESTIONS comment block (lines 64–68).** It's addressed to "the AUDITOR / HUMAN REVIEWER" — not an instruction to the executing agent. Move those decisions to the spec/PR.
+2. **Cover requirement 4 in verification** — the `sed -n '3p'` + `wc -l` additions above.
+3. **Number the trailing paragraph (line 38)** as requirement 7, or move it to `<constraints>`.
+4. **Narrow the DoD-override sentence (lines 25–27).** A README probe isn't "user-facing behavior change," so `docs/dod.md`'s CHANGELOG/docs bullet likely doesn't apply anyway; "This prompt overrides the general DoD" may invent a conflict.
+5. **Hard-coded spec path (line 27)** may go stale — the daemon moves specs between states. Prefer the slug `stale-ref-probe`. Low priority.
+6. **Line-number anchoring** on a mutable README — keep text anchors primary, line numbers as hints. Low priority.
+
+### What checks out
+- Structure complete (all XML sections), summary/objective genuinely plain-language.
+- Every referenced path verified to exist; all README factual claims (H1 on line 1, blank line 2, prose line 3, 110 lines, trailing newline) accurate.
+- Verification is container-safe: no `git` (important — daemon runs `hideGit=true`, so a git check would false-pass).
+- Scope tightly reconciled with the spec's Scope/Out of Scope; no YAGNI creep.
+
+### Pre-approve gate status: **none declared**
+- No root `CLAUDE.md`. The only `CLAUDE.md` is `agent/.claude/CLAUDE.md` — agent container guardrails, not a release checklist.
+- No "Release Checklist" section and no "before `dark-factory prompt approve`" instruction anywhere in the repo's docs/config.
+- `.dark-factory.yaml` sets `autoRelease: false`, so approval does not auto-ship here regardless.
+- The relevant validation doc, `docs/dod.md`, is the *post-execution* DoD (run by dark-factory after execution), not a pre-approve gate.
+
+**Bottom line:** The audit is clean structurally and reference-wise, but the verification block is fail-open and requirement 4 is unverified. Fix Critical #1 (including the line-count/blank-line checks) and drop the OPEN QUESTIONS block, then the prompt is approval-ready. No project gate is declared, so there is nothing else to walk before `dark-factory prompt approve`.
+[13:41:27] result: ## Prompt Audit — `prompts/spec-stale-ref-probe-add-probe-line.md`
+
+**Verdict: Good — 7/10. One Critical fix required before approval.**
+
+### Critical
+
+**1. Verification can pass on a partial failure (false-positive pass)** — `<verification>` lines 53–57
+The three checks are independent shell commands, so the block returns only the *last* command's exit status. If the probe line exists exactly once but is **not on line 2**, checks 1–2 fail and check 3 passes → exit 0. That contradicts the prompt's own "All three commands must succeed." It also misses requirement 4 (a file where the blank line 2 was *replaced* rather than preceded passes every check).
+
+Fix — one fail-closed conjunction, plus line-count/blank-line assertions:
+```bash
+grep -Fqx 'Stale-ref probe: ran.' README.md \
+  && [ "$(sed -n '2p' README.md)" = "Stale-ref probe: ran." ] \
+  && [ -z "$(sed -n '3p' README.md)" ] \
+  && [ "$(wc -l < README.md)" = "111" ] \
+  && [ "$(grep -Fxc 'Stale-ref probe: ran.' README.md || true)" = "1" ]
+```
+
+### Recommendations
+1. **Remove the OPEN QUESTIONS comment block (lines 64–68).** It's addressed to "the AUDITOR / HUMAN REVIEWER" — not an instruction to the executing agent. Move those decisions to the spec/PR.
+2. **Cover requirement 4 in verification** — the `sed -n '3p'` + `wc -l` additions above.
+3. **Number the trailing paragraph (line 38)** as requirement 7, or move it to `<constraints>`.
+4. **Narrow the DoD-override sentence (lines 25–27).** A README probe isn't "user-facing behavior change," so `docs/dod.md`'s CHANGELOG/docs bullet likely doesn't apply anyway; "This prompt overrides the general DoD" may invent a conflict.
+5. **Hard-coded spec path (line 27)** may go stale — the daemon moves specs between states. Prefer the slug `stale-ref-probe`. Low priority.
+6. **Line-number anchoring** on a mutable README — keep text anchors primary, line numbers as hints. Low priority.
+
+### What checks out
+- Structure complete (all XML sections), summary/objective genuinely plain-language.
+- Every referenced path verified to exist; all README factual claims (H1 on line 1, blank line 2, prose line 3, 110 lines, trailing newline) accurate.
+- Verification is container-safe: no `git` (important — daemon runs `hideGit=true`, so a git check would false-pass).
+- Scope tightly reconciled with the spec's Scope/Out of Scope; no YAGNI creep.
+
+### Pre-approve gate status: **none declared**
+- No root `CLAUDE.md`. The only `CLAUDE.md` is `agent/.claude/CLAUDE.md` — agent container guardrails, not a release checklist.
+- No "Release Checklist" section and no "before `dark-factory prompt approve`" instruction anywhere in the repo's docs/config.
+- `.dark-factory.yaml` sets `autoRelease: false`, so approval does not auto-ship here regardless.
+- The relevant validation doc, `docs/dod.md`, is the *post-execution* DoD (run by dark-factory after execution), not a pre-approve gate.
+
+**Bottom line:** The audit is clean structurally and reference-wise, but the verification block is fail-open and requirement 4 is unverified. Fix Critical #1 (including the line-count/blank-line checks) and drop the OPEN QUESTIONS block, then the prompt is approval-ready. No project gate is declared, so there is nothing else to walk before `dark-factory prompt approve`. | duration: 206193ms | cost: $1.0695 | tokens: 281 in / 2435 out
