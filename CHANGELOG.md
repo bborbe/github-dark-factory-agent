@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - fix: **name the failing phase and its message in the failure Sentry event, and fingerprint failures per phase.** `exitErrorForStatus` raised `agent reported status "failed" for phase "execution"` with no `Result.Message`, so planning/execution/ai_review failures collapsed into one untriageable issue. The error now carries the phase's message plus `phase`/`status` tags, and a Sentry event processor assigns `github-dark-factory-agent/phase/<phase>` as the fingerprint. Escalation is unchanged — a failed result still exits non-zero.
 
+## v0.7.2
+
+- fix: **a planning precondition that cannot be cleared by a re-run now parks as `needs_input` instead of `failed`.** `failed` is defined as transient — the controller retries it, incrementing `trigger_count` until `max_triggers` holds the record — so a record whose PR head had advanced since emit re-ran the identical refusal until the budget was gone. Measured on sun 2026-11-17: record `291e00a7` (PR `bborbe/agent-task-controller#163`, ref `67c699b6`) failed 07:44–07:49Z as `pod_crash_no_stdout (Error/1)`, because the process exits non-zero for `failed` but returns nil for every other status. The four permanent preconditions — ref≠HEAD, PR not a draft, `.dark-factory.yaml` missing, no approved-not-completed spec in the diff — now return `needs_input`, which the deliverer writes as `status: in_progress` with the assignee cleared and the phase preserved, so the record parks for a human on its first trigger. Clone and GitHub API errors keep `failed`; those are genuinely transient.
+
+## v0.7.1
+
+- fix: count an inbox prompt as work in flight only when it can still advance one of the run's requested specs, so an unrelated `status: draft` prompt can no longer hold the lifecycle drain to the Job deadline. `hasInboxPrompts` was a bare `prompts/*.md` glob, so on 2026-11-14 four drafts for other specs (023, 010, 021, bab89662) sat in the inbox of `bborbe/agent-task-executor` and both `drained()` and `findStalledSpec()` read them as work in flight for a run that requested only `bug-nuke-dev-fm`: the drain never completed, the stall detector never fired, and a Job whose prompt had already reported success was killed at its deadline and republished as `failed`. `rejected`/`cancelled`/`completed` never count, and an unreadable or not-yet-written prompt still counts so a mid-write prompt is never read as parked. The auto-approve window is preserved because the prompt the run just generated is linked to a requested spec; the daemon's auto-approve setting is not consulted, since every lifecycle run passes `--auto-approve-prompts`.
+
+## v0.7.0
+
+- feat: add a `check-task-link` gate that fails a PR whose body carries no `Task: <task_identifier>` line, and install a pinned, checksum-verified Trivy release so `test` stops failing on the retired keyring helper
+
+## v0.6.3
+
+- fix: bump the `go` directive to 1.27.4 and the Dockerfile build image to `golang:1.27.4`, so the image and `go.mod` name the same toolchain. The update-go agent could not proceed because `make precommit` failed with exit 2 and no parseable findings, which it treats as a broken gate and never retries — the real cause was the stale toolchain, not the code. `GOSEC_VERSION` moves to v2.30.0 in step with the canonical `tools.env`; this repo runs gosec inside golangci-lint rather than standalone, so the pin is kept for sync only.
+
 ## v0.6.2
 
 - fix: link the pinned dark-factory clone to `~/.claude/plugins/marketplaces/dark-factory` so the authoring-rule paths the agents hardcode resolve — a local-path `marketplace add` never creates that directory, so prompt generation ran with no guides

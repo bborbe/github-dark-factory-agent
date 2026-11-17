@@ -124,40 +124,40 @@ var _ = Describe("PlanningStep", func() {
 			Expect(ok).To(BeFalse())
 		}
 
-		It("fails when ref != PR head sha (assignee untouched)", func() {
+		It("parks (needs_input) when ref != PR head sha (assignee untouched)", func() {
 			fakeGH.GetPullRequestReturns(
 				&pkg.PullRequestInfo{Draft: true, HeadSHA: "different"},
 				nil,
 			)
 			result, md := run(baseTask())
-			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
 			Expect(result.Message).To(ContainSubstring("head sha"))
 			assertEscalated(md)
 		})
 
-		It("fails when the PR is not a draft (assignee untouched)", func() {
+		It("parks (needs_input) when the PR is not a draft (assignee untouched)", func() {
 			fakeGH.GetPullRequestReturns(&pkg.PullRequestInfo{Draft: false, HeadSHA: "abc123"}, nil)
 			result, md := run(baseTask())
-			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
 			Expect(result.Message).To(ContainSubstring("not a draft"))
 			assertEscalated(md)
 		})
 
-		It("fails when no approved-not-completed spec is in the PR diff", func() {
+		It("parks (needs_input) when no approved-not-completed spec is in the PR diff", func() {
 			fakeGH.GetPullRequestReturns(&pkg.PullRequestInfo{Draft: true, HeadSHA: "abc123"}, nil)
 			fakeGH.ListPullRequestFilesReturns([]string{"README.md"}, nil) // spec not in diff
 			result, md := run(baseTask())
-			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
 			Expect(result.Message).To(ContainSubstring("no approved-not-completed spec"))
 			assertEscalated(md)
 		})
 
-		It("fails when .dark-factory.yaml is missing", func() {
+		It("parks (needs_input) when .dark-factory.yaml is missing", func() {
 			bare := GinkgoT().TempDir() // no .dark-factory.yaml
 			fakeRepo.EnsureWorktreeReturns(bare, nil)
 			fakeGH.GetPullRequestReturns(&pkg.PullRequestInfo{Draft: true, HeadSHA: "abc123"}, nil)
 			result, md := run(baseTask())
-			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
 			Expect(result.Message).To(ContainSubstring(".dark-factory.yaml"))
 			assertEscalated(md)
 		})
@@ -218,7 +218,7 @@ body
 			fakeGH.ListPullRequestFilesReturns([]string{"specs/in-progress/foo.md"}, nil)
 
 			result, _ := run(baseTask())
-			Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+			Expect(result.Status).To(Equal(agentlib.AgentStatusNeedsInput))
 			Expect(result.Message).To(ContainSubstring("no approved-not-completed spec"))
 		})
 	})

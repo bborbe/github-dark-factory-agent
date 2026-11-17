@@ -25,9 +25,10 @@ Design artifact for the Phase-2 gate of [[Lift Dark-Factory Daemon into Agent Fr
 
 | Phase | Impl shape | Reads | Side effects | Writes |
 |---|---|---|---|---|
-| planning | pure-Go spec scan (`agent/code` shape) | frontmatter (`clone_url`,`ref`,`branch`,`pr_number`) | clone branch, precondition checks (ref==HEAD, `.dark-factory.yaml`, approved-not-completed spec, PR draft) | `## Plan` |
-| execution | custom step (dark-factory lifecycle + git) | `## Plan` | generate prompts → audit+approve → execute → verify → `spec complete`; commit + push per prompt | `## Result` |
+| planning | pure-Go spec scan (`agent/code` shape) | frontmatter (`clone_url`,`ref`,`branch`,`pr_number`) | clone branch, precondition checks (ref==HEAD, `.dark-factory.yaml`, approved-not-completed spec, PR draft) | `## Plan` || execution | custom step (dark-factory lifecycle + git) | `## Plan` | generate prompts → audit+approve → execute → verify → `spec complete`; commit + push per prompt | `## Result` |
 | ai_review | `claudelib.NewAgentStep` (read-only) | `## Plan`+`## Result` | remote checks: all specs `completed`, no prompts in-flight, PR still draft, diff-vs-spec sanity | `## Review`; `phase: human_review`, clear assignee |
+
+**Planning preconditions are terminal, not transient.** A failed precondition — ref≠HEAD, PR not a draft, `.dark-factory.yaml` missing, no approved-not-completed spec in the diff — cannot be cleared by re-running the same record against the same ref, so each returns `needs_input` and parks for a human. `failed` is reserved for genuine infrastructure errors (clone, GitHub API), because `failed` is defined as transient and the controller retries it, burning the trigger budget until the record is held.
 
 **Never runs `gh pr ready`.** The human's flip is the verification sign-off.
 

@@ -1,6 +1,6 @@
 module github.com/bborbe/github-dark-factory-agent
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/bborbe/agent v0.138.0
