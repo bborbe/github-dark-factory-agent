@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.8.0
 
 - fix: **`REPOS_PATH` and `WORK_PATH` are now required at startup instead of defaulting to the unwritable `/repos` and `/work`.** The pod runs as the image's unprivileged `node` user against a root-owned `/`, so an omitted variable resolved to an unwritable root and the run died minutes later at `git worktree add` with `fatal: could not create leading directories of '/work/<job>/.git': Permission denied` — 12 implement tasks hit it on prod between 2026-10-19 and 2026-11-02, and nothing in the failure named the variable. Both fields lose their `default:` tag and gain `required:"true"`, so the argument parser fails immediately with `Required field empty, define parameter work-path or define env WORK_PATH`. Both nuke stages already pin both variables, so no running deployment changes. `cmd/run-task` keeps its `~/.cache/github-dark-factory-agent/{repos,work}` fallback — that binary is the local CLI entry point, where a default is the point.
 
