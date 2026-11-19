@@ -105,9 +105,18 @@ type application struct {
 	PEMKeyFile     string `required:"false" arg:"pem-key-file"    env:"PEM_KEY_FILE"    usage:"Path to the GitHub App private key (PEM file mounted from k8s Secret)"`
 	PEMKey         string `required:"false" arg:"pem-key"         env:"PEM_KEY"         usage:"GitHub App private key (PEM) as env var content; mutually exclusive with PEM_KEY_FILE" display:"length"`
 
-	// Workdir paths for bare-clone cache and per-task worktrees.
-	ReposPath string `required:"false" arg:"repos-path" env:"REPOS_PATH" usage:"Root path for bare-clone cache"   default:"/repos"`
-	WorkPath  string `required:"false" arg:"work-path"  env:"WORK_PATH"  usage:"Root path for per-task worktrees" default:"/work"`
+	// Workdir paths for bare-clone cache and per-task worktrees. Both are
+	// REQUIRED here, with no compiled-in default.
+	//
+	// The pod runs as the image's unprivileged `node` user against a root-owned
+	// `/`, so the former `default:"/repos"` / `default:"/work"` resolved to an
+	// unwritable root: every `git worktree add` then failed with EACCES minutes
+	// into the run, naming no cause. Startup validation now fails immediately
+	// and names the variable. This binary is the pod entry point and requires
+	// explicit, writable paths; cmd/run-task — the local CLI — keeps its
+	// ~/.cache fallback, where a default is the point.
+	ReposPath string `required:"true" arg:"repos-path" env:"REPOS_PATH" usage:"Root path for bare-clone cache (required; no default)"`
+	WorkPath  string `required:"true" arg:"work-path"  env:"WORK_PATH"  usage:"Root path for per-task worktrees (required; no default)"`
 
 	// Kafka delivery (optional — only active when TASK_ID is set)
 	KafkaBrokers libkafka.Brokers        `required:"false" arg:"kafka-brokers" env:"KAFKA_BROKERS" usage:"Comma separated list of Kafka brokers"`

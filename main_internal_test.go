@@ -17,6 +17,64 @@ import (
 	"github.com/bborbe/vault-cli/pkg/domain"
 )
 
+// TestWorkdirPathsCarryNoCompiledInDefault guards the defect this change fixes:
+// the pod binary used to resolve REPOS_PATH and WORK_PATH to /repos and /work
+// via `default:` struct tags. The container runs as the image's unprivileged
+// `node` user against a root-owned `/`, so those paths are unwritable and every
+// `git worktree add` died with EACCES minutes into the run, naming no cause.
+//
+// It drives argument.DefaultValues — the same machinery the real parser merges
+// into the struct — so re-adding either tag turns this red.
+func TestWorkdirPathsCarryNoCompiledInDefault(t *testing.T) {
+	defaults, err := argument.DefaultValues(context.Background(), &application{})
+	if err != nil {
+		t.Fatalf("collect defaults: %v", err)
+	}
+	for _, field := range []string{"ReposPath", "WorkPath"} {
+		if value, ok := defaults[field]; ok {
+			t.Fatalf(
+				"%s still carries a compiled-in default %q — an unset variable would resolve to that path instead of failing at startup",
+				field,
+				value,
+			)
+		}
+	}
+}
+
+// TestValidateRequiredNamesWorkdirPaths is the behavioural half of the pair
+// above: with either variable unset, the startup validation the real binary
+// runs must fail and name it. While both fields were optional this validation
+// returned nil, so the container started and failed later at `git worktree add`
+// instead.
+//
+// TaskContent is set because it is the first required field the validator
+// reaches; leaving it empty would mask the workdir assertions.
+func TestValidateRequiredNamesWorkdirPaths(t *testing.T) {
+	ctx := context.Background()
+
+	err := argument.ValidateRequired(ctx, &application{TaskContent: "# task"})
+	if err == nil || !strings.Contains(err.Error(), "REPOS_PATH") {
+		t.Fatalf("unset ReposPath: want an error naming REPOS_PATH, got %v", err)
+	}
+
+	err = argument.ValidateRequired(ctx, &application{
+		TaskContent: "# task",
+		ReposPath:   "/repos",
+	})
+	if err == nil || !strings.Contains(err.Error(), "WORK_PATH") {
+		t.Fatalf("unset WorkPath: want an error naming WORK_PATH, got %v", err)
+	}
+
+	err = argument.ValidateRequired(ctx, &application{
+		TaskContent: "# task",
+		ReposPath:   "/repos",
+		WorkPath:    "/work",
+	})
+	if err != nil {
+		t.Fatalf("both set: want nil, got %v", err)
+	}
+}
+
 // TestExitErrorForStatus guards the exit-code contract between this agent and
 // the executor that watches its Job.
 //
