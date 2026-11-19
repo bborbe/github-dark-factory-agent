@@ -43,9 +43,9 @@ func TestWorkdirPathsCarryNoCompiledInDefault(t *testing.T) {
 
 // TestValidateRequiredNamesWorkdirPaths is the behavioural half of the pair
 // above: with either variable unset, the startup validation the real binary
-// runs must fail and name it. Today (before the fix) both fields are optional
-// and this validation returns nil, so the container starts and fails later at
-// `git worktree add` instead.
+// runs must fail and name it. While both fields were optional this validation
+// returned nil, so the container started and failed later at `git worktree add`
+// instead.
 //
 // TaskContent is set because it is the first required field the validator
 // reaches; leaving it empty would mask the workdir assertions.
