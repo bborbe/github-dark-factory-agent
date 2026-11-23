@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.8.3
 
 - fix: bump the baked dark-factory pin from `v0.199.4` to `v0.199.5`, which carries the cross-branch stash fix. `brancher.StashInPaths` treated an empty `git status --porcelain` result as a tracked change — `strings.Split("", "\n")` yields `[""]`, neither `??` nor `!!` — so every `SpecBookkeepingPrefixes` entry joined the `git stash push` pathspec and any bookkeeping dir the repo never created aborted the whole prompt setup with `pathspec ':(prefix:0)specs/rejected' did not match any file(s) known to git`. That killed the `bborbe/vault-ui` PR #232 cluster run on 2026-11-23T10:59Z. `StashInPaths` now returns early on an empty status, mirroring the guard `CommitUncommittedInPaths` already carried. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
 
