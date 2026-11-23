@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: bump the baked dark-factory pin from `v0.199.3` to `v0.199.4`, which carries the cross-branch spec-status write fix. A cluster run that starts on the default branch and must switch onto a PR branch now lands the spec-status write in the target branch's history (stash → switch → pop → commit) instead of refusing at branch setup with `working tree is not clean`. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
+
 ## v0.8.1
 
 - fix: bump the baked dark-factory pin from `v0.198.11` to `v0.199.3`, which carries the spec-status write-before-branch-switch fix. The image bakes dark-factory at build time, so a release alone never reached the running agent — every cluster run kept executing the old refusal (`working tree is not clean; cannot switch to branch`) at branch setup. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
