@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- fix: bump the baked dark-factory pin from `v0.199.6` to `v0.199.7`, which stashes the dirty spec bookkeeping around the branch workflow's `git merge origin/<default>` sync. `syncWithRemoteViaDeps` fetched and merged before `setupInPlaceBranch` persisted the generator's spec-status write, so `git merge` aborted with `Your local changes to the following files would be overwritten by merge: specs/in-progress/…`; the prompt failed permanently, the lifecycle drain aborted, and the agent exited 1 — surfaced as a bare `pod_crash_no_stdout`. `syncWithRemoteViaDeps` now stashes `SpecBookkeepingPrefixes` before the merge and pops after. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
+
 ## v0.8.4
 
 - fix: bump the baked dark-factory pin from `v0.199.5` to `v0.199.6`, which approves a generated prompt set in the order the prompt-creator prefixed it. `diffFiles` ranged over the inbox snapshot map, and the auto-approve loop approves one prompt at a time — `ApproveFromInbox` strips the creator's prefix and `NormalizeFilenames` assigns the next free number — so execution numbers were assigned in Go's randomised map order. A spec declaring `service → route → hardening` came out `186-route` / `187-hardening` / `188-service`, running the hardening prompt before the service it exercises. `diffFiles` now sorts by the numeric prefix on each filename (parsed, so `10-` follows `2-`), unprefixed last, full path as the tie-break. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
