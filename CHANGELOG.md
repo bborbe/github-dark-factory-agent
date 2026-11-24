@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.8.5
 
 - fix: bump the baked dark-factory pin from `v0.199.6` to `v0.199.7`, which stashes the dirty spec bookkeeping around the branch workflow's `git merge origin/<default>` sync. `syncWithRemoteViaDeps` fetched and merged before `setupInPlaceBranch` persisted the generator's spec-status write, so `git merge` aborted with `Your local changes to the following files would be overwritten by merge: specs/in-progress/…`; the prompt failed permanently, the lifecycle drain aborted, and the agent exited 1 — surfaced as a bare `pod_crash_no_stdout`. `syncWithRemoteViaDeps` now stashes `SpecBookkeepingPrefixes` before the merge and pops after. Both the CLI build and the plugin marketplace clone move together, since they are pinned to the same `DARK_FACTORY_VERSION`.
 
