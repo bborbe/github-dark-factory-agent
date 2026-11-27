@@ -10,10 +10,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
 	"github.com/bborbe/errors"
+	libhttp "github.com/bborbe/http"
 )
 
 // apiBaseURL is the GitHub REST API root. Overridable in tests via
@@ -49,8 +51,36 @@ func newGitHubClient(token, baseURL string) *httpGitHubClient {
 	return &httpGitHubClient{
 		token:   token,
 		baseURL: baseURL,
-		client:  &http.Client{Timeout: 15 * time.Second},
+		client: &http.Client{
+			Timeout:   15 * time.Second,
+			Transport: retryTransportFor(baseURL),
+		},
 	}
+}
+
+// retryTransportFor wraps the default transport with the shared rate-limit
+// retry round tripper. api.github.com is always retried; the host of apiBase
+// is added too when it differs, so a test seam pointing at a stub server is
+// covered.
+//
+// MaxWait bounds a single wait, not the call: the round tripper sleeps up to
+// MaxAttempts (default 5) times within one http.Client.Do, so the total sleep
+// budget is MaxAttempts × MaxWait. It is set to one second, keeping that
+// budget at five seconds — inside both client timeouts (15s for the REST
+// client, 10s for the token preflight), leaving the remaining time for the
+// requests themselves. A server-requested wait above the bound is deferred,
+// so the caller sees the real 403/429 instead of a context-deadline error
+// when the client timeout fires mid-sleep.
+func retryTransportFor(apiBase string) http.RoundTripper {
+	hosts := []string{"api.github.com"}
+	if u, err := url.Parse(apiBase); err == nil && u.Hostname() != "" &&
+		u.Hostname() != "api.github.com" {
+		hosts = append(hosts, u.Hostname())
+	}
+	return libhttp.NewRoundTripperRetryWithBackoff(
+		http.DefaultTransport,
+		libhttp.RetryBackoffOptions{RetryHosts: hosts, MaxWait: 1 * time.Second},
+	)
 }
 
 type httpGitHubClient struct {

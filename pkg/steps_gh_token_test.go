@@ -8,6 +8,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 
 	agentlib "github.com/bborbe/agent"
 	. "github.com/onsi/ginkgo/v2"
@@ -76,5 +77,24 @@ var _ = Describe("GHTokenCheckStep", func() {
 		result, err := step.Run(ctx, nil)
 		Expect(err).To(BeNil())
 		Expect(result.Status).To(Equal(agentlib.AgentStatusFailed))
+	})
+
+	It("retries a short 429 and succeeds", func() {
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			if atomic.AddInt32(&requests, 1) == 1 {
+				w.Header().Set("Retry-After", "1")
+				w.WriteHeader(http.StatusTooManyRequests)
+				return
+			}
+			_, _ = w.Write([]byte(`{"resources":{"core":{"limit":5000,"remaining":5000}}}`))
+		}))
+		DeferCleanup(srv.Close)
+
+		step := pkg.NewGHTokenCheckStepWithURL("tok", srv.URL)
+		result, err := step.Run(ctx, nil)
+		Expect(err).To(BeNil())
+		Expect(result.Status).To(Equal(agentlib.AgentStatusDone))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(2)))
 	})
 })

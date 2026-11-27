@@ -8,6 +8,8 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
+	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -97,5 +99,84 @@ var _ = Describe("GitHubClient", func() {
 		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
 		_, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
 		Expect(err).NotTo(BeNil())
+	})
+
+	It("retries a short 429 and succeeds", func() {
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			if atomic.AddInt32(&requests, 1) == 1 {
+				w.Header().Set("Retry-After", "1")
+				w.WriteHeader(http.StatusTooManyRequests)
+				return
+			}
+			_, _ = w.Write([]byte(`{"draft":true,"head":{"sha":"abc123"}}`))
+		}))
+		DeferCleanup(srv.Close)
+
+		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
+		info, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
+		Expect(err).To(BeNil())
+		Expect(info.HeadSHA).To(Equal("abc123"))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(2)))
+	})
+
+	It("defers a 429 whose requested wait exceeds MaxWait", func() {
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&requests, 1)
+			w.Header().Set("Retry-After", "60")
+			w.WriteHeader(http.StatusTooManyRequests)
+		}))
+		DeferCleanup(srv.Close)
+
+		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
+		start := time.Now()
+		_, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
+		elapsed := time.Since(start)
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(ContainSubstring("HTTP 429"))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(1)))
+		Expect(elapsed).To(BeNumerically("<", 5*time.Second))
+	})
+
+	It("bounds the accumulated retry sleep inside the client timeout", func() {
+		// A four-second Retry-After is at or below a five-second MaxWait, so
+		// under that old bound it would be slept once per attempt — 5 × 4s =
+		// 20s total, past the 15-second client timeout. At the one-second
+		// bound it exceeds MaxWait and is deferred immediately, so the call
+		// returns the real 429 after a single request instead of retrying.
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&requests, 1)
+			w.Header().Set("Retry-After", "4")
+			w.WriteHeader(http.StatusTooManyRequests)
+		}))
+		DeferCleanup(srv.Close)
+
+		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
+		start := time.Now()
+		_, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
+		elapsed := time.Since(start)
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(ContainSubstring("HTTP 429"))
+		Expect(err.Error()).NotTo(ContainSubstring("context deadline exceeded"))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(1)))
+		Expect(elapsed).To(BeNumerically("<", 5*time.Second))
+	})
+
+	It("does not retry a plain 403", func() {
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&requests, 1)
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = w.Write([]byte(`{"message":"Forbidden"}`))
+		}))
+		DeferCleanup(srv.Close)
+
+		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
+		_, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(ContainSubstring("HTTP 403"))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(1)))
 	})
 })
