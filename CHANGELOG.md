@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- feat: route the GitHub REST client and the GH-token preflight through `bborbe/http`'s rate-limit retry round tripper (`github.com/bborbe/http` v1.28.1), so a 403/429 from `api.github.com` is retried after the server-requested wait instead of ending the work item; waits over the five-second `MaxWait` bound are deferred so the caller sees the real rate-limit response rather than a context-deadline error
+
 ## v0.8.7
 
 - chore: remove orphaned section comments left in `.trivyignore` by the stale-ignore sweep

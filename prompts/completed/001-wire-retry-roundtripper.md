@@ -1,5 +1,12 @@
 ---
-status: draft
+status: completed
+summary: Wired both GitHub HTTP clients through bborbe/http's rate-limit retry transport with a five-second MaxWait deferral bound, bumped the dep to v1.28.1, added retry/deferral tests and a CHANGELOG entry
+execution_id: github-dark-factory-agent-retry-exec-001-wire-retry-roundtripper
+dark-factory-version: v0.198.17
+created: "2026-11-27T12:44:08Z"
+queued: "2026-11-27T12:44:08Z"
+started: "2026-11-27T12:45:38Z"
+completed: "2026-11-27T12:51:37Z"
 ---
 
 <summary>

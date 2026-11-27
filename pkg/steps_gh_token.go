@@ -57,7 +57,10 @@ func newGHTokenCheckStep(ghToken, httpURL string) *ghTokenCheckStep {
 	return &ghTokenCheckStep{
 		token:   ghToken,
 		httpURL: httpURL,
-		client:  &http.Client{Timeout: 10 * time.Second},
+		client: &http.Client{
+			Timeout:   10 * time.Second,
+			Transport: retryTransportFor(httpURL),
+		},
 	}
 }
 
