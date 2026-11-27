@@ -139,6 +139,31 @@ var _ = Describe("GitHubClient", func() {
 		Expect(elapsed).To(BeNumerically("<", 5*time.Second))
 	})
 
+	It("bounds the accumulated retry sleep inside the client timeout", func() {
+		// MaxWait bounds a single wait, so a persistent short Retry-After is
+		// slept MaxAttempts times inside one client.Do. The one-second bound
+		// keeps that budget at five seconds, inside the 15-second client
+		// timeout: the exhausted retries surface the real 429, not a
+		// context-deadline cancellation.
+		var requests int32
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&requests, 1)
+			w.Header().Set("Retry-After", "1")
+			w.WriteHeader(http.StatusTooManyRequests)
+		}))
+		DeferCleanup(srv.Close)
+
+		client := pkg.NewGitHubClientWithBaseURL("tok", srv.URL)
+		start := time.Now()
+		_, err := client.GetPullRequest(ctx, "bborbe", "sandbox", 7)
+		elapsed := time.Since(start)
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(ContainSubstring("HTTP 429"))
+		Expect(err.Error()).NotTo(ContainSubstring("context deadline exceeded"))
+		Expect(atomic.LoadInt32(&requests)).To(Equal(int32(6)))
+		Expect(elapsed).To(BeNumerically("<", 15*time.Second))
+	})
+
 	It("does not retry a plain 403", func() {
 		var requests int32
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {

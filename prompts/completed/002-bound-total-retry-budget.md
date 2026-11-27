@@ -1,5 +1,12 @@
 ---
-status: draft
+status: completed
+summary: Lowered retryTransportFor's MaxWait to 1s so the 5-attempt total sleep budget fits inside both client timeouts, updated the doc comment and CHANGELOG, and added an accumulation-bound test
+execution_id: github-dark-factory-agent-retry-exec-002-bound-total-retry-budget
+dark-factory-version: v0.198.17
+created: "2026-11-27T14:18:31Z"
+queued: "2026-11-27T14:18:31Z"
+started: "2026-11-27T14:20:54Z"
+completed: "2026-11-27T14:25:57Z"
 ---
 
 <summary>
