@@ -1,5 +1,12 @@
 ---
-status: draft
+status: completed
+summary: 'Changed the accumulation-bound test to Retry-After: 4 with deferred-behaviour assertions (one request, <5s, HTTP 429 without deadline error), verified it fails under a 5s MaxWait overlay and passes at 1s'
+execution_id: github-dark-factory-agent-retry-exec-003-make-the-budget-test-discriminate
+dark-factory-version: v0.198.17
+created: "2026-11-27T14:28:23Z"
+queued: "2026-11-27T14:28:23Z"
+started: "2026-11-27T14:29:10Z"
+completed: "2026-11-27T14:33:33Z"
 ---
 
 <summary>
